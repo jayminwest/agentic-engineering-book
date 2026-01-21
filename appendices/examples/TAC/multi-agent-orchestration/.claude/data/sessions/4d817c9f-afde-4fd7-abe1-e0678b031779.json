@@ -1,7 +1,0 @@
-{
-  "session_id": "4d817c9f-afde-4fd7-abe1-e0678b031779",
-  "prompts": [
-    "/question Can you please describe how the core multiagent functionality that is interactable with the frontend can be boiled down into just a tui or severl terminal panes open together. How can you boild the core backend functionality of this repo down to its essence?"
-  ],
-  "agent_name": "Prism"
-}

@@ -1,7 +1,0 @@
-{
-  "session_id": "3cc49164-0b6d-4e2c-865c-43eea86420c1",
-  "prompts": [
-    "/question 'How does agentic validation of the FE work using Playwright MCP server in this repo and how can I replicate the .claude/ files needed to conduct this validation step in external repos?'"
-  ],
-  "agent_name": "Prism"
-}
