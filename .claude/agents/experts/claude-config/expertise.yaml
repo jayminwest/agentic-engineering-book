@@ -65,6 +65,8 @@ core_implementation:
       purpose: Lifecycle hook with uv shebang
     - path: .claude/skills/<workflow>/SKILL.md
       purpose: Workflow template for /do orchestration
+    - path: .claude/output-styles/<style-name>.md
+      purpose: Reusable output formatting conventions
 
 key_operations:
   create_slash_command:
@@ -110,10 +112,10 @@ key_operations:
       1. Create .claude/agents/experts/<domain>/
       2. Create expertise.yaml (overview, core_implementation, key_operations,
          decision_trees, patterns, best_practices, known_issues)
-      3. Create <domain>-plan-agent.md (sonnet, yellow, Read/Glob/Grep/Write)
-      4. Create <domain>-build-agent.md (sonnet, green, Read/Write/Edit/Glob/Grep, +Bash for ops)
-      5. Create <domain>-improve-agent.md (sonnet, purple, all tools + Bash for git)
-      6. Create <domain>-question-agent.md (haiku, cyan, Read/Glob/Grep only)
+      3. Create <domain>-plan-agent.md (sonnet, yellow, Read/Glob/Grep/Write, output-style: academic-structured)
+      4. Create <domain>-build-agent.md (sonnet, green, Read/Write/Edit/Glob/Grep, +Bash for ops, output-style: practitioner-focused)
+      5. Create <domain>-improve-agent.md (sonnet, purple, all tools + Bash for git, output-style: evidence-grounded)
+      6. Create <domain>-question-agent.md (haiku, cyan, Read/Glob/Grep only, output-style: concise-reference)
     pattern: 4-agent pattern replaces old 3-file triad (expertise + question + self-improve)
     examples:
       - curriculum: 12th domain, absorbed 2 standalone agents (888 lines total)
@@ -122,6 +124,26 @@ key_operations:
       - what: "CRITICAL - Using colons in agent description field (e.g., 'Expects: SPEC')"
         instead: "Remove colons from description values (use 'Expects SPEC' not 'Expects: SPEC')"
         reason: "Colons in YAML string values cause Claude Code's agent discovery parser to fail silently. Agents with colons in descriptions will NOT appear in /agents list. [2026-01-17] Root cause confirmed via systematic testing across 38 agents."
+
+  configure_agent_output_style:
+    when: Agent needs consistent output formatting
+    approach: |
+      1. Add output-style field to agent frontmatter (references .claude/output-styles/<name>.md)
+      2. Add Output Style documentation to agent's Instructions section
+      3. Use standard mappings for 4-agent expert pattern:
+         - Question agents: concise-reference (scannable Q&A, haiku model)
+         - Plan agents: academic-structured (rigorous specs, standard sections)
+         - Build agents: practitioner-focused (action-first, code examples)
+         - Improve agents: evidence-grounded (timestamped, git-backed claims)
+    examples:
+      - file: agents/experts/knowledge/knowledge-question-agent.md
+        frontmatter: "output-style: concise-reference"
+        instructions: "**Output Style:** Follow .claude/output-styles/concise-reference.md conventions"
+    benefits:
+      - Consistent output across similar agent types
+      - Easier maintenance (update style file, all agents adapt)
+      - Clear expectations for agent behavior
+    timestamp: 2026-01-21
 
   configure_settings:
     when: Configuring permissions, hooks, or project behavior
@@ -173,17 +195,22 @@ patterns:
     structure: |
       .claude/agents/experts/<domain>/
       ├── expertise.yaml (400-600 lines target, 1000 max)
-      ├── <domain>-plan-agent.md (yellow, Read/Glob/Grep/Write)
-      ├── <domain>-build-agent.md (green, Read/Write/Edit/Glob/Grep, +Bash for ops)
-      ├── <domain>-improve-agent.md (purple, all + Bash for git analysis)
-      └── <domain>-question-agent.md (cyan, Read/Glob/Grep, haiku model)
+      ├── <domain>-plan-agent.md (yellow, Read/Glob/Grep/Write, academic-structured output)
+      ├── <domain>-build-agent.md (green, Read/Write/Edit/Glob/Grep, +Bash for ops, practitioner-focused output)
+      ├── <domain>-improve-agent.md (purple, all + Bash for git analysis, evidence-grounded output)
+      └── <domain>-question-agent.md (cyan, Read/Glob/Grep, haiku model, concise-reference output)
     color_coding:
       plan: yellow (analysis, planning)
       build: green (creation, implementation)
       improve: purple (review, expertise evolution)
       question: cyan (meta, read-only Q&A)
+    output_style_defaults:
+      plan: academic-structured (rigorous specs, standard sections)
+      build: practitioner-focused (action-first, code examples)
+      improve: evidence-grounded (timestamped learnings, git-backed claims)
+      question: concise-reference (scannable Q&A, tables/bullets)
     trade_offs:
-      pros: [Plan→build→improve lifecycle with approval gates, Color-coded roles, Expertise evolves via git analysis]
+      pros: [Plan→build→improve lifecycle with approval gates, Color-coded roles, Consistent output styles, Expertise evolves via git analysis]
       cons: [5 files vs 3 (old pattern), More complexity than standalone agents]
 
   skill_as_workflow_template:
@@ -234,6 +261,7 @@ best_practices:
     - Skills: .claude/skills/ as workflow templates (NOT agents)
     - Specs: .claude/.cache/specs/ (gitignored ephemeral)
     - Expertise.yaml: 400-600 lines target, 1000 hard limit
+    - Output styles: .claude/output-styles/ as reusable formatting conventions
 
   commands:
     - Naming: category:command pattern (/book:toc)
@@ -243,8 +271,11 @@ best_practices:
 
   expert_domains:
     - Standardized color coding (yellow/green/purple/cyan)
-    - Question agents: haiku model, read-only tools
-    - Improve agents: Bash for git history analysis
+    - Standardized output styles (concise-reference/academic-structured/practitioner-focused/evidence-grounded)
+    - Question agents: haiku model, read-only tools, concise-reference output
+    - Plan agents: academic-structured output for rigorous specs
+    - Build agents: practitioner-focused output for action-first guidance
+    - Improve agents: Bash for git history analysis, evidence-grounded output with timestamps
     - Absorb standalone agents >300 lines into expert domains
     - CRITICAL: Never use colons in description field (breaks agent discovery)
 
@@ -308,8 +339,24 @@ stability:
   convergence_indicators:
     insight_rate_trend: decreasing
     contradiction_count: 0
-    last_reviewed: 2026-01-17
+    new_patterns_added_this_cycle: 1
+    patterns_updated_this_cycle: 3
+    last_reviewed: 2026-01-21
+    utility_ratio: 1.0
     notes: |
-      Domain reached critical stability - frontmatter colon bug discovered and resolved.
-      Major architectural patterns converged (flat orchestration, 4-agent pattern).
-      Insight rate declining as fundamental patterns stabilize.
+      Cycle 2026-01-21: Output style integration pattern added.
+
+      Added: configure_agent_output_style key operation (standardizes agent formatting)
+      Updated: create_expert_domain (now includes output-style in agent creation steps)
+      Updated: expert_domain_4agent pattern (added output_style_defaults section)
+      Updated: best_practices expert_domains (added output style guidelines)
+
+      Pattern significance: Output styles enable consistent formatting across similar
+      agent types (all question agents use concise-reference, all plan agents use
+      academic-structured, etc.). Enhances predictability and maintainability.
+
+      File health: 368 lines (was 315), +53 lines for output style pattern.
+      Still well below 900 warning threshold (532 lines of headroom).
+
+      Domain stability remains high - this is refinement of existing 4-agent pattern,
+      not architectural change. Insight rate remains low (1 pattern per cycle).

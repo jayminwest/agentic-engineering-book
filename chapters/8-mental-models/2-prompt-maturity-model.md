@@ -2,7 +2,7 @@
 title: Prompt Maturity Model
 description: Seven levels of prompt sophistication from static to meta-cognitive
 created: 2025-12-08
-last_updated: 2025-12-10
+last_updated: 2026-01-21
 tags: [prompts, mental-models, maturity]
 part: 3
 part_title: Perspectives
@@ -107,7 +107,7 @@ Else:
 
 **When to use it**: For workflows that combine several distinct steps, or meta-commands that coordinate other commands.
 
-**Example**: Planning Council pattern from TAC examples, or workflow commands that call research, implement, and review commands in sequence.
+**Example**: This book's `/do` command orchestration (`.claude/commands/do.md`) demonstrates higher-order coordination by classifying user requirements and routing to appropriate expert domains. Workflow commands that call research, implement, and review commands in sequence also fit this level.
 
 ```markdown
 # feature-workflow.md

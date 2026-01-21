@@ -2,7 +2,7 @@
 title: Patterns
 description: Recurring architectures and approaches for building agentic systems
 created: 2025-12-08
-last_updated: 2025-12-10
+last_updated: 2026-01-21
 tags: [patterns, architecture]
 part: 2
 part_title: Craft
@@ -24,6 +24,7 @@ Patterns are solutions that keep showing up. They're not prescriptions—they're
 | [Plan-Build-Review](1-plan-build-review.md) | Complex domains with accumulating expertise | Learning vs. simplicity |
 | [Self-Improving Experts](2-self-improving-experts.md) | Commands that learn from production experience | Maintenance overhead vs. continuous improvement |
 | [Orchestrator](3-orchestrator-pattern.md) | Multi-agent coordination with parallel experts | Power vs. complexity overhead |
+| [Autonomous Loops](4-autonomous-loops.md) | Mechanical tasks with clear completion criteria | Iteration resilience vs. token cost |
 | [Progressive Disclosure](../4-context/_index.md#progressive-disclosure-pattern) | Large knowledge bases with tight context budgets | Slight latency vs. dramatic capacity gains |
 | ReAct Loop | General-purpose reasoning + action | Flexibility vs. efficiency |
 | Human-in-the-Loop | High-stakes, uncertain, or preference-sensitive | Safety vs. autonomy |

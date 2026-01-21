@@ -2,7 +2,7 @@
 title: Orchestrator Pattern
 description: Hub-and-spoke coordination of specialized sub-agents in a single workflow
 created: 2025-12-08
-last_updated: 2025-12-10
+last_updated: 2026-01-21
 tags: [patterns, multi-agent, orchestration, coordination, tool-restriction]
 part: 2
 part_title: Craft
@@ -273,7 +273,7 @@ Tool restriction is only half the pattern. **Scope restriction** achieves the sa
 - **One domain per expert**: Security expert doesn't comment on testing, even though it *could*
 - **Orchestrator as spec writer**: Primary job becomes packaging comprehensive context, not doing work
 
-From the TAC example:
+A common pattern in multi-agent systems:
 > "Never guess or assume context: Each build-agent needs comprehensive instructions as if they are new engineers"
 
 This forces the orchestrator to be explicit about what each subagent needs, keeping each agent's context minimal and focused.

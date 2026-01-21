@@ -19,6 +19,5 @@ Supplementary materials that support the main chapters.
 
 - **[Examples](examples/_index.md)** - Real configurations and patterns from actual projects
   - KotaDB - Database project patterns
-  - TAC - Multi-agent orchestration examples
   - Context Loading Demo - Basic tool use and context management
   - Orchestrator - Pattern coordination examples

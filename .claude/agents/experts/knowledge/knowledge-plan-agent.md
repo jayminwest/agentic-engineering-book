@@ -240,6 +240,14 @@ This format is more scannable than prose paragraphs and more compact than subsec
 
 This prevents propagation of false technical assertions that require large-scale corrections later.
 
+*[2026-01-21]*: Large-scale content removal pattern observed in commit 6dd8246. When removing substantial content (examples, private configs), coordinate updates across:
+1. Commit message clarity - indicate scope and reason (e.g., "remove private examples for open-source release")
+2. Documentation synchronization - update CLAUDE.md if directory structure changes
+3. Cross-reference integrity - update links in chapters/ to remaining examples
+4. Index file updates - reflect removal in appendices/_index.md or other navigation
+
+This prevents broken links and outdated references after large deletions. Commit 6dd8246 removed 22,400 lines across 138 files cleanly by following this pattern.
+
 | If the insight relates to... | Store in... | Entry type |
 |------------------------------|-------------|------------|
 | The four pillars overview, leverage points | `chapters/1-foundations/` | Extend existing or new section file |

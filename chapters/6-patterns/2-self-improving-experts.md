@@ -2,7 +2,7 @@
 title: Self-Improving Expert Commands
 description: The Plan-Build-Improve pattern for creating commands that learn from experience
 created: 2025-12-08
-last_updated: 2025-12-26
+last_updated: 2026-01-21
 tags: [patterns, meta-prompting, self-improvement]
 part: 2
 part_title: Craft
@@ -303,11 +303,6 @@ Domain-specific experts for the KotaDB project, each accumulating knowledge abou
 - Environment-specific configuration resolution
 - Anti-patterns discovered through debugging
 
-### TAC Meta-Prompt Expert
-`appendices/examples/TAC/agentic-prompt-engineering/.claude/commands/experts/`
-
-Experts for developing agentic systems, with accumulated patterns for prompt engineering and agent design.
-
 ### Questions Workflow Expert
 `.claude/agents/experts/questions/`
 
@@ -557,87 +552,76 @@ The key insight: what appears as a single "Improve" command at the user interfac
 
 ## Expertise-as-Mental-Model Variant
 
-*[2025-12-25]*: An investigation of the TAC agent-experts codebase revealed a variant of this pattern that treats expertise as a **queryable mental model** rather than embedded prompt sections. Key differences:
+*[2025-12-25]*: Experience with large-scale agent systems revealed a variant of this pattern that treats expertise as a **queryable mental model** rather than embedded prompt sections. This book's own `.claude/agents/experts/` implementation demonstrates this approach. Key differences:
 
 ### Structure
 
-Instead of expertise embedded in command files, a separate `expertise.yaml` (400-700 lines) contains all domain knowledge:
+Instead of expertise embedded in command files, a separate `expertise.yaml` (500-700 lines) contains all domain knowledge. This book uses this structure for all 11 expert domains:
 
 ```
-commands/experts/<domain>/
-├── expertise.yaml         # Complete knowledge base in YAML
-├── question.md            # Read-only Q&A interface
-├── plan.md                # Higher Order Prompt wrapper
-├── plan_build_improve.md  # Multi-step orchestration
-└── self-improve.md        # Expertise validation
+.claude/agents/experts/<domain>/
+├── expertise.yaml              # Complete knowledge base in YAML
+├── <domain>-question-agent.md  # Read-only Q&A interface
+├── <domain>-plan-agent.md      # Specification creation
+├── <domain>-build-agent.md     # Implementation from specs
+└── <domain>-improve-agent.md   # Expertise validation and updates
 ```
 
 ### Expertise YAML Format
 
 Structured YAML with consistent sections:
-- `overview` - System description and rationale
-- `core_implementation` - File paths with line numbers
-- `key_operations` - 40+ functions documented
-- `schema_structure` or `event_types` - Domain-specific structures
-- `configuration` - Environment variables, settings
-- `best_practices` - Proven patterns
-- `known_issues` - Current limitations
-- `potential_enhancements` - Roadmap items
+- `overview` - Domain scope and rationale
+- `core_implementation` - Key files and conventions
+- `key_operations` - Domain-specific operations documented
+- `decision_trees` - Choice frameworks with observed usage
+- `patterns` - High-level workflows with trade-offs
+- `safety_protocols` - Immutable safety rules
+- `best_practices` - Evolving guidance (mutable)
+- `known_issues` - Current limitations (mutable)
+- `potential_enhancements` - Roadmap items (mutable)
 
-### Question Command Pattern
+### Question Agent Pattern
 
 A read-only interface for querying expertise without code changes:
 1. Read expertise.yaml
-2. Validate expertise against codebase
+2. Locate relevant sections based on question
 3. Answer with evidence from expertise + code references
-4. Include diagrams (mermaid) or code snippets
+4. Provide context on pattern rationale and pitfalls
 
-Tool restrictions: `allowed-tools: Bash, Read, Grep, Glob, TodoWrite` (no write access)
+Tool restrictions: `Read, Glob, Grep` only (no write access)
 
-### Higher Order Prompts (HOP)
+Model: `haiku` for fast, cost-effective queries
 
-Wrapper commands that inject domain context before delegating:
+### Self-Improvement with Constraints
 
-```markdown
-# Plan with WebSocket Expertise
-
-1. Load expertise context:
-   - Read expertise.yaml
-   - Read critical implementation files
-
-2. Execute `/plan` with USER_REQUEST as argument
-```
-
-This ensures domain expertise informs planning without duplicating the plan command's logic.
-
-### Self-Improvement with Line Limits
-
-The self-improve command enforces constraints that prevent expertise bloat:
-- **1000-line limit** with iterative trimming when exceeded
-- **YAML syntax validation** after every update
-- **Git diff checking** to focus on recent changes
-- **Focus area parameter** for targeted validation
+The improve-agent enforces constraints that prevent expertise bloat:
+- **PRESERVE/APPEND/DATE/REMOVE rules** for controlled updates
+- **Git history analysis** to focus on recent changes
+- **Timestamp tracking** for all new entries
+- **Mutable vs stable section** distinction
 
 ### Mental Model Philosophy
 
-The key insight: treat expertise files as **updatable mental models**, not static documentation. The quote from their implementation:
+The key insight: treat expertise files as **updatable mental models**, not static documentation. A common pattern:
 
 > "Think of the expertise file as your mental model and memory reference for all [domain]-related functionality"
 
-This reframes the improve workflow from "updating documentation" to "validating and correcting your understanding."
+This reframes the improve workflow from "updating documentation" to "validating and correcting understanding."
 
 ### When to Use This Variant
 
 **Prefer expertise.yaml when:**
 - Expertise exceeds 100 lines (too large to embed in prompts)
-- Multiple commands need the same expertise (question, plan, build)
-- You want queryable interfaces (question command)
-- Domain has many operations worth documenting (40+ functions)
+- Multiple agents need the same expertise (question, plan, build)
+- Queryable interfaces are valuable (question agent)
+- Domain has many operations worth documenting (15+ operations)
 
 **Stick with embedded expertise when:**
 - Expertise is compact (<100 lines)
 - Single command uses the expertise
 - Overhead of separate file not justified
+
+**Example**: This book's github expert domain (`.claude/agents/experts/github/`) demonstrates the full pattern with 550-line expertise.yaml covering commit conventions, branch workflows, PR structure, and safety protocols.
 
 ---
 

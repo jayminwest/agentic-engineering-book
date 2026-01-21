@@ -248,6 +248,15 @@ ReAct loops might work better if you possibly try to separate...
 # Example from knowledge-evolution.md
 **Knowledge bases are gardens, not databases.** Effective knowledge management requires pruning, transplanting, and sometimes letting things go fallow.
 
+*[2026-01-17]*: Mental model taxonomy structure pattern observed in execution-topologies.md (415 lines). For technical framework mental models, follow consistent template for each taxonomy element:
+- Definition (what this element is)
+- ASCII diagram (visual representation)
+- Book Mapping: [Pattern Name](../path.md) with context explaining connection
+- When to Use: Bulleted criteria for selecting this element
+- Measurement Indicators: Observable metrics for assessing effectiveness
+
+This structure enables practitioners to: understand concept, classify situation, apply patterns, measure results. Example: chapters/8-mental-models/5-execution-topologies.md covers 5 topologies (parallel, sequential, synthesis, nested, persistent) with identical subsection structure.
+
 # Example from prompt-structuring.md
 **Design prompts output-first.** Before writing any instructions, define exactly what output format is acceptable.
 ```
@@ -277,6 +286,28 @@ Actionable recommendations for each approach.
 This grounds abstract pattern discussion in real code readers can examine. The comparison table crystallizes trade-offs at a glance.
 
 *[2025-12-26]*: Pattern variant documentation observed in chapters/6-patterns/2-self-improving-experts.md - when a pattern has multiple implementation approaches, document variants as timestamped inline sections rather than separate files. Structure: establish base pattern fully, then add "## Pattern-Name Variant" sections with "*[YYYY-MM-DD]*: An investigation of X revealed..." This keeps related patterns together while clearly distinguishing approaches. See lines 569-655 for "Expertise-as-Mental-Model Variant" example.
+
+*[2026-01-17]*: Operational threshold documentation pattern from context percentage monitoring section (commit d69ef22). When documenting features with operational thresholds, structure as:
+1. Threshold Table: Range | Signal | Recommended Action (concrete breakpoints, not vague "high/low")
+2. Decision Framework: Step-by-step guide translating thresholds into workflow
+3. Integration: Cross-reference to related existing patterns
+4. Trade-offs: When to adjust defaults based on use case
+
+This removes ambiguity from "when should I X?" questions. Example: chapters/4-context/2-context-strategies.md lines 123-150 show 5 threshold ranges (0-30%, 30-60%, 60-80%, 80-95%, 95%+) with corresponding actions, followed by 4-step decision framework.
+
+*[2026-01-17]*: External changelog integration pattern from commit d69ef22. When external tool releases features, sync to book via:
+1. Research Phase: Analyze changelog delta (versions since last sync)
+2. Impact Mapping: Map features to affected chapters
+3. Integration: Add timestamped sections to relevant chapters with format:
+   - Section header describing feature
+   - Timestamp matching release (*[YYYY-MM-DD]*)
+   - Feature description with operational context
+   - Configuration examples when applicable
+   - Trade-offs table showing when to use/avoid
+   - Cross-references to related book sections
+4. Evidence: Cite changelog version numbers and official docs
+
+Commit d69ef22 synced Claude Code 2.1.5-2.1.9, adding 610 lines across 5 chapters.
 
 ### Inline Addition Patterns
 

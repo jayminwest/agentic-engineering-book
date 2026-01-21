@@ -66,7 +66,6 @@ Building working agent systems with prompts, tools, and workflows.
 - **Level 1**: [Context Loading Demo](appendices/examples/context-loading-demo/) - Basic tool use and prompting
 - **Level 2**: [KotaDB](appendices/examples/kotadb/) - Multi-step workflow with tools
 - **Level 3**: [KotaDB](appendices/examples/kotadb/) - Multi-agent orchestration
-- **Level 4**: [TAC](appendices/examples/TAC/) - Meta-framework for agent coordination
 
 ### Progression Guide
 
@@ -118,7 +117,6 @@ Architecting multi-agent workflows and selecting appropriate patterns.
 - **Level 1**: Basic single-agent examples in [Context Loading Demo](appendices/examples/context-loading-demo/)
 - **Level 2**: Workflow design in [KotaDB](appendices/examples/kotadb/)
 - **Level 3**: Multi-agent architecture in [KotaDB](appendices/examples/kotadb/)
-- **Level 4**: Meta-framework design in [TAC](appendices/examples/TAC/)
 
 ### Progression Guide
 
@@ -170,7 +168,6 @@ Identifying and fixing failures across the four pillars.
 - **Level 1**: Basic debugging in [Context Loading Demo](appendices/examples/context-loading-demo/)
 - **Level 2**: Workflow debugging in [KotaDB](appendices/examples/kotadb/)
 - **Level 3**: Multi-agent debugging in [KotaDB](appendices/examples/kotadb/)
-- **Level 4**: Novel debugging approaches in [TAC](appendices/examples/TAC/)
 
 ### Progression Guide
 
@@ -222,7 +219,6 @@ Running agents reliably at scale with cost and quality constraints.
 - **Level 1**: Basic cost estimation using examples
 - **Level 2**: Production deployment patterns in [KotaDB](appendices/examples/kotadb/)
 - **Level 3**: Scale operations in [KotaDB](appendices/examples/kotadb/)
-- **Level 4**: Extreme scale in [TAC](appendices/examples/TAC/)
 
 ### Progression Guide
 
@@ -274,7 +270,6 @@ Meta-framework design, pattern extraction, and knowledge evolution.
 - **Level 1**: Mental model application in basic examples
 - **Level 2**: Pattern extraction from [KotaDB](appendices/examples/kotadb/)
 - **Level 3**: Framework design in [KotaDB](appendices/examples/kotadb/)
-- **Level 4**: Meta-framework thinking in [TAC](appendices/examples/TAC/)
 
 ### Progression Guide
 
@@ -551,7 +546,6 @@ This table shows which dimensions each chapter primarily addresses:
 |---------|-----------|---------------|-------|------------|-----------|
 | [Context Loading Demo](appendices/examples/context-loading-demo/) | L1 | L1 | L1 | L1 | L1 |
 | [KotaDB](appendices/examples/kotadb/) | L2-L3 | L2-L3 | L2-L3 | L2-L3 | L2-L3 |
-| [TAC](appendices/examples/TAC/) | L4 | L4 | L4 | L4 | L4 |
 
 ### Learning Path by Target Level
 
@@ -613,7 +607,6 @@ This table shows which dimensions each chapter primarily addresses:
 
 **Practice:**
 - Create novel patterns
-- Study [TAC](appendices/examples/TAC/) meta-framework
 - Build frameworks for multiple domains
 - Mentor others
 - Contribute to field knowledge
@@ -729,7 +722,7 @@ This table shows which dimensions each chapter primarily addresses:
 1. Choose one dimension to push to Level 3
 2. Take on a challenging project requiring deep expertise
 3. Study advanced chapters: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md)
-4. Analyze [KotaDB](appendices/examples/kotadb/) or [TAC](appendices/examples/TAC/) deeply
+4. Analyze [KotaDB](appendices/examples/kotadb/) deeply
 5. Mentor someone to force articulation of deep knowledge
 
 **Diagnostic Questions:**

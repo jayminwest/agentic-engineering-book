@@ -441,7 +441,6 @@ Implement the same agent functionality on two platforms (e.g., Claude Code + Goo
 **Core Reading:**
 - [Context as Code](chapters/8-mental-models/4-context-as-code.md) (30 min)
 - [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) (45 min)
-- [TAC Example](appendices/examples/TAC/) (60-90 min deep study)
 
 **Key Competencies:**
 - Design frameworks that support multiple agent architectures
@@ -451,14 +450,14 @@ Implement the same agent functionality on two platforms (e.g., Claude Code + Goo
 
 **Deep Dive Exercise:**
 
-Study the TAC (The Agentic Cookbook) meta-framework:
-1. How does it separate concerns (coordinator, expert, specialist)?
-2. What makes it reusable across different domains?
-3. How does knowledge accumulate and evolve?
-4. Where does it trade complexity for power?
-5. What would you design differently?
+Design your own meta-framework for a specific domain:
+1. How will you separate concerns across agents?
+2. What makes it reusable across different problem types?
+3. How will knowledge accumulate and evolve?
+4. Where will you trade complexity for power?
+5. What constraints will guide correct usage?
 
-Document insights and design your own meta-framework for a specific domain.
+Document insights and iterate based on implementation experience.
 
 ### Stage 4: Mastery Validation
 
@@ -520,7 +519,7 @@ Navigate directly to solutions for specific issues you're facing right now.
 | Agent ignores instructions | [Prompt Types](chapters/2-prompt/1-prompt-types.md) - Check prompt level/authority | [Debugging Agents](chapters/7-practices/1-debugging-agents.md) | [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) |
 | Agent uses wrong tools | [Tool Selection](chapters/5-tool-use/2-tool-selection.md) - Review tool descriptions | [Tool Design](chapters/5-tool-use/1-tool-design.md) | [KotaDB](appendices/examples/kotadb/) |
 | Agent repeats same failed action | [Evaluation](chapters/7-practices/2-evaluation.md) - Add failure detection | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | [Context Loading Demo](appendices/examples/context-loading-demo/) |
-| Agent loses track of task progress | [Context Strategies](chapters/4-context/2-context-strategies.md) - Implement explicit state | [Workflow Coordination](chapters/7-practices/5-workflow-coordination.md) | [TAC](appendices/examples/TAC/) |
+| Agent loses track of task progress | [Context Strategies](chapters/4-context/2-context-strategies.md) - Implement explicit state | [Workflow Coordination](chapters/7-practices/5-workflow-coordination.md) | - |
 | Agent gives inconsistent outputs | [Model Selection](chapters/3-model/1-model-selection.md) - Check model vs. task fit | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | - |
 | Agent can't find relevant information | [Context Fundamentals](chapters/4-context/1-context-fundamentals.md) - Improve information structure | [Context Patterns](chapters/4-context/3-context-patterns.md) | - |
 | Multi-agent coordination failures | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) - Review delegation | [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md) | [KotaDB](appendices/examples/kotadb/) |
@@ -540,12 +539,12 @@ Navigate directly to solutions for specific issues you're facing right now.
 
 | Question | Check | Deep Dive | Example |
 |----------|-------|-----------|---------|
-| Should I use one agent or multiple? | [Patterns](chapters/6-patterns/_index.md) - Review pattern catalog | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) | [TAC](appendices/examples/TAC/) |
+| Should I use one agent or multiple? | [Patterns](chapters/6-patterns/_index.md) - Review pattern catalog | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) | - |
 | How do I structure prompts? | [Prompt Types](chapters/2-prompt/1-prompt-types.md) | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) |
 | Which model should I use? | [Model Selection](chapters/3-model/1-model-selection.md) | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) | - |
 | How should agents share information? | [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md) | [Context Patterns](chapters/4-context/3-context-patterns.md) | [KotaDB](appendices/examples/kotadb/) |
 | What tools should my agent have? | [Tool Design](chapters/5-tool-use/1-tool-design.md) | [Scaling Tools](chapters/5-tool-use/4-scaling-tools.md) | - |
-| How do I make agents learn from experience? | [Self-Improving Experts](chapters/6-patterns/2-self-improving-experts.md) | [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) | [TAC](appendices/examples/TAC/) |
+| How do I make agents learn from experience? | [Self-Improving Experts](chapters/6-patterns/2-self-improving-experts.md) | [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) | - |
 | When should I add human oversight? | [Patterns](chapters/6-patterns/_index.md) - Human-in-the-Loop | [Production Concerns](chapters/7-practices/4-production-concerns.md) | - |
 | How do I prevent agent mistakes? | [Pit of Success](chapters/8-mental-models/1-pit-of-success.md) | [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md) | - |
 
@@ -565,7 +564,7 @@ Navigate directly to solutions for specific issues you're facing right now.
 |---------------|----------------|-----------------|----------|
 | Claude Code | [Claude Code Overview](chapters/9-practitioner-toolkit/1-claude-code.md) | [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md) | [Context Loading Demo](appendices/examples/context-loading-demo/) |
 | Google ADK | [Google ADK Overview](chapters/9-practitioner-toolkit/2-google-adk.md) | [Multi-Model Architectures](chapters/3-model/4-multi-model-architectures.md) | - |
-| Custom Agents | [Foundations](chapters/1-foundations/_index.md) | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) | [TAC](appendices/examples/TAC/) |
+| Custom Agents | [Foundations](chapters/1-foundations/_index.md) | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) | - |
 
 ---
 
@@ -772,8 +771,6 @@ Use chapters as reference material:
 **Key Sections:**
 - [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) (45 min)
 - [Google ADK](chapters/9-practitioner-toolkit/2-google-adk.md) (45 min)
-
-**Recommended Example:** [TAC](appendices/examples/TAC/) - Meta-framework design
 
 **Exercise:** Build the same agent on two platforms. Document platform-specific optimizations and portability challenges.
 

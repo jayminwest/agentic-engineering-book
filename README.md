@@ -1,5 +1,9 @@
 # Agentic Engineering: The Book
 
+> [!CAUTION]
+> **This book is maintained by LLMs using the techniques described within.**
+> Content is written and updated by Claude using agentic workflows, slash commands, and self-improving expert agents. Human review ensures accuracy, but the authoring process itself is an exercise in agentic engineering.
+
 A practical guide to building agentic systems—covering prompts, models, context, and tooling. Written from hands-on experience, not abstractions.
 
 ## Structure
@@ -36,6 +40,10 @@ This book includes Claude Code slash commands for content maintenance:
 - All content is markdown with YAML frontmatter
 - Files prefixed with `_` are chapter/section indexes
 - Ordering controlled by `order` field in frontmatter (e.g., `1.2.0`)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. This book is developed through the [Agentic Engineering Skool community](https://www.skool.com/agentic-engineering).
 
 ## Author
 

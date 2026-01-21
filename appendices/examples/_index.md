@@ -23,7 +23,6 @@ Examples organized by project:
 - `context-loading-demo/` - Basic context management and tool use patterns
 - `kotadb/` - KotaDB database project examples (Level 2-3 patterns)
 - `orchestrator/` - Orchestration pattern examples
-- `TAC/` - TAC meta-framework examples (Level 4 patterns)
 
 ## Using These Examples
 

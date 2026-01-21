@@ -809,6 +809,48 @@ recent_content_learnings:
         lines: "123-150"
         note: Threshold table + decision framework for context percentage monitoring
 
+  large_scale_content_removal_pattern:
+    name: Large-Scale Content Removal Pattern
+    context: Pattern from commit 6dd8246 (remove private examples for open-source release)
+    timestamp: 2026-01-21
+    pattern_observed: |
+      When removing large amounts of content (example directories, private configs):
+
+      1. **Commit Clarity:** Use clear commit messages indicating scope
+         - "chore: remove private examples for open-source release"
+         - Helps future archaeology understand why content disappeared
+
+      2. **Preserve Public References:** Update appendices/_index.md to reflect removal
+         - Don't leave broken links or outdated directory references
+         - Update example counts in documentation
+
+      3. **Book Structure Impact:** Large removals affect narrative flow
+         - Check if chapters reference removed examples
+         - Update cross-references to point to remaining examples
+         - Consider whether sections need rewriting after example removal
+
+      4. **Documentation Synchronization:** Update CLAUDE.md if structure changes
+         - Example directories listed in CLAUDE.md must match filesystem
+         - Update example counts in appendices section
+
+      This pattern applies when preparing content for open-source release,
+      removing deprecated examples, or archiving outdated implementations.
+    evidence: |
+      Commit 6dd8246 removed ~22,000 lines:
+      - appendices/examples/TAC/ (agentic-prompt-engineering, multi-agent-orchestration)
+      - appendices/examples/context-loading-demo/
+      - appendices/examples/kota/
+      - appendices/examples/orchestrator/
+
+      Affected 138 files with coordinated updates to:
+      - appendices/examples/_index.md (updated to reflect removal)
+      - Cross-references in chapters/ (updated to remaining examples)
+
+      No broken internal links after removal (verified via git grep).
+    real_examples:
+      - location: commit 6dd8246
+        note: "Removed 22,400 lines across 138 files cleanly"
+
 stability:
   oscillation_detection:
     rule: |
@@ -821,20 +863,19 @@ stability:
     detected_oscillations: []
 
   convergence_indicators:
-    insight_rate_trend: "Active - new content patterns from changelog integration and mental models"
-    new_entries_this_cycle: 3  # mental_model_entry_structure, changelog_integration_pattern, operational_threshold_documentation
+    insight_rate_trend: "Active - content removal patterns and observability paradigms"
+    new_entries_this_cycle: 1  # large_scale_content_removal_pattern
     contradiction_count: 0
-    last_reviewed: 2026-01-17
+    last_reviewed: 2026-01-21
     notes: |
-      Knowledge domain shows active learning from recent commits:
-      - 610 lines of changelog-driven content added across 5 chapters (commit d69ef22)
-      - New mental model entry (execution-topologies.md, 415 lines) established framework pattern
-      - Operational threshold documentation pattern emerged from context monitoring section
-      - Size governance healthy: 729 lines (well below 900-line warning threshold)
+      Knowledge domain continues active learning from recent commits:
+      - Large-scale content removal pattern (commit 6dd8246: 22,400 lines removed)
+      - Previous cycle: changelog integration, mental models, operational thresholds
+      - Size governance healthy: 870 lines (below 900-line warning threshold)
 
-      Patterns extracted:
-      1. Mental model taxonomy structure (consistent subsection templates)
-      2. External changelog integration workflow (research → map → integrate)
-      3. Operational threshold tables + decision frameworks (remove ambiguity)
+      Recent patterns focus on operational concerns:
+      1. Managing large-scale content removal cleanly
+      2. Maintaining documentation consistency after structural changes
+      3. Cross-reference integrity during deletions
 
-      Domain remains stable with headroom for growth. Comprehensive coverage maintained.
+      Domain remains stable with headroom for growth. No contradictions detected.
