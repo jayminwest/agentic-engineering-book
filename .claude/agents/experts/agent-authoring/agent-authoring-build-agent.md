@@ -109,6 +109,8 @@ You are an Agent Authoring Expert specializing in implementing agent configurati
 
 *[2025-12-27]*: Build agents for dual-file ownership must coordinate atomic updates across tightly-coupled files. Pattern from curriculum-build-agent: (1) validate cross-file references before saving, (2) update both files in single operation when changes affect coupling, (3) confirm all bidirectional links resolve correctly. Example: adding chapter to CURRICULUM.md learning path requires updating RUBRIC.md competency mappings simultaneously.
 
+*[2026-02-02]*: Expert Swarm Pattern coordination (commits 9fa2447, a1d5942). When creating swarm worker agents, use canonical prompt structure: ROLE (narrow focus) | CONTEXT (EXPERTISE_PATH, TEAM, LEADER) | TASK (specific subtask) | CONSTRAINTS (tools, reporting) | OUTPUT FORMAT (Status/Files/Summary). Workers receive expertise path (not content), load themselves, execute one focused task. Anti-patterns: meta-commentary ("Based on..."), negative constraints ("Never..."), vague instructions ("Be thorough"). Workers get Read/Write/Edit/Glob/Grep/SendMessage but NO Task (no sub-spawning). See .claude/commands/do-swarm.md for templates.
+
 ## Workflow
 
 1. **Load Specification**

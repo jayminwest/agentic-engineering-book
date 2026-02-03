@@ -89,6 +89,39 @@ key_operations:
         instead: "No colons in description, argument-hint, or any YAML value"
         reason: "Colons break YAML parsing in Claude Code's configuration system. Affects ALL frontmatter, not just agents. [2026-01-17]"
 
+  create_command_with_orchestrator_agent:
+    when: Command needs complex coordination beyond single agent capability
+    pattern: DEPRECATED - Command + Orchestrator Agent Pairing NO LONGER WORKS
+    architecture_issue: |
+      CRITICAL CONSTRAINT [2026-02-02]:
+      Subagents spawned via Task tool CANNOT use Task/TeammateTool to spawn nested agents.
+      This breaks the "command delegates to orchestrator agent" pattern entirely.
+
+      If orchestrator is a subagent, it cannot spawn teams. Architecture is fundamentally broken.
+    correct_pattern: |
+      For complex orchestration (especially TeammateTool):
+      1. Create comprehensive slash command (.claude/commands/<category>/<name>.md)
+         - Contains ALL orchestration logic (6 phases: init, classify, spawn, coordinate, wait, report)
+         - Frontmatter: allowed-tools includes TeammateTool, SendMessage, Task, etc.
+         - 500-700 lines typical for full swarm orchestration
+         - No delegation to orchestrator agent (orchestration happens at command level)
+      2. No separate orchestrator agent needed or wanted
+      3. Update CLAUDE.md with command documentation
+    examples:
+      - .claude/commands/do.md - 600+ lines, orchestrates plan→build→improve directly
+      - .claude/commands/do-swarm.md - 650+ lines, orchestrates swarm coordination directly
+    rationale: |
+      - TeammateTool operations MUST happen at command level
+      - Delegation adds broken indirection layer (subagent can't spawn)
+      - Single source of truth for orchestration logic
+      - Mirrors Task tool constraint (same limitation)
+    benefits:
+      - Actually works (subagents can't spawn, commands can)
+      - No broken delegation layer
+      - Clear single source of truth
+      - Comprehensive documentation in one file
+    timestamp: "[2026-02-02] Pattern deprecated after discovering Task/TeammateTool spawning constraints"
+
   implement_hook:
     when: Need to run code on agent lifecycle events
     events: [SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, SubagentStop, PreCompact, Stop]
@@ -179,6 +212,25 @@ decision_trees:
         then: Skill (.claude/skills/) - NOT an agent
       - if: Domain expertise with plan/build/improve/question
         then: Expert domain (.claude/agents/experts/<domain>/)
+      - if: Command needs complex coordination (messaging, parallel, patterns)
+        then: Command + Orchestrator Agent pair (do-swarm pattern)
+
+  simple_vs_orchestrator_command:
+    question: Is this a simple command or does it need orchestration?
+    options:
+      - if: Single sequential task, deterministic workflow
+        then: Simple command (command file only)
+        example: "/book:toc - regenerate table of contents"
+      - if: Complex coordination, multi-pattern support, rich messaging
+        then: Command + Orchestrator Agent pairing
+        example: "/do-swarm - parallel coordination with leader-worker/council/pipeline patterns"
+      - reasoning: |
+          Orchestrator agents enable:
+          - Multiple coordination patterns (lead-worker, council, pipeline)
+          - Inter-agent messaging (Write/Broadcast)
+          - Selective waiting strategies
+          - Complex error handling per pattern
+          - Future extensibility without command bloat
 
   expert_location:
     question: Where to put expert files?
@@ -212,6 +264,100 @@ patterns:
     trade_offs:
       pros: [Plan→build→improve lifecycle with approval gates, Color-coded roles, Consistent output styles, Expertise evolves via git analysis]
       cons: [5 files vs 3 (old pattern), More complexity than standalone agents]
+
+  expertise_path_protocol:
+    purpose: Pass domain expertise to spawned agents without context bloat
+    pattern: |
+      All agents spawned via TeammateTool receive EXPERTISE_PATH parameter:
+      EXPERTISE_PATH=/absolute/path/to/.claude/agents/experts/{domain}/expertise.yaml
+
+      Agents read this file at runtime to:
+      - Understand domain conventions
+      - Apply relevant patterns
+      - Reference historical learnings
+      - Access decision trees and best practices
+    rationale: |
+      Expertise.yaml files are 400-600 lines (sometimes 1000+). Embedding in
+      spawned agent prompts causes context bloat and token waste. File path
+      reference is more efficient: agents load only what they need for their task.
+
+      Lead agents read full expertise.yaml. Worker agents read task-specific
+      sections. Question agents reference for answering domain queries.
+    implementation: |
+      1. When spawning agent via TeammateTool, include in prompt:
+         EXPERTISE_PATH: {absolute_path}
+      2. Agent reads file early in execution
+      3. Agent extracts relevant patterns for current task
+      4. Worker agents: focus on sections matching subtask
+      5. Lead agents: full context to coordinate workers
+    scale_benefits:
+      - Supports large expertise files (1000 lines)
+      - Keeps spawned agent prompts compact
+      - Expertise evolves independently (agents pick up changes on spawn)
+      - Multiple workers read same file without duplication
+    timestamp: "[2026-02-02] Discovered in /do-swarm orchestrator pattern"
+
+  learning_separation_principle:
+    purpose: Decouple swarm execution from expertise learning
+    principle: |
+      Swarm agents execute tasks. Improve agents learn from execution.
+      These phases are separate and asynchronous.
+
+      Execution Phase (live swarm):
+      - Focus: Task execution only
+      - Agents: Lead + workers perform work
+      - Output: Files modified, results generated
+      - No expertise updates
+
+      Learning Phase (after swarm completes):
+      - Focus: Extract patterns from execution
+      - Agents: Domain improve-agent analyzes git history
+      - Output: Expertise.yaml updates
+      - User-triggered: /do "improve {domain} expertise"
+    rationale: |
+      Prevents race conditions: Multiple spawned agents cannot update expertise
+      simultaneously. Keeps swarm execution focused and fast. Enables batch
+      learning (analyze multiple swarm outputs together). Improves can fail
+      without blocking successful execution.
+    implementation: |
+      1. Swarm execution via /do-swarm command
+         Result: Files committed/modified, task complete
+      2. User (or future: scheduled automation) runs:
+         /do "improve {domain} expertise"
+      3. Improve agent:
+         - Analyzes recent git history
+         - Extracts patterns from swarm outputs
+         - Updates expertise.yaml
+         - Documents learnings with timestamps
+    workflow_diagram: |
+      User: /do-swarm "complex task"
+        ↓ swarm executes
+      Result: Files modified, task complete
+        ↓ separately:
+      User: /do "improve {domain} expertise"
+        ↓ improve agent analyzes git
+      Result: Expertise.yaml updated with learnings
+    trade_offs:
+      pros: [No race conditions, Focused execution, Batch learning, Fail-safe]
+      cons: [Extra step for user, Learning not automatic, Requires discipline]
+    timestamp: "[2026-02-02] Pattern established in /do-swarm design"
+
+  flat_orchestration_architecture:
+    constraint: "Phase 1 enforces flat architecture—no nested sub-swarms"
+    reason: |
+      Unknown whether TeammateTool supports nested spawning (spawning agents
+      that themselves spawn teams). Flat architecture is safer, faster, and
+      simpler to reason about.
+    implementation: |
+      /do-swarm orchestrator spawns lead + workers (all flat).
+      Workers do not spawn sub-teams.
+      If nesting needed: orchestrator manually spawns agents sequentially.
+    future_enhancement: |
+      Once nested spawning is validated, can support:
+      - Pipeline pattern (sequential handoffs)
+      - Hierarchical coordination (manager agents spawn sub-teams)
+      - Tree-based decomposition (hierarchical task breakdown)
+    timestamp: "[2026-02-02] Constraint documented in do-swarm.md (orchestration moved to command level)"
 
   skill_as_workflow_template:
     structure: |
@@ -254,10 +400,50 @@ patterns:
       success: boolean
       total_tokens: integer
 
+  coordinate_multi_agent_execution:
+    when: Multiple agents need to execute with coordination/messaging vs simple delegation
+    tool_selection: |
+      Task tool (existing, sequential):
+      - Sequential delegation (plan→build→approve→improve)
+      - Simple spawn-and-wait model
+      - No inter-agent messaging
+      - /do command uses Task for expert delegation
+
+      TeammateTool (new, parallel):
+      - Parallel execution with messaging
+      - Inter-agent communication (Write/Broadcast)
+      - Selective waiting (join specific agents, not all)
+      - Coordination patterns: lead-worker, council, pipeline
+      - /do-swarm command uses TeammateTool
+    decision_criteria:
+      - If agents work independently → Task (sequential)
+      - If agents need messaging → TeammateTool (parallel)
+      - If order matters → Task
+      - If timing is flexible → TeammateTool
+      - If one agent coordinates others → either (Task simpler if no messaging)
+    implementation_patterns:
+      lead_worker:
+        use_when: One coordinator, N focused workers
+        spawn: Lead agent + N worker agents
+        coordination: Lead broadcasts work, workers write results to lead
+        wait_strategy: Join lead only (workers may continue async)
+      council:
+        use_when: Multiple experts, equal standing, no single coordinator
+        spawn: N expert agents (all equal)
+        coordination: Orchestrator broadcasts question, experts write findings
+        wait_strategy: Join all experts
+      pipeline:
+        use_when: Sequential with handoffs (future enhancement)
+        spawn: Agents in sequence
+        coordination: Agent N writes to Agent N+1
+        wait_strategy: Join final agent
+    timestamp: "[2026-02-02] Pattern extracted from /do-swarm implementation"
+
 best_practices:
   organization:
     - Agents in .claude/agents/, commands in .claude/commands/
     - Expert domains: agents/experts/<domain>/ (4-agent + expertise.yaml)
+    - Orchestrator agents: .claude/agents/<name>-orchestrator-agent.md (paired with command)
     - Skills: .claude/skills/ as workflow templates (NOT agents)
     - Specs: .claude/.cache/specs/ (gitignored ephemeral)
     - Expertise.yaml: 400-600 lines target, 1000 hard limit
@@ -268,6 +454,17 @@ best_practices:
     - Frontmatter: description (required), argument-hint, allowed-tools
     - Use allowed-tools to restrict capabilities per command
     - CRITICAL: Never use colons in frontmatter string values (breaks YAML parsing)
+    - For complex workflows: pair command with orchestrator agent (not 4-agent pattern)
+
+  orchestrator_agents:
+    - DEPRECATED PATTERN: Originally designed separate orchestrator agents for multi-pattern coordination
+    - ARCHITECTURE CHANGE [2026-02-02]: Orchestration must happen at command level, not in subagents
+    - Reason: Subagents spawned via Task tool cannot use Task/TeammateTool to spawn nested agents
+    - New pattern: Command file contains ALL orchestration logic (see /do and /do-swarm as examples)
+    - Supports multiple coordination patterns (lead-worker, council, pipeline)
+    - Use TeammateTool for parallel coordination with messaging
+    - Do NOT include improve phase (learning handled separately per learning_separation_principle)
+    - Pass EXPERTISE_PATH to spawned agents (expertise_path_protocol pattern)
 
   expert_domains:
     - Standardized color coding (yellow/green/purple/cyan)
@@ -278,6 +475,26 @@ best_practices:
     - Improve agents: Bash for git history analysis, evidence-grounded output with timestamps
     - Absorb standalone agents >300 lines into expert domains
     - CRITICAL: Never use colons in description field (breaks agent discovery)
+
+  coordination:
+    - Use Task tool for sequential delegation (plan→build→improve)
+    - Use TeammateTool for parallel coordination with messaging
+    - Pass expertise via EXPERTISE_PATH (file reference, not embedding)
+    - Implement learning_separation_principle: execution and improvement are separate phases
+    - For swarms: orchestrator spawns all agents flat (no nesting Phase 1)
+    - Document coordination pattern (lead-worker, council, pipeline) in orchestrator
+
+  swarm_operational_practices:
+    - Shutdown ceremony is optional: quick research swarms can skip explicit shutdown (5min timeout saves 3-4 turns)
+    - Full shutdown ceremony for production swarms: SendMessage with request/shutdown subtype, wait for approval
+    - Instruct teammates to send plain-text results only (suppress JSON status messages in prompts)
+    - Idle notifications are JSON and system-generated: ignore them, wait for plain-text results
+    - Expected timing: spawn to first result ~30s, all parallel results ~1-2min, shutdown ceremony ~30s overhead
+    - No progress visibility: instruct teammates to send interim updates if long-running tasks
+    - Validation levels in worker prompts: Level 1 (syntax only), Level 2 (tests + types), Level 3 (full suite + manual)
+    - Forbidden patterns: negative constraints, meta-commentary, vague instructions, unbounded scope
+    - Role-based tool access: specify allowed tools explicitly to prevent confusion
+    - timestamp: "[2026-02-02] Tactical patterns from initial /do-swarm usage and refinement (commit 75a4962)"
 
   hooks:
     - uv shebang for Python dependencies
@@ -334,29 +551,46 @@ potential_enhancements:
   - Hook debugging mode for visible errors (medium effort)
   - Orchestration trace aggregation tool for latency stats (low effort)
   - Temp file orphan cleanup on SessionStart (low effort)
+  - Research nested TeammateTool spawning (medium effort, unblocks pipeline and hierarchical patterns)
+  - Orchestrator agent templates for lead-worker, council, pipeline patterns (low effort, tooling)
+  - Swarm execution visualization (medium effort, observability enhancement)
+  - EXPERTISE_PATH hot-loading for multi-domain swarms (low effort, optional optimization)
 
 stability:
   convergence_indicators:
     insight_rate_trend: decreasing
     contradiction_count: 0
-    new_patterns_added_this_cycle: 1
-    patterns_updated_this_cycle: 3
-    last_reviewed: 2026-01-21
+    new_patterns_added_this_cycle: 0
+    patterns_updated_this_cycle: 1
+    decision_trees_added_this_cycle: 0
+    last_reviewed: 2026-02-02
     utility_ratio: 1.0
     notes: |
-      Cycle 2026-01-21: Output style integration pattern added.
+      Cycle 2026-02-02b (second improve): Tactical refinements from initial /do-swarm usage.
 
-      Added: configure_agent_output_style key operation (standardizes agent formatting)
-      Updated: create_expert_domain (now includes output-style in agent creation steps)
-      Updated: expert_domain_4agent pattern (added output_style_defaults section)
-      Updated: best_practices expert_domains (added output style guidelines)
+      Updated Sections:
+      1. best_practices.swarm_operational_practices - Added 10 operational patterns from fix commit 75a4962
 
-      Pattern significance: Output styles enable consistent formatting across similar
-      agent types (all question agents use concise-reference, all plan agents use
-      academic-structured, etc.). Enhances predictability and maintainability.
+      Tactical Patterns Added:
+      - Optional shutdown ceremony (skip for quick swarms, save 3-4 turns)
+      - JSON notification suppression (instruct teammates to send plain-text only)
+      - Timing expectations (spawn ~30s, parallel results ~1-2min, shutdown ~30s)
+      - No progress visibility workaround (interim updates for long tasks)
+      - Validation level specification (L1/L2/L3 for worker prompts)
+      - Forbidden patterns in teammate prompts (negative constraints, meta-commentary)
+      - Role-based tool access enforcement (explicit allowed tools)
 
-      File health: 368 lines (was 315), +53 lines for output style pattern.
-      Still well below 900 warning threshold (532 lines of headroom).
+      Pattern Significance:
+      These are convergence patterns—initial /do-swarm design (a1d5942) refined through
+      real usage (75a4962 fix). Tactical guidance for practical swarm orchestration.
 
-      Domain stability remains high - this is refinement of existing 4-agent pattern,
-      not architectural change. Insight rate remains low (1 pattern per cycle).
+      File health: 597 lines (was 585), +12 lines for tactical patterns.
+      Still well below 900 warning threshold (303 lines of headroom).
+
+      Domain stability: High. This cycle adds operational refinements to existing swarm
+      architecture. No contradictions. Insight rate decreasing (0 foundational patterns,
+      1 tactical update). Suggests domain reaching maturity for swarm coordination.
+
+      Previous Cycle (2026-02-02a): Major architectural pattern—command + orchestrator pairing,
+      TeammateTool coordination, expertise path protocol, learning separation, flat orchestration
+      constraint. Added 5 foundational patterns (+195 lines from 362 to 557).

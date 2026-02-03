@@ -187,6 +187,7 @@ This is a real gap. When an agent learns something valuable mid-session, how doe
 - **To [Context Fundamentals](1-context-fundamentals.md):** How multi-agent isolation changes the "One Agent, One Task" model
 - **To [Advanced Context Patterns](3-context-patterns.md):** ACE playbooks are persistent state loaded into ephemeral context
 - **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** How orchestrators use context isolation to maintain clean working memory
+- **To [Expert Swarm Pattern](../6-patterns/8-expert-swarm-pattern.md):** Path-passing protocol implements expertise sharing without context pollution. Workers receive `EXPERTISE_PATH: /path/to/expertise.yaml` and read relevant sections themselves. Prevents context pollution while maintaining consistency.
 - **To [Google ADK](../9-practitioner-toolkit/2-google-adk.md):** Production implementation of persistent state
 
 ---

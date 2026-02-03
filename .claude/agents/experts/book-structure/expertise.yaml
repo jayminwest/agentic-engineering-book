@@ -712,6 +712,9 @@ best_practices:
       - practice: Include chapter descriptions in TOC for better navigation context
         evidence: TOC regenerated 2026-01-15 added chapter description lines under each chapter heading
         timestamp: 2026-01-17
+      - practice: Pattern additions require 3-step coordinated update (new file + _index.md catalog + TOC regeneration)
+        evidence: commit a1d5942 completed steps 1-2 (8-expert-swarm-pattern.md + _index.md catalog) but TOC regeneration pending
+        timestamp: 2026-02-02
 
 known_issues:
   - issue: Order field duplicates can cause TOC sorting confusion
@@ -741,6 +744,12 @@ known_issues:
     evidence: TOC requires explicit regeneration (last update commit e3a4517)
     timestamp: 2025-12-26
 
+  - issue: Pattern catalog in _index.md can miss newly added patterns without coordinated update
+    workaround: When adding new pattern file, update pattern catalog table and decision tree in _index.md
+    status: open
+    evidence: commit a1d5942 added 8-expert-swarm-pattern.md + updated _index.md catalog, but TOC not regenerated (missing from TABLE_OF_CONTENTS.md)
+    timestamp: 2026-02-02
+
   - issue: Relative path links break when content files reference each other incorrectly
     workaround: Use relative paths from current file location, include section anchors when specific (path.md#section)
     status: open
@@ -767,10 +776,10 @@ anti_patterns:
     timestamp: 2025-12-26
 
   - anti_pattern: Leaving TOC unregenerated after structural changes
-    why_problematic: Main navigation shows stale structure, hides new content
-    evidence: 9 new sections added but TOC shows as outdated until explicit regeneration
-    instead_do: Run /book:toc after any file add/move/delete in chapters/
-    timestamp: 2025-12-26
+    why_problematic: Main navigation shows stale structure, hides new content from readers
+    evidence: 9 new sections added but TOC outdated (commit e3a4517), Expert Swarm pattern added but missing from TOC (commit a1d5942)
+    instead_do: Run /book:toc after any file add/move/delete in chapters/ - TOC generation is final step of content addition
+    timestamp: 2026-02-02
 
   - anti_pattern: Embedding large content blocks in _index.md instead of extracting to sections
     why_problematic: Creates monolithic files, poor granularity for updates, harder navigation
@@ -849,3 +858,13 @@ stability:
       - Insight rate decreasing: 4 commits analyzed, only 1 new pattern (rest validation of existing patterns)
       - Zero contradictions with existing patterns (retroactive pattern complements new section creation)
       - File size: 892 lines (within target, +133 lines from new pattern + git analysis)
+
+      Improvement cycle 2026-02-02:
+      - Added 1 known issue + 2 best practice updates + 1 anti-pattern update
+      - Analyzed Expert Swarm pattern addition (commit a1d5942): 8-expert-swarm-pattern.md + _index.md catalog update
+      - Observed pattern: New pattern additions update both file + _index.md catalog but TOC regeneration deferred
+      - Learning: Pattern additions follow 3-step workflow (file creation, catalog update, TOC regeneration)
+      - Validation: Existing coordinated multi-file workflow pattern remains accurate (seen in commits 1d06516, 20500f1, a1d5942)
+      - Insight rate continues decreasing: 5 commits analyzed, zero new patterns (refinements only)
+      - Zero contradictions with existing entries (all updates are clarifications/evidence additions)
+      - File size: 900 lines (at warning threshold, consolidation recommended next cycle)

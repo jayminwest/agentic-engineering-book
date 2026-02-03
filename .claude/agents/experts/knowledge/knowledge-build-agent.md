@@ -112,6 +112,34 @@ order: X.Y.Z
 
 ## Core Questions
 
+### Architectural Pattern Structure (Commit 20500f1 + 2026-02-02 Expert Swarm Example)
+
+*[2026-02-02]*: When building sophisticated patterns (300-550 lines), follow this 10-12 section structure observed in ReAct, HITL, Progressive Disclosure, and Expert Swarm patterns:
+
+1. Opening definition (2-3 paragraphs) - What it is + why it matters + production evidence
+2. Core Structure section - ASCII diagram + explanation of architecture
+3. How It Works - Key mechanisms and properties (3-5 bullet points)
+4. Implementation section - Code examples, pseudocode, or concrete syntax
+5. Scale Considerations - Parallelism metrics, token economics, performance data
+6. Trade-offs - 3-column comparison table across 10+ evaluation dimensions
+7. When to Use - Good Fit (3-4 bullet scenarios) + Poor Fit (3-4 bullet scenarios)
+8. Decision Framework - ASCII tree or flowchart routing to recommendation
+9. Anti-Patterns - What NOT to do (3-5 common mistakes)
+10. Production Considerations - Real-world deployment concerns (observability, cost, etc.)
+11. Connections section - 4-6 bidirectional cross-references with relationship context
+12. Open Questions - 8+ unsolved research questions acknowledging limitations
+
+**Critical Success Factors:**
+- Production evidence first (commit hash, quantified metrics like "10 agents, 4 minutes")
+- ASCII diagrams BEFORE prose explanation (visual → abstract order)
+- Real implementation prompts or code (copy-paste ready, not abstract templates)
+- Quantified comparisons in trade-off tables (scannability > prose paragraphs)
+- Decision frameworks as trees, not prose lists (catches incompatible criteria combinations)
+
+This structure provides multiple entry points: questions for navigation, mental models for framing, patterns for implementation, trade-offs for selection. Length typically 320-551 lines depending on pattern complexity.
+
+## Core Questions
+
 ### Category Name
 - Question exploring the domain
 - Question about decisions or tradeoffs
@@ -189,6 +217,11 @@ tags: [domain, concept]
 **Tradeoffs:**
 - Benefit: <specific benefit>
 - Cost: <specific cost>
+```
+
+*[2026-02-02]*: **Slash Command Documentation Implementation** - When building multi-step command documentation (like /do-swarm), use 7-section imperative structure: Role (clarify executor responsibilities) → Workflow (numbered steps with code blocks) → Templates (copy-paste Lead/Worker) → Coordination → When/Examples → Troubleshooting. Include EXPERTISE_PATH protocol in templates, add "CRITICAL:" callouts for common errors.
+
+*[2026-02-02]*: **Debugging Chapter Expansion Implementation** - When expanding operational guidance chapters, use symptom-first structure: Mindset comparison table → Core framework table → Multi-branch decision tree → Failure modes (Symptoms/Diagnosis/Root/Fixes). Each failure mode gets 4-part structured documentation. Decision trees guide readers through diagnostic sequence ("if X then check Y")
 
 ## Common Pitfalls
 

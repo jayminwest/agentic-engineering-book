@@ -28,6 +28,7 @@ Patterns are solutions that keep showing up. They're not prescriptions—they're
 | [Progressive Disclosure](7-progressive-disclosure.md) | Large knowledge bases with tight context budgets | Slight latency vs. dramatic capacity gains |
 | [ReAct Loop](5-react-pattern.md) | General-purpose reasoning + action | Flexibility vs. efficiency |
 | [Human-in-the-Loop](6-human-in-the-loop.md) | High-stakes, uncertain, or preference-sensitive | Safety vs. autonomy |
+| [Expert Swarm](8-expert-swarm-pattern.md) | Multiple independent tasks within single domain requiring consistency | Expertise governance vs. generic orchestration |
 
 *Add more patterns as you identify them*
 
@@ -102,6 +103,7 @@ Start: What kind of task?
 | Task Characteristic | Primary Pattern | Secondary Pattern |
 |---------------------|-----------------|-------------------|
 | Needs multiple expert domains | Orchestrator | Plan-Build-Review |
+| Needs domain expertise + parallelism | Expert Swarm | Orchestrator |
 | Mechanical, 10+ iterations likely | Autonomous Loops | Plan-Build-Review |
 | Tight action-feedback cycles | ReAct | Orchestrator |
 | High-stakes decisions | Human-in-the-Loop | Plan-Build-Review |

@@ -351,6 +351,7 @@ The patterns (labels, relationships, validation evidence) apply to both.
 ## Connections
 
 - **Multi-Agent Orchestration**: GitHub as coordination layer for multi-agent systems
+- **[Expert Swarm Pattern](../6-patterns/8-expert-swarm-pattern.md)**: Architectural pattern enabling workflow coordination at scale. Production evidence: 10 agents, 11 tasks, 4 minutes, 3000+ lines. Spec-as-artifact and TeammateTool coordination primitives support Expert Swarm execution.
 - **[Context Management](../4-context/_index.md)**: Issues/PRs as persistent context stores
 - **[Production Concerns](4-production-concerns.md)**: GitHub workflows as part of deployment pipeline
 

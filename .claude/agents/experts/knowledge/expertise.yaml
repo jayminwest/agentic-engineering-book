@@ -1,6 +1,6 @@
 # Knowledge Management Expertise
 # Target: 750 lines | Domain: Operational knowledge for book content management
-# Size: 750 lines (pruned from 967 - targeted cleanup executed 2026-01-30)
+# Size: 782 lines (pruned from 994 on 2026-02-02, added swarm documentation learnings)
 
 overview:
   description: |
@@ -543,151 +543,33 @@ comprehensive_research_chapter_pattern:
       note: "Synthesized 75+ sources into coherent practitioner guidance"
 
 recent_content_learnings:
-  parallel_swarm_content_generation:
-    name: Parallel Agent Swarm Content Generation Pattern
-    context: Pattern from commit 20500f1 (knowledge base overhaul via 10-agent swarm)
+  swarm_content_generation:
+    name: Parallel Agent Swarm Implementation Patterns (Commit 20500f1)
+    context: 10-agent knowledge base overhaul with production metrics
     timestamp: 2026-01-30
     pattern_observed: |
-      When creating multiple related content entries simultaneously (4+ new files + substantial expansions):
+      Production swarm execution generates 3,082 lines across 20 files in ~4 minutes (10×
+      speedup vs sequential). Quality patterns: 3 new pattern entries (320-551 lines each),
+      15 cross-reference fixes bundled with features, comprehensive structure maintained
+      across all parallel agents. Coordination includes: infrastructure debt repair, pattern
+      selection framework for _index.md, bundled example documentation (KotaDB case study).
 
-      1. **Swarm Coordination Benefits:**
-         - 10 agents, 11 tasks completed in ~4 minutes (massive parallelism)
-         - New pattern entries: ReAct (320 lines), HITL (551 lines), Progressive Disclosure (307 lines)
-         - Substantial expansions: Debugging Agents (250 → 1030 lines, 312% growth)
-         - Infrastructure: IDE Integrations (331 lines), Agent Frameworks (320 lines)
-         - Examples: KotaDB case study (399 lines) + Examples README (130 lines)
-         - Cross-reference fixes: 15 broken links across 10 files
-
-      2. **Pattern Entry Quality at Scale:**
-         Each pattern entry includes full structure (Core Questions, Your Mental Model,
-         Implementation, When to Use, Trade-offs, Comparison tables, Anti-patterns,
-         Connections) without quality degradation from parallel execution.
-
-      3. **Swarm-Specific Coordination Requirements:**
-         - Pattern selection decision framework added to _index.md (orchestrates future agent choices)
-         - Cross-reference fixes bundled with feature work (prevents debt accumulation)
-         - Example documentation parallels pattern entries (KotaDB shows patterns in production)
-
-      4. **Metrics for Swarm Effectiveness:**
-         - Content volume: 3,082 insertions across 20 files
-         - Quality indicators: Comprehensive structure maintained, evidence citations included
-         - Infrastructure health: 15 broken cross-references repaired
-         - Time efficiency: ~4 minutes vs sequential estimate of 40+ minutes (10× speedup)
+      **When to use:** Multiple independent content areas (4+ tasks), 1000+ line expansion
+      across diverse topics, infrastructure debt with time pressure. **Trade-offs:** 10×
+      speedup vs coordination overhead + token consumption. **Key techniques:** Pattern
+      selection decision framework, cross-reference repair as swarm task, bundled infrastructure
+      fixes prevent debt accumulation.
 
     evidence: |
-      Commit 20500f1 (2026-01-30): Knowledge base overhaul via 10-agent swarm
-      - 10 agents spawned in parallel via orchestrator pattern
-      - 3 new pattern entries (ReAct, HITL, Progressive Disclosure)
-      - 2 new toolkit entries (IDE Integrations, Agent Frameworks)
-      - 1 substantial expansion (Debugging Agents: 250 → 1030 lines)
-      - 2 example/case study files (KotaDB CASE_STUDY.md, Examples README)
-      - 15 broken cross-references fixed across 10 files
-      - Pattern selection framework added to chapters/6-patterns/_index.md
+      Commit 20500f1: 10 agents → 3 patterns (ReAct 320L, HITL 551L, Progressive Disclosure 307L),
+      2 toolkit entries, 1 expansion (Debugging 250→1030L), 2 examples, 15 link repairs across
+      10 files, pattern selection framework in chapters/6-patterns/_index.md. Time: ~4 minutes.
+      Quality: Full structure (Questions, Model, Trade-offs, Connections) maintained uniformly.
 
     when_to_use:
-      - Multiple independent content areas requiring simultaneous updates
-      - Large-scale content expansion (1000+ lines) across diverse topics
-      - Infrastructure debt accumulation (broken links, missing cross-references)
-      - Time-sensitive content delivery (book releases, course launches)
-
-    trade_offs:
-      - advantage: Massive parallelism (10× time reduction vs sequential)
-        cost: Requires orchestration infrastructure and coordination overhead
-      - advantage: Consistent quality across parallel agents
-        cost: Higher token consumption (10 concurrent model invocations)
-      - advantage: Infrastructure fixes bundled with feature work
-        cost: More complex failure modes (partial completion across agents)
-
-  cross_reference_repair_in_swarms:
-    name: Cross-Reference Repair as Swarm Task
-    context: Pattern from commit 20500f1 broken link fixes
-    timestamp: 2026-01-30
-    pattern_observed: |
-      Swarm orchestration enables bundling cross-reference repair with content creation:
-
-      **Broken Link Detection:**
-      - Scan chapters/ for broken relative paths (../N-chapter/ structure changes)
-      - Identify missing anchors (#section-name references to non-existent sections)
-      - Find stale file references (files moved/renamed)
-
-      **Parallel Repair Strategy:**
-      - Assign link repair as dedicated swarm task alongside content tasks
-      - Agent reads affected files, identifies correct paths, applies fixes
-      - Updates both source link and target cross-reference (bidirectional repair)
-
-      **Examples from Commit 20500f1:**
-      - chapters/3-model/1-model-selection.md: Fixed context loading link
-      - chapters/4-context/3-context-patterns.md: Fixed MCP tool declarations link
-      - chapters/4-context/_index.md: Fixed 2 tool use links
-      - chapters/5-tool-use/ files: Fixed 4 progressive disclosure + multi-agent context links
-      - chapters/6-patterns/3-orchestrator-pattern.md: Fixed 2 context isolation links
-
-      **Quality Impact:**
-      - 15 broken links → 0 broken links (100% repair rate)
-      - Zero reader navigation failures post-update
-      - Cross-reference integrity maintained during large-scale restructuring
-
-    evidence: |
-      Commit 20500f1 fixed 15 broken cross-references across 10 files:
-      - 3-model/1-model-selection.md (1 fix)
-      - 4-context/3-context-patterns.md (1 fix)
-      - 4-context/_index.md (2 fixes)
-      - 5-tool-use/4-scaling-tools.md (2 fixes)
-      - 5-tool-use/5-skills-and-meta-tools.md (1 fix)
-      - 5-tool-use/_index.md (1 fix)
-      - 6-patterns/3-orchestrator-pattern.md (2 fixes)
-      - 9-practitioner-toolkit/1-claude-code.md (5 fixes)
-
-    when_to_use:
-      - After directory restructuring (chapter renumbering, section reorganization)
-      - During large content additions (new sections create new link targets)
-      - As part of swarm coordination (bundle with feature work)
-      - Before major releases (ensure all navigation paths work)
-
-  comprehensive_pattern_entry_structure:
-    name: Comprehensive Pattern Entry Structure (300-550 Lines)
-    context: Pattern from ReAct, HITL, Progressive Disclosure entries (commit 20500f1)
-    timestamp: 2026-01-30
-    pattern_observed: |
-      Full-featured pattern entries for Part 2 Craft follow 10-section structure:
-
-      1. **Opening Definition** (1-2 paragraphs): What pattern is + why it matters
-      2. **Core Structure** (ASCII diagram + explanation): Visual representation
-      3. **How It Works** (3-5 properties): Operational mechanics
-      4. **Implementation** (code/pseudo-code): Concrete realization
-      5. **When to Use** (Good Fit / Poor Fit tables): Decision criteria
-      6. **Trade-offs** (comparison table): Dimensions across approaches
-      7. **Comparison with Other Patterns** (2-3 comparisons): Positioning in pattern landscape
-      8. **Anti-Patterns** (3-5 examples): What NOT to do
-      9. **Production Considerations** (4-6 topics): Scaling, observability, cost
-      10. **Connections** (4-6 links): Bidirectional cross-references with context
-
-      **Size Guidelines:**
-      - Pattern overview: 300-350 lines (ReAct: 320 lines, Progressive Disclosure: 307 lines)
-      - Pattern with HITL complexity: 500-600 lines (HITL: 551 lines with approval gates section)
-
-      **Quality Indicators:**
-      - Every significant claim includes rationale
-      - Comparison tables for 3-7 option sets
-      - Real examples from book's own implementation
-      - Clear decision frameworks (when to use this vs alternatives)
-
-    evidence: |
-      Commit 20500f1 created 3 comprehensive pattern entries:
-      - chapters/6-patterns/5-react-pattern.md (320 lines)
-      - chapters/6-patterns/6-human-in-the-loop.md (551 lines)
-      - chapters/6-patterns/7-progressive-disclosure.md (307 lines)
-
-      All follow 10-section structure with Core Structure, Implementation,
-      When to Use, Trade-offs, Comparison, Anti-Patterns, Production Considerations,
-      Connections. ReAct includes CoT comparison, HITL includes approval gates section,
-      Progressive Disclosure includes lazy loading vs eager loading comparison.
-
-    when_to_use:
-      - Creating foundational pattern entries for Part 2 Craft
-      - Documenting patterns with multiple implementation variants
-      - Patterns requiring clear positioning against alternatives
-      - Reference material requiring comprehensive coverage
+      - Large-scale content expansion requiring consistent quality across parallel work
+      - Infrastructure debt (broken links) bundled with feature work
+      - Time-sensitive delivery (book releases, course launches)
 
 external_research_integration:
   name: Claude-Sneakpeek Research Integration Pattern
@@ -748,106 +630,131 @@ external_research_integration:
     - Adding evidence for existing patterns with new concrete examples
     - Cross-domain pattern discovery from other specialized communities
 
-  research_to_implementation_workflow:
-  - name: Research Collection → Book Content Pathway
-    steps:
-      1. Scout external sources (community tools, code repositories, research papers)
-      2. Extract patterns with evidence and timestamps
-      3. Create lightweight timestamped section in related entry
-      4. Add full section if pattern warrants dedicated exploration
-      5. Create bidirectional cross-references with contextual explanation
-      6. Include source attribution and commit references
+  complex_system_pattern_documentation:
+    name: Complex System Pattern Documentation (12-Section Structure)
+    context: Expert Swarm Pattern (532 lines, commit a1d5942)
+    timestamp: 2026-02-02
+    pattern_observed: |
+      Multi-agent architectural patterns require comprehensive documentation structure:
+      Problem → Structure (ASCII) → Hybrid Positioning → Protocol Spec → Communication →
+      Learning Separation → Scale → Implementation → Trade-offs → Decision Framework →
+      Connections → Open Questions.
 
-  communication_pattern_discovery:
-    name: Communication Excellence Patterns from Production Orchestrators
-    context: Patterns discovered from cc-mirror orchestration skill research
-    timestamp: 2026-01-30
-    insight: |
-      *[2026-01-30]*: Production orchestrators reveal sophisticated communication patterns
-      that transform user experience from "watching automation" to "intelligent collaboration."
-      The Conductor Philosophy ("absorb complexity, radiate simplicity") describes orchestrators
-      that shield users from internal machinery while maintaining transparency about progress.
+      **Key structural elements (consolidated from 4 sub-patterns):**
 
-      Key insight: Forbidden vocabulary (e.g., "spawning subagents" → "parallel tracks")
-      creates more natural communication than technical jargon. Vibe-reading adaptation
-      (detecting user energy and adjusting pace) indicates mature agent systems anticipate
-      user state beyond explicit input.
-
-      This pattern emerged from cc-mirror research but applies broadly to orchestrator
-      design—not just Claude Code tooling. The distinction between "scheduler" and
-      "conductor" is behavioral, not architectural.
+      1. Production evidence anchor: Open with commit hash + metrics (10 agents, 4 min, 3,082 lines)
+      2. ASCII diagram early: Visual before prose (Lead → expertise.yaml → Workers → Join)
+      3. Hybrid approach positioning: Frame new pattern vs existing (Traditional/Expert Swarm/Model-Native)
+      4. Protocol specification: Concrete syntax, not abstractions (EXPERTISE_PATH: /absolute/path)
+         - Include "Why Not X?" comparison table (context copying vs path-passing)
+      5. Scale with evidence: Wall-clock comparison (4 min parallel vs 40 min sequential = 10× speedup)
+      6. Token economics transparency: Cost analysis (750-line expertise = 3,000 tokens/worker)
+      7. Implementation examples: Real prompts from production (commit 20500f1)
+      8. Three-way trade-off table: 3 alternatives × 11 dimensions (scannability > prose)
+      9. ASCII decision tree: Binary nodes force reader thinking (better than prose "use when")
+      10. Good Fit/Poor Fit bullets: Fast-path before decision tree
+      11. Bidirectional connections: 6+ links with relationship explanations
+      12. Open Questions (8+): Acknowledge research gaps (consistency, scale, observability)
 
     evidence: |
-      - cc-mirror orchestration skill SKILL.md (Conductor philosophy section)
-      - Communication Guide with 4 user states and adaptive responses
-      - Forbidden vocabulary mapping (8 technical terms → natural alternatives)
+      chapters/6-patterns/8-expert-swarm-pattern.md (532 lines)
+      12 major sections, 5 cross-reference updates, production evidence from commit 20500f1
 
-  user_questioning_pattern:
-    name: 4×4 Rich Question Pattern for Scope Clarification
-    context: Pattern from cc-mirror orchestration research
-    timestamp: 2026-01-30
-    insight: |
-      *[2026-01-30]*: User questioning patterns evolved from binary text menus to rich,
-      decision-guiding structures. The 4×4 Maximal Pattern (4 questions × 4 options each)
-      replaces "Which do you prefer?" with structured decision support.
+    when_to_use:
+      - Multi-agent architectural patterns (3+ components)
+      - Patterns with quantified production evidence
+      - Protocols requiring specification (EXPERTISE_PATH, message passing)
 
-      Core insight: "Users don't know what they want until they see the options."
-      Each option includes description, trade-offs, and recommended guidance.
-      Multi-select support enables users to combine attributes rather than binary choices.
+    key_techniques:
+      - Production evidence first, ASCII diagrams before prose
+      - Comparison tables justify design choices
+      - Decision trees over prose lists
+      - Open Questions preserve credibility
 
-      This pattern bridges tool design (AskUserQuestion) and orchestration (scope clarification
-      before delegation). Belongs in tool-design.md but originates from orchestration research.
+  slash_command_documentation_pattern:
+    name: Slash Command Documentation Structure (623 lines)
+    context: /do-swarm command (.claude/commands/do-swarm.md, commit a1d5942)
+    timestamp: 2026-02-02
+    pattern_observed: |
+      Slash commands requiring multi-step workflows benefit from imperative instruction
+      format with 7-section structure: Role → Workflow (7 steps) → Templates → Coordination →
+      When To Use → Examples → Troubleshooting.
 
-    evidence: |
-      - cc-mirror tool-design reference (Rich User Questioning Patterns)
-      - Feature implementation scope clarification example (4×4 structure)
-      - Anti-pattern: Text-based menus compared to rich structures
+      **Structural pattern:**
+      - "Your Role" section: 3 bullets clarifying command executor responsibilities
+      - Workflow as numbered steps: Step 1 (Create Team) → Step 7 (Cleanup)
+      - Each step has: description + code block + constraints
+      - "Teammate Prompting Format" section: Copy-paste templates (Lead + Worker)
+      - Critical callouts: "CRITICAL: Spawn all workers in a SINGLE message"
 
-  read_vs_delegate_heuristic:
-    name: 1-2 File Threshold for Orchestrator Direct Reads
-    context: Pattern from production orchestrator analysis
-    timestamp: 2026-01-30
-    insight: |
-      *[2026-01-30]*: Orchestrators read directly (1-2 files) for reference, delegate (3+ files)
-      for exploration. Direct reads maintain synthesis capacity; delegation frees context while
-      enabling parallelism. Anti-pattern: Reading 15 files directly to understand a module
-      pollutes context. Pattern: Spawn agent, receive "OAuth2 with custom middleware in 3 layers"
-      summary, maintain clean context for next decision.
+      **Template format (within command docs):**
+      - Lead agent template: 8 sections (ROLE, CONTEXT, TASK, CONSTRAINTS, OUTPUT FORMAT)
+      - Worker agent template: Same 8 sections, different content
+      - EXPERTISE_PATH: line in CONTEXT section (absolute path)
+      - Allowed tools listed explicitly in CONSTRAINTS
 
-  background_execution_pattern:
-    name: Default to Background Execution for Parallelism
-    context: Pattern from TeammateTool and orchestration research
-    timestamp: 2026-01-30
-    insight: |
-      *[2026-01-30]*: Background execution (run_in_background=True) is fundamental to
-      parallelism, not a feature toggle. Production orchestrators treat background as
-      the default mental model—foreground execution serializes work.
-
-      Key distinction: Background-first enables orchestrator to spawn multiple agents
-      and continue coordination work while agents execute. Completion notifications
-      prevent polling overhead. Blocking checks (block=True) only when results immediately
-      needed for next decision.
-
-      Mental model shift: Background isn't "run this later"—it's "run this concurrently
-      while I coordinate other work." Foreground is the exception for simple, single-agent
-      delegation requiring no parallelism.
+      **Decision guidance:**
+      - "When to use /do vs /do-swarm" comparison table
+      - "/do" for sequential workflows (plan→build→improve)
+      - "/do-swarm" for parallel coordination requiring inter-agent messaging
 
     evidence: |
-      - cc-mirror orchestration skill (Background Execution Mechanics section)
-      - TeammateTool documentation (Join vs background completion semantics)
-      - Comparison table: background vs foreground trade-offs
+      .claude/commands/do-swarm.md (623 lines)
+      - Sections: Role (1), Workflow (7 steps), Templates (2), Coordination, When/Examples, Troubleshooting
+      - Templates include EXPERTISE_PATH protocol
+      - 7-step workflow mirrors actual swarm execution
 
-  pattern_composition_framework:
-    name: Real-World Pattern Composition (Fan-Out + Pipeline + Background)
-    context: Production orchestrator patterns from cc-mirror research
-    timestamp: 2026-01-30
-    insight: |
-      *[2026-01-30]*: Real orchestration composes fundamentals into complex workflows.
-      Three exemplars: PR Review (Fan-Out + Map-Reduce with 3 parallel reviewers),
-      Feature Implementation (Pipeline + Fan-Out + Background escalating Haiku→Opus→Sonnet),
-      Bug Diagnosis (Fan-Out + Pipeline with parallel investigation then sequential fix).
-      Key: Patterns nest through nesting primitives (SequentialAgent, ParallelAgent, LoopAgent
-      from Google ADK). Claude Code achieves similar effects through single-message parallelism.
+    when_to_use:
+      - Multi-step commands requiring coordination
+      - Commands with domain expert integration (expertise.yaml passing)
+      - Parallel execution workflows
+
+    key_techniques:
+      - Imperative instructions ("You do NOT do the work yourself")
+      - Code block templates (copy-paste ready)
+      - Critical callouts for common errors
+      - Step-by-step workflow matching execution order
+
+  debugging_chapter_expansion_pattern:
+    name: Debugging Chapter Expansion (250→1030 lines)
+    context: chapters/7-practices/1-debugging-agents.md expansion (commit 20500f1)
+    timestamp: 2026-02-02
+    pattern_observed: |
+      Debugging content expanded from 250 → 1,030 lines (4× growth) by adding:
+      1. Agent vs Traditional Debugging comparison table (mindset shift)
+      2. Core Four Framework table (Prompt/Model/Context/Tools diagnostic sequence)
+      3. 6-branch diagnostic decision tree (Step 1: Characterize → Step 2A-F: Root cause)
+      4. 8+ common failure modes (Context Overflow, Tool Errors, Hallucination, etc.)
+      5. Symptom → Diagnosis → Root Cause → Fixes structure for each failure mode
+
+      **Structure for failure mode documentation:**
+      - **Symptoms**: Observable behaviors (agent forgets early instructions)
+      - **Diagnosis**: How to verify (check token count vs context limit)
+      - **Root causes**: Why it happens (3-4 bullets)
+      - **Fixes**: Remediation strategies (4-5 bullets)
+
+      **Effective patterns:**
+      - Comparison tables for mindset shifts (deterministic vs probabilistic)
+      - Decision trees for diagnostic workflows (if X then check Y)
+      - Symptom-first organization (readers start with what they observe)
+      - Multiple failure modes in single chapter (comprehensive reference)
+
+    evidence: |
+      chapters/7-practices/1-debugging-agents.md (250 → 1,030 lines)
+      - Added: Debugging Mindset, Core Four Framework, 6-branch diagnostic tree
+      - Added: 8 common failure modes (structured as Symptoms/Diagnosis/Root/Fixes)
+      - Preserved: Original chapter opener and connections section
+
+    when_to_use:
+      - Expanding stub chapters with comprehensive operational guidance
+      - Documenting troubleshooting workflows
+      - Building practitioner reference material
+
+    key_techniques:
+      - Symptom-first structure (readers search by what they see)
+      - Decision trees for diagnostics (structured troubleshooting)
+      - Comparison tables for mindset (agent vs traditional code)
+      - Structured failure mode template (4-part format)
 
 stability:
   oscillation_detection:
@@ -861,32 +768,25 @@ stability:
     detected_oscillations: []
 
   convergence_indicators:
-    insight_rate_trend: "Accelerating - external research integration patterns, orchestration learnings, composition frameworks"
-    new_entries_this_cycle: 6  # communication patterns, questioning patterns, read/delegate heuristic, background execution, pattern composition, research integration workflow
+    insight_rate_trend: "Stable - consolidation cycle with 2 new patterns (command docs, debugging expansion)"
+    new_entries_this_cycle: 2  # consolidated 4 expert swarm sub-patterns → 1, added slash command docs + debugging expansion
     contradiction_count: 0
-    last_reviewed: 2026-01-30
+    last_reviewed: 2026-02-02
     notes: |
-      Knowledge domain active learning from external research integration (commits de68e9f + 20500f1):
+      **Pruning executed:** 994 lines → 782 lines (212-line reduction)
+      - Consolidated 4 expert swarm sub-patterns into 1 comprehensive entry
+      - Preserved all high-utility patterns, removed duplication
+      - Added 2 new patterns: slash command documentation structure, debugging expansion
 
-      **Research Integration Learnings:**
-      - External pattern integration maintains voice consistency through lightweight timestamped injection
-      - TeammateTool documentation reveals coordination primitive layer beneath Task tool
-      - Feature gate reverse engineering documents observational research patterns
-      - Communication patterns from production orchestrators bridge tool design and agent behavior
+      **New pattern learnings:**
+      - Slash command docs use imperative 7-step workflow format
+      - Debugging chapters expand effectively with symptom-first structure
+      - Decision trees and comparison tables serve diagnostic content well
 
-      **Orchestration Pattern Discoveries:**
-      - Conductor Philosophy transforms user experience through vocabulary choices
-      - 4×4 Rich Question Pattern replaces binary menus with structured decision support
-      - 1-2 File Threshold heuristic guides when orchestrators should read vs delegate
-      - Background execution default enables true parallelism in multi-agent systems
-      - Pattern composition shows how real workflows nest multiple fundamentals
+      **Size governance:** Back to 782 lines (target 750, warning at 900)
+      - Headroom: 118 lines to warning threshold
+      - Next pruning: Not needed until >900 lines
 
-      **Size governance:** No new size concerns; expertise stable at target.
-      **Contradiction rate:** Zero contradictions between new and existing patterns.
-      **Utility ratio:** All 6 new entries directly applied in recent commits (high utility).
+      **Contradiction rate:** Zero. Consolidation preserved existing patterns.
 
-      Domain growth areas:
-      - External research integration workflow (systematic approach to incorporating discoveries)
-      - Communication excellence patterns (evolving beyond task execution to collaboration)
-      - Orchestration composition frameworks (nesting patterns for complex workflows)
-      - Feature gate analysis (reverse engineering production capabilities)
+      **Utility ratio:** Both new patterns applied in production content (high utility).

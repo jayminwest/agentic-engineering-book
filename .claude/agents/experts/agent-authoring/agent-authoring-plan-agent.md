@@ -49,6 +49,8 @@ You are an Agent Authoring Expert specializing in planning agent creation and co
 
 *[2025-12-26]*: Flat orchestration architecture (commit 353d576). /do command directly spawns expert agents (not via coordinator layer). Coordinators converted to skills (.claude/skills/) which are workflow templates, not executable agents. This addresses nested subagent limitation where coordinator→expert spawning was broken.
 
+*[2026-02-02]*: Expert Swarm Pattern (commits 9fa2447, a1d5942). Domain experts coordinate parallel workers with expertise inheritance via path-passing. Workers receive `EXPERTISE_PATH: /absolute/path` (not full content) to keep prompts lean while maintaining domain consistency. Pattern documented in chapters/6-patterns/8-expert-swarm-pattern.md and operationalized in .claude/commands/do-swarm.md. Production evidence: 10 agents, 3,082 lines, 4 minutes with consistent quality.
+
 *[2025-12-26]*: Read-only agents (scouts, explorers) get only Read, Glob, Grep. This forces synthesis back to the orchestrator. Adding Bash to read-only agents is dangerous - can bypass restrictions.
 
 *[2025-12-26]*: Question agents follow consistent pattern: haiku model, Read/Glob/Grep tools only, description pattern "Answers [domain] questions. Expects USER_PROMPT (required question)". These provide advisory-only expertise access without modification capability.

@@ -665,6 +665,7 @@ The SQL issue needs immediate attention before merge."
 
 - [Plan-Build-Review](1-plan-build-review.md) - simpler version without parallel experts
 - [Self-Improving Experts](2-self-improving-experts.md) - how the domain experts evolve
+- [Expert Swarm Pattern](8-expert-swarm-pattern.md) - adds domain expertise inheritance to orchestration. When coordinating agents need consistent domain knowledge, expertise.yaml provides shared mental model via path-passing protocol. Combines orchestration scale with expertise consistency.
 - [Google ADK](../9-practitioner-toolkit/2-google-adk.md) - framework with native workflow primitives
 - [Context: Multi-Agent Context Isolation](../4-context/4-multi-agent-context.md#multi-agent-context-isolation) - the foundational context management strategy that makes orchestration viable
 - [Context Loading Demo](../../appendices/examples/context-loading-demo/README.md) - minimal example showing context payload construction and verification layer

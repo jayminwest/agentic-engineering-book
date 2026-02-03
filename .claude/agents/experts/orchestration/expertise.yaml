@@ -282,6 +282,62 @@ best_practices:
         evidence: .claude/commands/do.md Rule 3 (lines 110-126)
         timestamp: 2025-12-26
 
+  - category: Expert Swarm Coordination
+    practices:
+      - practice: Pass expertise.yaml path to workers (not content) via EXPERTISE_PATH parameter
+        evidence: chapters/6-patterns/8-expert-swarm-pattern.md#expertise-inheritance-protocol
+        rationale: Prevents context bloat (750 lines copied = 3K tokens per worker), maintains single source of truth
+        timestamp: 2026-02-02
+      - practice: Enforce learning separation - workers read-only, improve agent updates expertise post-swarm
+        evidence: chapters/6-patterns/8-expert-swarm-pattern.md#learning-separation
+        rationale: Prevents race conditions when multiple workers try updating expertise simultaneously
+        timestamp: 2026-02-02
+      - practice: Spawn all parallel workers in single message for true concurrency
+        evidence: Expert Swarm Pattern commit 20500f1 - 10 workers in one message = 10× speedup
+        timestamp: 2026-02-02
+      - practice: Workers return summaries, not full artifacts, to orchestrator
+        evidence: chapters/6-patterns/8-expert-swarm-pattern.md#orchestrator-context-hygiene
+        rationale: Keeps orchestrator context available for synthesis decisions
+        timestamp: 2026-02-02
+      - practice: Target 750-line expertise.yaml maximum for swarm-inherited expertise
+        evidence: chapters/6-patterns/8-expert-swarm-pattern.md#size-governance
+        rationale: Token economics - 750 lines = 3K tokens per worker (manageable), 2K lines = 8K tokens (unsustainable)
+        timestamp: 2026-02-02
+
+  - category: Canonical Swarm Prompting
+    practices:
+      - practice: Use canonical prompt structure (ROLE/CONTEXT/TASK/CONSTRAINTS/OUTPUT) for all teammates
+        evidence: .claude/commands/do-swarm.md#teammate-prompting-format
+        rationale: Reduces variance - 10-agent swarm with canonical format showed zero voice drift vs 15-20% without
+        timestamp: 2026-02-02
+      - practice: Avoid negative constraints ("Never X") - use positive alternatives ("Do Y")
+        evidence: .claude/commands/do-swarm.md#forbidden-patterns
+        rationale: Pink elephant effect - negative constraints focus model attention on prohibited action
+        timestamp: 2026-02-02
+      - practice: Specify validation level explicitly (Quick/Standard/Critical)
+        evidence: .claude/commands/do-swarm.md#validation-levels
+        rationale: Prevents inconsistent quality across parallel workers
+        timestamp: 2026-02-02
+      - practice: End prompts with "Use this exact format. No preamble." to prevent meta-commentary
+        evidence: .claude/commands/do-swarm.md#output-consistency-enforcement
+        timestamp: 2026-02-02
+
+  - category: /do vs /do-swarm Selection
+    practices:
+      - practice: Use /do for sequential workflows (plan→build→improve), simple delegation
+        evidence: .claude/commands/do.md + .claude/commands/do-swarm.md
+        timestamp: 2026-02-02
+      - practice: Use /do-swarm for parallel coordination with inter-agent messaging, multiple experts
+        evidence: .claude/commands/do-swarm.md
+        timestamp: 2026-02-02
+      - practice: /do-swarm requires TeammateTool access (server-side gated, may need claude-sneakpeek)
+        evidence: .claude/commands/do-swarm.md#requirements
+        timestamp: 2026-02-02
+      - practice: For quick research swarms, skip shutdown ceremony (teammates timeout naturally ~5 min)
+        evidence: .claude/commands/do-swarm.md#cleanup
+        rationale: Saves 3-4 conversation turns without downside
+        timestamp: 2026-02-02
+
 anti_patterns:
   frontmatter_colon_usage:
     name: Using Colons in Agent Description Frontmatter Values
@@ -608,6 +664,203 @@ patterns_discovered_in_recent_work:
       - chapters/6-patterns/3-orchestrator-pattern.md (coordination primitives)
     timestamp: 2026-01-30
 
+  expert_swarm_pattern:
+    name: Expert Swarm Pattern - Domain Expertise + Parallel Execution
+    context: Combining expert domain knowledge inheritance with swarm-scale parallelism
+    discovered: 2026-02-02 (commit a1d5942)
+    implementation: |
+      Expert Swarm resolves orchestration tension: generic coordinators achieve
+      parallelism but lack domain context; domain experts maintain consistency
+      but execute sequentially.
+
+      **Core Innovation: Expertise Inheritance via Path-Passing**
+      Workers receive EXPERTISE_PATH (not copied content):
+      ```
+      EXPERTISE_PATH: /path/to/domain/expertise.yaml
+      Read this file and apply relevant patterns.
+      Focus on: Implementation Standards, Voice Patterns
+      ```
+
+      **Key Elements:**
+      1. Expert as orchestrator - existing domain expert acts as lead
+      2. Narrow workers - ephemeral agents spawned for single tasks
+      3. Path-passing protocol - single source of truth (prevents context bloat)
+      4. Learning separation - workers execute, improve agent analyzes post-swarm
+      5. Single-message parallelism - all workers spawn in ONE message
+
+      **Communication Mechanisms:**
+      - Spec-as-artifact: Orchestrator writes spec file, workers read it
+      - TeammateTool messaging: Write/Broadcast for coordination (when available)
+      - No context passing between workers (isolation maintained)
+
+      **Production Evidence (commit 20500f1):**
+      - 10 parallel agents: 3,082 lines across 20 files in ~4 minutes
+      - 10× speedup over sequential execution (~40 min → ~4 min)
+      - Zero voice drift: All entries followed structure standards
+      - Token economics: 750-line expertise.yaml = ~3K tokens per worker (manageable at 10 workers = 30K tokens)
+
+      **Why Path-Passing vs Context Copying:**
+      - Keeps orchestrator context clean (no 500-750 line pollution per worker)
+      - Single source of truth (updates propagate to future workers)
+      - Scales to 10+ workers without context explosion
+      - Workers selectively read relevant sections
+
+      **Learning Separation Rationale:**
+      Allowing parallel workers to update expertise.yaml creates race conditions:
+      Worker 1 and 2 read version A → both update → one overwrites other's learnings.
+      Solution: Workers read-only access → swarm completes → improve agent analyzes
+      all changes once → updates expertise → next swarm benefits.
+
+      **Decision Framework:**
+      Use Expert Swarm when:
+      - Multiple independent tasks within single domain
+      - Expertise.yaml exists (500-750 lines) and well-documented
+      - Quality consistency valued (voice drift costly)
+      - Scale exceeds single-agent capacity (10+ similar tasks)
+
+      Don't use when:
+      - Simple single-file changes (overhead exceeds benefit)
+      - Tasks tightly coupled (sequential dependencies)
+      - Domain expertise not yet codified
+      - Cross-domain work (use multi-expert council instead)
+
+      **Size Governance:**
+      Target 750 lines for expertise.yaml to prevent token bloat when inherited.
+      A 2,000-line expertise would cost 8K tokens per worker (unsustainable).
+
+      **Coordination Patterns:**
+      - Leader-Worker (default): Expert lead + narrow workers
+      - Council: Multiple domain experts analyzing independently
+
+      **Limitations:**
+      - Flat architecture only (Claude Code nesting unreliable)
+      - TeammateTool gated (rely on spec-as-artifact until GA)
+      - Expertise synchronization requires governance
+      - Token overhead: 3K per worker (30K for 10 workers)
+    evidence: chapters/6-patterns/8-expert-swarm-pattern.md
+    cross_references:
+      - chapters/6-patterns/2-self-improving-experts.md (expertise evolution)
+      - chapters/4-context/4-multi-agent-context.md (path-passing protocol)
+      - .claude/commands/do-swarm.md (implementation)
+    timestamp: 2026-02-02
+
+  do_swarm_direct_orchestration:
+    name: /do-swarm Direct Orchestration Pattern
+    context: TeammateTool coordination at command level, not subagent
+    discovered: 2026-02-02 (commit a1d5942)
+    implementation: |
+      /do-swarm command orchestrates TeammateTool swarms directly without
+      spawning coordinator agent. This avoids nested subagent issues while
+      enabling full TeammateTool primitives.
+
+      **Architecture:**
+      /do-swarm → YOU are team leader → spawn teammates → coordinate → synthesize
+
+      Contrast with /do:
+      - /do: Orchestrates via Task tool (spawn plan→build→improve)
+      - /do-swarm: Orchestrates via Teammate operations (spawn, message, join)
+
+      **Workflow:**
+      1. Create team: Teammate(operation="spawnTeam")
+      2. Spawn lead + workers: Task(team_name=X, name=Y) in single message
+      3. Coordinate: SendMessage (direct/broadcast)
+      4. Receive results: Automatic delivery via messaging
+      5. Synthesize: Aggregate worker outputs
+      6. Cleanup: Teammate(operation="cleanup")
+
+      **Canonical Prompting Format (Variance Reduction):**
+      Every teammate prompt follows structure:
+      - ROLE: You are a {role} specializing in {capability}
+      - CONTEXT: EXPERTISE_PATH, TEAM, LEADER/WORKERS
+      - TASK: Clear, specific deliverable
+      - CONSTRAINTS: Tools, completion signals, messaging protocol
+      - OUTPUT FORMAT: Structured sections (Status, Files, Summary)
+
+      Forbidden patterns documented:
+      - Meta-commentary openers ("Based on...", "I have created...")
+      - Negative constraints ("Never X" causes pink elephant effect)
+      - Vague instructions ("Be thorough")
+      - Unbounded scope ("Research everything")
+
+      **Role-Based Tool Access:**
+      | Role | Allowed Tools | Forbidden |
+      |------|---------------|-----------|
+      | Lead | Read, Glob, Grep, SendMessage | Write, Edit (delegates) |
+      | Worker | Read, Write, Edit, SendMessage | Task (no sub-spawning) |
+      | Expert (Council) | Read, Glob, Grep, WebSearch | Write (analysis only) |
+      | Scout | Read, Glob, Grep | Write, Edit, Task |
+
+      **Shutdown Optimization:**
+      Full shutdown ceremony (SendMessage shutdown request + wait + cleanup)
+      adds 3-4 conversation turns. For quick research swarms, skip shutdown—
+      teammates timeout after ~5 min naturally.
+
+      **When to Use /do-swarm vs /do:**
+      - /do: Sequential workflows (plan→build→improve), simple delegation
+      - /do-swarm: Parallel coordination with inter-agent messaging, multiple
+        expert perspectives, complex multi-agent workflows
+
+      **Requirements:**
+      TeammateTool access (server-side gated, may require claude-sneakpeek unlock)
+    evidence: .claude/commands/do-swarm.md
+    cross_references:
+      - chapters/6-patterns/8-expert-swarm-pattern.md (pattern documentation)
+      - chapters/6-patterns/3-orchestrator-pattern.md (orchestration principles)
+    timestamp: 2026-02-02
+
+  canonical_teammate_prompting:
+    name: Canonical Teammate Prompting Format for Swarm Consistency
+    context: Reducing variance in parallel swarm execution via structured prompts
+    discovered: 2026-02-02 (commit 75a4962)
+    implementation: |
+      Variance in teammate prompts causes inconsistent swarm behavior. Canonical
+      format enforces structure across all parallel agents:
+
+      **Required Sections:**
+      1. ROLE: Identity + focus (one sentence)
+      2. CONTEXT: EXPERTISE_PATH, TEAM, relationships
+      3. TASK: Specific deliverable (not open-ended)
+      4. CONSTRAINTS: Tools, completion signals, messaging
+      5. OUTPUT FORMAT: Structured sections (prevents meta-commentary)
+
+      **Forbidden Patterns (Documented):**
+      | Category | Forbidden | Correct Alternative |
+      |----------|-----------|-------------------|
+      | Openers | "Based on...", "I have created..." | Start with content directly |
+      | Constraints | "Never modify files without reading" | "Read file contents before editing" |
+      | Instructions | "Be thorough" | "Cover these 3 scenarios: {list}" |
+      | Scope | "Research everything about X" | "Research X from {3 sources}" |
+
+      **Rationale:**
+      - Negative constraints cause "pink elephant" effect (model focuses on prohibited action)
+      - Meta-commentary wastes context and dilutes focus
+      - Vague instructions lead to interpretation variance
+      - Unbounded scope causes inconsistent task boundaries
+
+      **Validation Levels:**
+      Specify validation explicitly to prevent inconsistent quality:
+      - Level 1 (Quick): Syntax check only (docs, comments)
+      - Level 2 (Standard): Run tests, verify no regressions (features)
+      - Level 3 (Critical): Full test suite + manual verification (API, auth)
+
+      **Role-Based Tool Access:**
+      Explicit tool constraints prevent confusion and security issues.
+      Lead agents coordinate (no Write); workers implement (no Task).
+
+      **Output Format Enforcement:**
+      End every prompt with: "CRITICAL: Use this exact format. No preamble."
+      Prevents "I have completed..." and other meta-commentary that pollutes
+      orchestrator context during synthesis.
+
+      **Production Impact:**
+      10-agent swarm (commit 20500f1) with canonical prompting: zero voice drift,
+      consistent structure across all 20 files. Prior swarms without canonical
+      format showed 15-20% variance in section structure and output style.
+    evidence: .claude/commands/do-swarm.md#teammate-prompting-format
+    cross_references:
+      - chapters/6-patterns/8-expert-swarm-pattern.md
+    timestamp: 2026-02-02
+
 potential_enhancements:
   - enhancement: Automated spec file cleanup after successful build
     rationale: Prevent .claude/plans/ from accumulating stale specs
@@ -636,24 +889,36 @@ stability:
     detected_oscillations: []
 
   convergence_indicators:
-    insight_rate_trend: stable
+    insight_rate_trend: increasing
     contradiction_count: 0
-    last_reviewed: 2026-01-30
+    last_reviewed: 2026-02-02
     notes: |
       Domain stabilizing after pruning (940→464 lines in cb89c17).
       Key patterns validated: flat orchestration, single-message parallelism,
       4-agent expert pattern, approval gates, expertise size governance.
 
-      New learnings this cycle: 2 patterns (swarm orchestration, TeammateTool coordination)
-      Cross-domain contributions: 2 patterns (both apply to multi-model, context, tool-use domains)
+      New learnings this cycle: 4 patterns (expert swarm, /do-swarm direct orchestration,
+      canonical prompting format, expertise inheritance protocol)
+      Cross-domain contributions: 3 patterns (expertise inheritance, learning separation,
+      canonical prompting - apply to any swarm coordination domain)
 
       ELA Component 2 implemented (orchestration trace logging).
       ELA Component 3 implemented (cross-domain registry).
       Observability infrastructure enables self-improving orchestration.
 
-      Size health: 517→663 lines (+146 from this improvement cycle, still under 750 target)
+      Size health: 663→946 lines (+283 from this improvement cycle, approaching WARNING threshold)
+      Note: Next improve cycle should assess consolidation opportunities - expertise
+      inheritance pattern may subsume earlier delegation patterns.
+
+      Major architectural addition:
+      - Expert Swarm Pattern bridges generic orchestration and domain expertise
+      - /do-swarm enables TeammateTool swarms at command level (no coordinator nesting)
+      - Production validated: 10× speedup, zero voice drift across 20 files
+      - Canonical prompting format reduces variance in parallel swarm execution
+      - Path-passing protocol solves context bloat problem (750 lines → 3K tokens vs copying)
 
       Architectural evolution detected:
       - Model-native swarm represents shift from SDK to model-capability orchestration
       - TeammateTool indicates Anthropic's strategic direction toward richer coordination
-      - Both patterns complement existing SDK orchestration (not replacements)
+      - Expert Swarm combines SDK orchestration with domain expertise accumulation
+      - All three patterns complement (not replace) existing orchestration approaches

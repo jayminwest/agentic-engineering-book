@@ -502,6 +502,8 @@ Multiple perspectives needed? ──Yes──> Consider Council pattern
 Default: Use TeammateTool ──> Enable richer coordination
 ```
 
+**Expert Swarm Variant**: Council pattern combines with expertise inheritance when domain experts coordinate. Each council member inherits domain expertise.yaml via path-passing, enabling consistent multi-perspective analysis. See [Expert Swarm Pattern](../../6-patterns/8-expert-swarm-pattern.md) for combining orchestration with expertise consistency.
+
 ### Open Questions
 
 - Which coordination operations beyond the 8 identified exist in the codebase?

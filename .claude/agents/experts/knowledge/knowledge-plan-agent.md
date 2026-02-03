@@ -158,6 +158,83 @@ When extending existing content, prefix with timestamp:
 
 Use these when documenting "how to decide" workflows. They make implicit decision logic explicit and scannable. See chapters/3-model/1-model-selection.md for reference implementation.
 
+### Sophisticated Pattern Documentation (10+ Sections)
+
+*[2026-02-02]*: Complex orchestration patterns require 10+ sections with specific structural choices serving different reader needs. The Expert Swarm Pattern (chapters/6-patterns/8-expert-swarm-pattern.md - 532 lines) demonstrates effective documentation for architectural innovations:
+
+**Key Structural Decisions That Worked:**
+
+1. **Production Evidence First** (within 20 lines) - Opens with commit hash + quantified metrics (10 agents, 4 minutes, 3,082 lines). Creates immediate credibility before diving into details.
+
+2. **ASCII Diagrams Before Prose** - Visual representation (5-layer Expert Swarm architecture) clarifies system before explanation. Readers mentally model the system before reading prose.
+
+3. **Hybrid Approach Positioning** - Frame new pattern against existing patterns (Traditional Orchestrator vs Expert Swarm vs Model-Native). Don't assume readers know the problem it solves.
+
+4. **Protocol Specification with "Why Not" Comparison** - Core innovations (path-passing) documented with concrete syntax + comparison table ("Why Not Context Copying?"). Eliminates reader hesitation.
+
+5. **Scale Subsection with Quantified Speedup** - Single-Message Parallelism gets dedicated subsection. Include wall-clock comparison (4 min parallel vs 40 min sequential = 10× speedup). Quantified metrics answer "is this worth it?"
+
+6. **Token Economics Transparency** - Dedicate subsection to cost analysis (750-line expertise.yaml = 3,000 tokens/worker). Readers make informed decisions about whether pattern scales for their needs.
+
+7. **Real Implementation Prompts** - Show actual prompt language from production (SPEC: ... and EXPERTISE_PATH: ...). Readers can copy-paste exact syntax.
+
+8. **Three-Way Trade-Off Table** - Compare 3+ alternatives across 10+ dimensions. Readers see which dimensions favor which approaches without prose paragraphs.
+
+9. **Decision Framework as ASCII Tree** - Force readers through binary/ternary decisions. Tree catches incompatible criteria combinations that prose lists miss.
+
+10. **Good Fit / Poor Fit Before Tree** - Bullet lists for obvious cases, tree for nuanced decisions. Readers scan bullets first for fast path.
+
+11. **Bidirectional Cross-References with Relationship Explanation** - Each connection link explains "why this matters" not just "click here."
+
+12. **Open Questions (8+) Acknowledging Research Gaps** - Signal pattern is useful but incomplete. Specific questions guide community research contribution. Intellectual humility increases credibility.
+
+**When to Use This Structure:** Sophisticated multi-agent architectural patterns (3+ components), patterns solving known tensions, production patterns with quantified evidence, patterns requiring protocol specification. Typical length: 300-550 lines.
+
+### Slash Command Documentation Structure
+
+*[2026-02-02]*: Multi-step command workflows require imperative instruction format. The /do-swarm command (.claude/commands/do-swarm.md - 623 lines) demonstrates effective structure for coordination workflows:
+
+**7-Section Format:**
+1. **Your Role** (3 bullets): Clarify command executor responsibilities ("You are the team leader")
+2. **Workflow** (7 numbered steps): Step 1 (Create Team) → Step 7 (Cleanup), each with code block + constraints
+3. **Templates** (2 sections): Copy-paste Lead agent template + Worker agent template
+4. **Coordination Patterns**: SendMessage usage (direct messages, broadcasts)
+5. **When To Use**: Comparison table (/do vs /do-swarm decision guidance)
+6. **Examples**: Real execution scenarios
+7. **Troubleshooting**: Common errors with resolutions
+
+**Critical Elements:**
+- Imperative voice throughout ("You do NOT do the work yourself—teammates do")
+- Code block templates (copy-paste ready with EXPERTISE_PATH protocol)
+- Critical callouts for common errors ("CRITICAL: Spawn all workers in a SINGLE message")
+- Step-by-step workflow matching actual execution order
+
+**When to Use:** Commands requiring multi-agent coordination, domain expert integration (expertise.yaml passing), parallel execution workflows requiring explicit orchestration.
+
+### Debugging Chapter Expansion Pattern
+
+*[2026-02-02]*: Debugging content expands effectively from stubs (250 lines) to comprehensive reference (1,030 lines) by adding structured diagnostic workflows. The debugging-agents.md expansion (commit 20500f1) demonstrates:
+
+**Expansion Structure:**
+1. **Mindset comparison table**: Agent debugging vs traditional (deterministic vs probabilistic)
+2. **Core Framework table**: Diagnostic sequence (Prompt → Model → Context → Tools)
+3. **Multi-branch decision tree**: Step 1 (Characterize) → Steps 2A-F (Root cause by failure type)
+4. **8+ failure modes**: Each with 4-part structure (Symptoms → Diagnosis → Root Causes → Fixes)
+
+**Failure Mode Documentation Template:**
+- **Symptoms**: Observable behaviors readers recognize
+- **Diagnosis**: How to verify (check logs, metrics, context)
+- **Root causes**: Why it happens (3-4 bullets)
+- **Fixes**: Remediation strategies (4-5 actionable bullets)
+
+**Why This Works:**
+- Symptom-first organization (readers search by what they observe)
+- Decision trees for structured troubleshooting (if X then check Y)
+- Comparison tables for mindset shifts (conceptual bridges)
+- Multiple failure modes in single chapter (comprehensive reference, not fragmented entries)
+
+**When to Use:** Expanding operational guidance chapters, documenting troubleshooting workflows, building practitioner reference material for production issues.
+
 **Leading Questions Pattern:**
 New and developing entries benefit from questions that guide future development:
 ```markdown

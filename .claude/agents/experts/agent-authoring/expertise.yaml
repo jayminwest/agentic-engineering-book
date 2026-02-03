@@ -256,6 +256,66 @@ key_operations:
         protocols_migrated: 5 (Never Force Push, Never Amend Pushed Commits, etc.)
         location: .claude/agents/experts/github/expertise.yaml
 
+  configure_swarm_coordination:
+    name: Configure Expert Swarm Coordination
+    description: Set up lead + worker structure for parallel execution with expertise inheritance
+    when_to_use: Creating /do-swarm command agents or expert swarms requiring parallel coordination
+    approach: |
+      *[2026-02-02]*: Pattern from commits 9fa2447 and a1d5942.
+
+      Swarm structure decision tree:
+      1. Does task require parallel execution? (Yes → continue, No → use /do sequential)
+      2. Does task benefit from domain expertise? (Yes → Expert Swarm, No → generic coordination)
+      3. Do workers need to communicate? (Yes → TeammateTool, No → simple Task spawning)
+
+      Configuration approach:
+      1. **Identify Lead Agent**: Use existing domain expert (plan/build agent) as coordinator
+      2. **Design Path-Passing**: Pass EXPERTISE_PATH, not full content
+      3. **Scope Workers Narrowly**: Each worker = single focused task
+      4. **Canonical Prompt Structure**: Follow ROLE/CONTEXT/TASK/CONSTRAINTS/OUTPUT FORMAT template
+      5. **Enforce Learning Separation**: Workers execute only, no expertise updates
+
+      Lead agent prompt elements:
+      - ROLE: Lead {domain} expert coordinating swarm
+      - CONTEXT: EXPERTISE_PATH, TEAM, WORKERS list
+      - TASK: Main requirement from user
+      - CONSTRAINTS: Distribute via SendMessage, wait for all results, validate consistency
+      - TOOLS: Read, Glob, Grep, SendMessage (no Write, delegates to workers)
+
+      Worker prompt elements:
+      - ROLE: Specialist worker focused on {narrow task}
+      - CONTEXT: EXPERTISE_PATH (same as lead), TEAM, LEADER name
+      - TASK: Specific subtask (narrow and clear)
+      - CONSTRAINTS: Complete independently, send results to leader, report blockers
+      - TOOLS: Read, Write, Edit, Glob, Grep, SendMessage (no Task, no sub-spawning)
+      - OUTPUT FORMAT: Status | Files Modified | Summary (consistent across all workers)
+
+      Anti-patterns to avoid:
+      - Meta-commentary openers ("Based on the changes...")
+      - Negative constraints ("Never modify without reading" → use positive "Read before editing")
+      - Vague instructions ("Be thorough" → use "Cover these 3 scenarios: {list}")
+      - Unbounded scope ("Research everything" → use "Research from these 3 sources")
+
+      Expertise inheritance:
+      - Pass absolute path: `EXPERTISE_PATH: /Users/.../experts/{domain}/expertise.yaml`
+      - Workers load themselves: "Read the expertise file before starting"
+      - Focus attention: "Focus on sections: key_operations.{X}, patterns.{Y}"
+    examples:
+      - location: .claude/commands/do-swarm.md
+        note: 400+ lines with canonical prompt templates for lead/worker/council patterns
+      - location: chapters/6-patterns/8-expert-swarm-pattern.md
+        note: Full pattern documentation with production evidence (10 agents, 3,082 lines, 4 minutes)
+    pitfalls:
+      - what: Passing full expertise content in worker prompts
+        instead: Pass EXPERTISE_PATH and have workers read it
+        reason: Expertise files are 500-750 lines, bloating context unnecessarily
+      - what: Workers spawning sub-agents
+        instead: Keep workers narrow, grant no Task access
+        reason: Prevents coordination explosion
+      - what: Workers updating expertise during execution
+        instead: Improve agent analyzes afterward
+        reason: Prevents race conditions on expertise.yaml
+
 decision_trees:
   tool_selection_by_role:
     name: Tool Selection Decision Tree
@@ -547,6 +607,74 @@ patterns:
       - location: .claude/commands/do.md
         note: 300+ lines, direct orchestration of expert agents (commit 353d576)
 
+  expert_swarm_pattern:
+    name: Expert Swarm Pattern
+    context: Domain experts coordinate parallel workers with expertise inheritance
+    implementation: |
+      *[2026-02-02]*: Commit 9fa2447 documented pattern, commit a1d5942 added /do-swarm command.
+      Pattern combines expertise consistency with parallel execution scale.
+
+      Core structure:
+      ```
+      Expert Lead (existing domain expert with full context)
+        └─ Workers 1-N (narrow tasks, inherit via path-passing)
+           └─ EXPERTISE_PATH: /absolute/path/to/expertise.yaml
+      ```
+
+      Key mechanisms:
+      1. **Path-Passing Protocol**: Workers receive `EXPERTISE_PATH: /absolute/path` (not full content)
+      2. **Expert as Lead**: Existing domain expert (plan/build agent) acts as coordinator
+      3. **Narrow Workers**: Each executes single focused task with domain knowledge
+      4. **Learning Separation**: Workers execute only; improve agents analyze afterward
+      5. **Canonical Prompt Structure**: Consistent format reduces variance across teammates
+
+      Prompt structure for workers:
+      ```markdown
+      ## ROLE
+      You are a {role} specializing in {specific capability}.
+      Your sole focus is {single responsibility}.
+
+      ## CONTEXT
+      EXPERTISE_PATH: {absolute_path}
+      TEAM: {team-name}
+      LEADER: {lead-name}
+
+      Read the expertise file. Focus on sections relevant to your task.
+
+      ## TASK
+      {Specific subtask}
+
+      ## CONSTRAINTS
+      - Complete independently
+      - Send plain-text results to leader when done
+      - Do NOT send JSON status messages
+
+      ## OUTPUT FORMAT
+      ### Status
+      {Complete | Blocked}
+      ### Files Modified
+      - {path} - {change}
+      ### Summary
+      {1-2 sentences}
+      ```
+
+      Production evidence:
+      - Commit 20500f1: 10 agents, 3,082 lines, 4 minutes
+      - Quality consistent across all parallel work
+      - Core Questions, Mental Models, trade-off tables all followed conventions
+    trade_offs:
+      - advantage: Expertise consistency without micromanagement
+        cost: Requires existing expertise.yaml (500-750 lines domain knowledge)
+      - advantage: Parallel scale with domain context
+        cost: Path-passing assumes shared filesystem (not distributed)
+      - advantage: Learning separation prevents race conditions
+        cost: Cannot update expertise during swarm execution
+    real_examples:
+      - location: .claude/commands/do-swarm.md
+        note: 400+ lines, TeammateTool coordination with canonical prompt templates
+      - location: chapters/6-patterns/8-expert-swarm-pattern.md
+        note: 532-line pattern documentation with production evidence
+
 best_practices:
   - category: Frontmatter
     practices:
@@ -689,6 +817,18 @@ best_practices:
       - practice: Dual-file ownership - single expert domain manages tightly-coupled files
         evidence: curriculum domain owns both CURRICULUM.md and RUBRIC.md
         timestamp: 2025-12-27
+      - practice: /do-swarm command for parallel execution with TeammateTool coordination
+        evidence: Commit a1d5942 added command, commit 9fa2447 documented Expert Swarm Pattern
+        timestamp: 2026-02-02
+        implementation: |
+          Use /do-swarm when requiring:
+          - Parallel execution with inter-agent messaging
+          - Multiple expert perspectives (council pattern)
+          - Complex multi-agent workflows
+          Use /do for sequential workflows (plan→build→improve) or simple delegation.
+
+          Key difference: /do-swarm has TeammateTool access for message-passing coordination,
+          /do uses traditional Task spawning for sequential expert orchestration.
 
 known_issues:
   - issue: No automated validation for frontmatter completeness
@@ -741,8 +881,31 @@ stability:
   convergence_indicators:
     insight_rate_trend: "stable-decreasing"
     contradiction_count: 0
-    last_reviewed: 2026-01-30
+    last_reviewed: 2026-02-02
     notes: |
+      *[2026-02-02 - Expert Swarm Pattern and /do-swarm command]*
+      New learnings: +1 pattern, +1 command pattern, +1 best practice
+      Size after additions: ~830 lines (within healthy 750-900 range)
+
+      Key learnings from commits 9fa2447 (swarm documentation) and a1d5942 (do-swarm command):
+
+      1. Expert Swarm Pattern: Domain experts coordinate parallel workers via path-passing protocol
+         - Workers receive EXPERTISE_PATH (not full content) to keep prompts lean
+         - Lead agent (existing domain expert) orchestrates + synthesizes results
+         - Learning separation: workers execute, improve agents analyze afterward
+         - Production evidence: 10 agents, 3,082 lines, 4 minutes, consistent quality
+
+      2. /do-swarm Command: Orchestrator-level swarm coordination with TeammateTool
+         - Flat architecture: command directly spawns lead + workers (no nested subagents)
+         - Canonical prompt structure reduces variance across teammates
+         - Path-passing: EXPERTISE_PATH in all worker prompts for domain knowledge inheritance
+         - Coordination patterns: Leader-Worker (implementation), Council (research)
+
+      3. Description field fix (commit 74b0ad3): Additional evidence of colon breaking pattern
+         - Changed `default: false` to `default false` in 6 plan agent files
+         - Confirms colons anywhere in description value cause parser failure
+         - Pattern already documented in best_practices but additional commit evidence
+
       *[2026-01-30 - External teaching workflow learnings]*
       New learnings: +2 best practices (external-teacher Bash access patterns)
       Size after additions: ~782 lines (within healthy 750-900 range)
