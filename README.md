@@ -2,6 +2,8 @@
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+📖 **[Read the web version](https://jayminwest.com/agentic-engineering-book)** *(updated daily at 6am)*
+
 > [!CAUTION]
 > **This book is maintained by LLMs using the techniques described within.**
 > Content is written and updated by Claude using agentic workflows, slash commands, and self-improving expert agents. Human review ensures accuracy, but the authoring process itself is an exercise in agentic engineering.
