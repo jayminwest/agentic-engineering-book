@@ -509,6 +509,139 @@ Scale justifies overhead? ─No─→ Sequential expert pattern
 
 ---
 
+## Flat Team Coordination Archetypes
+
+*[2026-02-05]*: Production agent teams operate under strict constraints: no nested teams, one team per session, flat hierarchy. Within this constraint, two coordination archetypes emerge: Implementation Pattern (file ownership) and Council Pattern (read-only analysis).
+
+### The Flat Team Constraint
+
+Agent teams systems enforce three architectural constraints:
+
+1. **No nested teams**: Teams cannot spawn sub-teams
+2. **One team per session**: Single active team coordination boundary
+3. **Flat hierarchy**: All teammates are peers, no sub-coordinators
+
+**Why these constraints:**
+- Prevents coordination complexity explosion
+- Keeps orchestration traceable (no hidden delegation layers)
+- Simplifies mental model: lead coordinates N peers, peers collaborate
+
+### Implementation Pattern: File Ownership Coordination
+
+**Structure:**
+```
+Lead (orchestrator, coordination-only tools)
+├── Build Agent 1: src/auth/*.ts (exclusive ownership)
+├── Build Agent 2: src/api/*.ts (exclusive ownership)
+├── Build Agent 3: src/utils/*.ts (exclusive ownership)
+└── ... (each agent owns distinct file scope)
+```
+
+**Key characteristics:**
+- Each teammate gets explicit file ownership scope
+- No overlap: prevents write conflicts
+- Build specialists with Write, Edit, Bash tools
+- Parallel execution (no shared state)
+
+**Use when:**
+- Implementing multiple independent modules
+- Clear file boundaries exist
+- Work parallelizes cleanly across file scopes
+
+**Trade-offs:**
+
+| Advantage | Cost |
+|-----------|------|
+| Zero coordination overhead (no shared state) | Requires upfront decomposition |
+| True parallelism (no blocking) | Rigid boundaries (hard to shift scope) |
+| Conflict-free merging | Less effective for cross-cutting changes |
+
+### Council Pattern: Independent Analysis
+
+**Structure:**
+```
+Lead (orchestrator, aggregates findings)
+├── Security Analyst: Read, Grep only
+├── Performance Auditor: Read, Grep only
+├── Code Quality Reviewer: Read, Grep only
+└── ... (each analyst provides independent perspective)
+```
+
+**Key characteristics:**
+- All teammates read-only (Read, Grep tools)
+- No coordination needed (independent analyses)
+- Parallel execution (no dependencies)
+- Lead synthesizes perspectives
+
+**Use when:**
+- Multi-perspective review required (security + performance + quality)
+- Independent expert opinions valued
+- No implementation work needed
+
+**Trade-offs:**
+
+| Advantage | Cost |
+|-----------|------|
+| Diverse perspectives (independent analysis) | No implementation (analysis-only) |
+| Embarrassingly parallel (no blocking) | Requires synthesis (lead aggregates) |
+| Clean separation (analysts can't interfere) | Read-only limits (can't demonstrate fixes) |
+
+### Serialization Within Parallel Teams: `addBlockedBy`
+
+**The problem:** Sometimes teammates need sequential coordination:
+```
+Agent A: Implement database schema
+Agent B: Implement API routes (DEPENDS ON schema)
+```
+
+**The solution:** `addBlockedBy` marks dependency without breaking parallelism:
+
+```json
+{
+  "task_id": "implement-api-routes",
+  "agent": "build-agent-2",
+  "blocked_by": ["implement-schema"]
+}
+```
+
+Orchestrator spawns both agents in parallel, but Agent B waits for Agent A completion before starting.
+
+**When to use:**
+- Sequential dependencies within parallel teams
+- Batch 1 (no deps) → Batch 2 (depends on Batch 1) workflows
+- Prevents agents from blocking on missing preconditions
+
+### Hybrid Approach: Mixed Archetypes
+
+Production teams often combine patterns:
+```
+Lead
+├── Implementation Track (file ownership)
+│   ├── Build Agent 1: auth module
+│   └── Build Agent 2: api module
+└── Council Track (read-only review)
+    ├── Security Analyst
+    └── Performance Auditor
+```
+
+**Workflow:**
+1. Lead spawns implementation track (parallel builds)
+2. Implementation agents complete work
+3. Lead spawns council track (parallel review)
+4. Lead synthesizes findings and addresses issues
+
+This combines parallelism (multiple builders) with quality gates (council review).
+
+### Connections
+
+- **To [Orchestrator Pattern](3-orchestrator-pattern.md)**: Flat team constraint is architectural decision, not SDK limitation. Orchestrators coordinate flat teams; teammates execute.
+- **To [Agent Teams](../../9-practitioner-toolkit/1-claude-code.md#agent-teams-native-multi-agent-coordination-experimental)**: Implementation and Council patterns map to TeammateTool coordination primitives
+- **To [Workflow Coordination](../../7-practices/5-workflow-coordination.md)**: Flat team archetypes provide coordination patterns for structured metadata systems
+
+**Sources:** Advanced external .claude/ implementation patterns, TeammateTool documentation analysis.
+
+---
+
 ## Connections
 
 - **To [Orchestrator Pattern](3-orchestrator-pattern.md)**: Expert Swarm extends generic orchestration by adding domain expertise inheritance. Single-message parallelism and context isolation principles still apply. The key difference: expert lead provides domain context that generic orchestrators lack.

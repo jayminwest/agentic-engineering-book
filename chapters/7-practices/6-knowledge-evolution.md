@@ -2,7 +2,7 @@
 title: Knowledge Evolution
 description: Guidelines for how knowledge base entries should be updated over time
 created: 2025-12-08
-last_updated: 2026-01-21
+last_updated: 2026-02-05
 tags: [practices, maintenance, evolution]
 part: 2
 part_title: Craft
@@ -143,6 +143,58 @@ Content here...
 2. **Technology shifted fundamentally** - API deprecated, tool replaced, paradigm obsolete
 3. **Created provable harm** - Pattern led to bugs or degraded systems
 4. **Superceded by better pattern** - New approach strictly dominates old one
+
+### Learning Separation in Multi-Agent Systems
+
+*[2026-02-05]*: Production multi-agent systems extend the learning separation principle to coordination boundaries. Teammates execute tasks only; learning happens post-hoc via dedicated improve-agents analyzing collective execution history.
+
+**The coordination constraint:**
+
+In flat team orchestration (see [Expert Swarm Pattern](../../6-patterns/8-expert-swarm-pattern.md)), multiple agents execute tasks in parallel. If agents update shared expertise during execution, race conditions emerge:
+
+```
+Agent 1 reads expertise.yaml (version A)
+Agent 2 reads expertise.yaml (version A)
+Agent 1 updates expertise.yaml → version B
+Agent 2 updates expertise.yaml → version C (overwrites B)
+Result: Agent 1's learnings lost
+```
+
+**The clean separation:**
+
+**Execution Phase (teammates):**
+- Read expertise.yaml for guidance
+- Execute assigned tasks
+- Do NOT update expertise.yaml
+- Report completion to orchestrator
+
+**Learning Phase (improve-agent):**
+- Runs AFTER all teammates complete
+- Analyzes git history from collective execution
+- Updates expertise.yaml once with all learnings
+- Next team benefits from accumulated knowledge
+
+**Example workflow:**
+```
+1. Orchestrator spawns 10 build agents (read expertise.yaml)
+2. Build agents execute tasks in parallel
+3. All agents complete, orchestrator commits changes
+4. Orchestrator spawns improve-agent
+5. Improve-agent analyzes git diff, updates expertise.yaml
+6. Next orchestration uses improved expertise
+```
+
+**Why this works:**
+- No coordination overhead during execution (agents focus on tasks)
+- No race conditions (single writer in learning phase)
+- Expertise accumulates over time (improve-agent sees full context)
+- Fast execution (agents don't pause to update knowledge)
+
+**Connection to PRESERVE/APPEND/DATE/REMOVE:**
+
+Learning separation determines WHEN updates happen (post-hoc), while PRESERVE/APPEND/DATE/REMOVE governs HOW updates happen (conservative, timestamped). Both patterns combine to create sustainable knowledge accumulation without coordination chaos.
+
+**Sources:** Expert Swarm Pattern production evidence (commit 20500f1), advanced .claude/ implementation analysis.
 
 *[2025-12-10]*: **Utility tracking makes removal evidence-based.** Rather than guessing which entries to prune, track metrics:
 

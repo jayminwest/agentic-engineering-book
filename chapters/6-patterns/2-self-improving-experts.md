@@ -2,7 +2,7 @@
 title: Self-Improving Expert Commands
 description: The Plan-Build-Improve pattern for creating commands that learn from experience
 created: 2025-12-08
-last_updated: 2026-01-21
+last_updated: 2026-02-05
 tags: [patterns, meta-prompting, self-improvement]
 part: 2
 part_title: Craft
@@ -1438,6 +1438,131 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Knowledge accumulation**: expertise.yaml gained 6 patterns, 3 decision trees, 4 best practices, 4 known issues, 5 potential enhancements—all with timestamps and evidence from actual repository usage.
 
 **Absorption ROI**: 3.6× code expansion, but enables continuous knowledge accumulation without agent prompt modifications. The improve-agent runs periodically, expertise evolves, plan/build agents automatically benefit from updated knowledge.
+
+---
+
+## Agent Registry Pattern
+
+*[2026-02-05]*: As expert domains scale from 1 to 10+, manual agent discovery becomes bottleneck. Agent registries auto-generate machine-readable catalogs from agent frontmatter, enabling programmatic discovery and routing.
+
+### The Discovery Problem at Scale
+
+With 11 domains × 4 agents = 44 specialized agents, routing questions emerge:
+- Which agents can modify TypeScript files?
+- Which agents use Haiku model (for cost-sensitive queries)?
+- Which agents have Write access (vs read-only)?
+
+Manual maintenance doesn't scale. Registry generation solves this.
+
+### Registry Generation from Frontmatter
+
+**Source material:** Agent frontmatter contains structured metadata:
+
+```yaml
+---
+name: knowledge-build-agent
+tools: Read, Write, Edit, Glob, Grep, WebSearch
+model: sonnet
+color: green
+output-style: practitioner-focused
+---
+```
+
+**Generated indices:**
+
+**Capability Index:**
+```json
+{
+  "can_write": [
+    "knowledge-build-agent",
+    "github-build-agent",
+    "book-structure-build-agent"
+  ],
+  "read_only": [
+    "knowledge-question-agent",
+    "github-question-agent",
+    "orchestration-question-agent"
+  ]
+}
+```
+
+**Model Index:**
+```json
+{
+  "haiku": ["knowledge-question-agent", "github-question-agent"],
+  "sonnet": ["knowledge-build-agent", "github-plan-agent"],
+  "opus": []
+}
+```
+
+**Tool Matrix:**
+```json
+{
+  "Read": ["*-agent"],
+  "Write": ["*-build-agent", "*-plan-agent"],
+  "Bash": ["github-build-agent", "orchestration-build-agent"],
+  "WebSearch": ["knowledge-build-agent", "research-build-agent"]
+}
+```
+
+### Routing Applications
+
+**Cost-sensitive queries:** Route to Haiku agents when speed/cost matters
+```
+Query: "How do I structure a PR?"
+→ github-question-agent (haiku, read-only, 4× cheaper)
+```
+
+**Capability-aware delegation:** Route based on required tool access
+```
+Task: "Implement new section"
+→ knowledge-build-agent (has Write, Edit, WebSearch)
+```
+
+**Domain discovery:** "Which agents can help with GitHub operations?"
+```
+Query index: domain="github" AND tools CONTAINS "Bash"
+→ [github-build-agent, github-improve-agent]
+```
+
+### Registry Update Strategy
+
+**Option 1: Build-time generation**
+- Script scans `.claude/agents/experts/` at build time
+- Generates `agent-registry.json`
+- Commit to repository (static lookup)
+
+**Option 2: Runtime query**
+- On-demand frontmatter parsing
+- No pre-generated file required
+- Slower but always fresh
+
+**Option 3: Hybrid with cache invalidation**
+- Generate on first query, cache result
+- Invalidate when `.claude/agents/` directory changes
+- Balance speed and freshness
+
+### When to Use Registry Pattern
+
+**Good fit:**
+- 10+ agents across multiple domains
+- Programmatic routing logic (like /do command)
+- Cost-sensitive delegation (model tier selection)
+- Multi-agent orchestration systems
+
+**Poor fit:**
+- Small agent count (<5 agents)
+- Manual agent selection sufficient
+- Single-domain systems
+
+### Connections
+
+- **To [Context Contracts](../../5-tool-use/5-skills-and-meta-tools.md#context-contracts-for-agent-capability-declaration)**: Registry provides discovery layer; contracts provide capability schema
+- **To [Expert Swarm](8-expert-swarm-pattern.md)**: Registry enables orchestrator to discover appropriate workers for swarm coordination
+
+**Implementation Note:** This book's 11-domain expert system would benefit from registry generation for the /do command routing logic.
+
+**Sources:** Advanced external .claude/ implementation patterns, 4-agent pattern standardization commit analysis (39e7904).
 
 ---
 

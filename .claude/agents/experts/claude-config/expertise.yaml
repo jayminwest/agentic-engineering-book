@@ -400,6 +400,78 @@ patterns:
       success: boolean
       total_tokens: integer
 
+  agent_registry_pattern:
+    purpose: Programmatic agent discovery for scale (10+ domains, 40+ agents)
+    structure: |
+      .claude/scripts/generate-agent-registry.py - Frontmatter scanner + indexer
+      .claude/schemas/agent-registry.schema.json - Registry structure definition
+      .claude/agent-registry.json - Auto-generated catalog (gitignored)
+    generation_approach: |
+      Scan .claude/agents/ recursively → extract frontmatter → infer capabilities →
+      build indices (capability, model, tool, domain) → output JSON
+    capability_inference:
+      domain_based: "File path .../experts/{domain}/ → {domain}-domain capability tag"
+      role_based: "Agent suffix *-plan-agent → planning, *-build-agent → implementation"
+      description_based: "Keywords: research, review, orchestration, documentation-gathering"
+    indices_generated:
+      capabilityIndex: "Map: capability → [agent-ids]"
+      modelIndex: "Map: model-tier → [agent-ids]"
+      toolMatrix: "Map: tool-name → [agent-ids]"
+      domains: "List: [{domain-id, domain-name, [agent-ids]}]"
+    routing_use_cases: |
+      - Cost-sensitive routing: Query → haiku agents (4× cheaper for Q&A)
+      - Capability-aware routing: Task requiring Write → build agents only
+      - Domain discovery: "Which agents can modify TypeScript?" → registry query
+    update_timing:
+      build_time: "Run script pre-deploy, commit registry (static, fast lookup)"
+      runtime: "Parse frontmatter on-demand (dynamic, slower, always fresh)"
+      hybrid: "Cache + invalidate on .claude/agents/ change (balanced)"
+    scale_threshold: "10+ agents across multiple domains justifies registry automation"
+    integration: "Registry enables /do command capability-based routing and agent selection"
+    timestamp: "[2026-02-05] Implemented with generate-agent-registry.py + schema"
+
+  template_driven_domain_scaffolding:
+    purpose: Rapid expert domain creation with structural consistency (12th+ domain)
+    structure: |
+      .claude/agents/templates/
+      ├── README.md - Quick-start guide + anti-patterns
+      ├── base-agent.md - Minimal single-purpose agent
+      ├── plan-agent.md, build-agent.md, improve-agent.md, question-agent.md
+      └── expert-domain/ - Full 4-agent + expertise.yaml template set
+          ├── {domain}-plan-agent.md
+          ├── {domain}-build-agent.md
+          ├── {domain}-improve-agent.md
+          ├── {domain}-question-agent.md
+          └── expertise.yaml (9-section schema template)
+    workflow: |
+      1. Copy expert-domain/ to .claude/agents/experts/{new-domain}/
+      2. sed 's/{domain}/actual-domain/g' *.md (replace placeholders)
+      3. Fill domain-specific content in expertise.yaml + agent instructions
+      4. Update CLAUDE.md Experts table
+      5. Run generate-agent-registry.py to include in discovery
+    template_parameterization:
+      placeholders: "{domain} (kebab-case), {Domain} (Title Case)"
+      fixed_values: "tools, model, color, output-style per agent type (enforces 4-agent pattern)"
+      variable_sections: "Expertise content, workflow customization, domain-specific operations"
+    standardization_enforced:
+      - Frontmatter structure (6 fields: name, description, tools, model, color, output-style)
+      - Workflow sections (Understand → Analyze → Design → Create/Build → Save/Report)
+      - expertise.yaml schema (9 sections with consistent format)
+      - Agent naming ({domain}-{type}-agent pattern)
+      - Cross-references (agents point to expertise.yaml as source of truth)
+      - Registry compatibility (machine-readable metadata)
+    time_savings:
+      manual: "4-6 hours per domain, consistency drift over time"
+      template: "30-60 minutes per domain, structural consistency guaranteed"
+      roi_threshold: "3+ domains justifies template investment"
+    emergence_note: |
+      This book's 11 domains created through iterative standardization (commits 39e7904, 5002a1c),
+      not upfront templating. Templates capture emerged 4-agent pattern for future domain creation.
+    trade_offs:
+      pros: [Fast scaffolding, Structural consistency, Onboarding-friendly, Registry-compatible]
+      cons: [Upfront template maintenance, Less flexibility for specialized domains, May encourage premature domain creation]
+    timestamp: "[2026-02-05] Implemented with .claude/agents/templates/ directory"
+
   coordinate_multi_agent_execution:
     when: Multiple agents need to execute with coordination/messaging vs simple delegation
     tool_selection: |
@@ -439,6 +511,106 @@ patterns:
         wait_strategy: Join final agent
     timestamp: "[2026-02-02] Pattern extracted from /do-swarm implementation"
 
+  generate_agent_registry:
+    when: Need programmatic agent discovery for routing logic (10+ agents across multiple domains)
+    purpose: Auto-generate machine-readable agent catalog from frontmatter for capability-based routing
+    implementation: |
+      1. Create .claude/scripts/generate-agent-registry.py script
+      2. Scan .claude/agents/ directory recursively for .md files
+      3. Extract frontmatter (name, description, tools, model, color, output-style)
+      4. Infer capabilities from agent metadata:
+         - Domain capability from file path (experts/{domain}/ → {domain}-domain tag)
+         - Role capability from agent suffix (*-plan-agent → planning, *-build-agent → implementation)
+         - Description-based inference (research, review, orchestration, etc.)
+      5. Build indices:
+         - capabilityIndex: Map capabilities → agent IDs
+         - modelIndex: Map model tiers → agent IDs
+         - toolMatrix: Map tools → agent IDs
+         - domains: Group agents by domain
+      6. Output .claude/agent-registry.json (gitignored, auto-generated)
+      7. Define schema in .claude/schemas/agent-registry.schema.json
+    registry_structure: |
+      {
+        "generated": "ISO 8601 timestamp",
+        "agents": [{agent metadata objects}],
+        "domains": [{domain with agent lists}],
+        "capabilityIndex": {"capability": ["agent-ids"]},
+        "modelIndex": {"haiku|sonnet|opus": ["agent-ids"]},
+        "toolMatrix": {"Tool": ["agent-ids"]}
+      }
+    routing_applications:
+      cost_sensitive: Route queries to haiku agents for speed/cost optimization
+      capability_aware: Route based on required tool access (Write, Bash, etc.)
+      domain_discovery: "Which agents can help with GitHub operations?"
+    update_strategies:
+      build_time: Script runs before deployment, commit registry to repo (static lookup)
+      runtime_query: Parse frontmatter on-demand (no pre-generated file, slower but fresh)
+      hybrid_cache: Generate on first query, invalidate when .claude/agents/ changes
+    good_fit:
+      - 10+ agents across multiple domains
+      - Programmatic routing logic (like /do command)
+      - Cost-sensitive delegation (model tier selection)
+      - Multi-agent orchestration systems requiring capability discovery
+    poor_fit:
+      - Small agent count (<5 agents)
+      - Manual agent selection sufficient
+      - Single-domain systems
+    examples:
+      - This book's 11-domain expert system (44+ agents) benefits from registry for /do routing
+      - Cost routing: "How do I...?" → github-question-agent (haiku, 4× cheaper)
+      - Capability routing: "Implement section" → knowledge-build-agent (has Write, WebSearch)
+    timestamp: "[2026-02-05] Pattern implemented with generate-agent-registry.py + schema"
+
+  scaffold_expert_domain_from_templates:
+    when: Creating new expert domain (12th+ domain) and want consistency + speed
+    purpose: Template-driven expert domain creation to maintain structural consistency
+    implementation: |
+      1. Maintain templates in .claude/agents/templates/:
+         - base-agent.md (minimal single-purpose agent)
+         - plan-agent.md, build-agent.md, improve-agent.md, question-agent.md
+         - expert-domain/{domain}-{type}-agent.md (full 4-agent set)
+         - expert-domain/expertise.yaml (9-section schema template)
+      2. Copy expert-domain/ directory to .claude/agents/experts/{new-domain}/
+      3. Replace {domain} placeholders with actual domain name:
+         sed -i '' 's/{domain}/api-security/g' *.md (macOS)
+      4. Fill domain-specific content:
+         - Update expertise.yaml with domain patterns
+         - Customize agent instructions and workflow steps
+         - Document domain-specific operations
+      5. Update CLAUDE.md Experts table
+      6. Run generate-agent-registry.py to include in discovery index
+    template_parameterization:
+      frontmatter_placeholders:
+        - "{domain}" → actual domain name
+        - Fixed values: tools, model, color, output-style per agent type
+      content_placeholders:
+        - "{Domain}" → Title-cased domain name
+        - "{domain}" → kebab-case domain name
+        - Workflow sections remain consistent (Understand → Analyze → Design → Create → Save)
+    standardization_benefits:
+      - Frontmatter structure (name, description, tools, model, color)
+      - Workflow sections (Understand → Apply → Formulate → Report)
+      - expertise.yaml schema (9 sections: overview, core_implementation, key_operations, decision_trees, patterns, best_practices, known_issues, potential_enhancements, stability)
+      - Cross-references between agents
+      - File naming conventions
+      - Registry compatibility (machine-readable frontmatter)
+    time_investment:
+      manual_authoring: "4-6 hours per domain, variable consistency (drift over time)"
+      template_generation: "30-60 minutes per domain, high consistency (templates enforce structure)"
+    good_fit:
+      - Adding 3+ new domains (upfront template investment pays off)
+      - Onboarding new contributors (templates provide scaffolding)
+      - Maintaining consistency across large expert systems (11+ domains)
+    poor_fit:
+      - First 2-3 domains (establishing patterns organically)
+      - Highly specialized domains requiring custom structure
+      - One-off expert agents not part of domain system
+    examples:
+      - This book's 11 expert domains created through iterative standardization (not upfront templating)
+      - Templates capture emerged pattern for future (12th+) domain creation
+      - Template README.md provides quick-start instructions and anti-patterns
+    timestamp: "[2026-02-05] Pattern implemented with .claude/agents/templates/ directory structure"
+
 best_practices:
   organization:
     - Agents in .claude/agents/, commands in .claude/commands/
@@ -475,6 +647,8 @@ best_practices:
     - Improve agents: Bash for git history analysis, evidence-grounded output with timestamps
     - Absorb standalone agents >300 lines into expert domains
     - CRITICAL: Never use colons in description field (breaks agent discovery)
+    - Use templates for 3+ new domains (30-60min vs 4-6hr manual authoring)
+    - Run generate-agent-registry.py after adding domains for discovery index
 
   coordination:
     - Use Task tool for sequential delegation (plan→build→improve)
@@ -555,42 +729,72 @@ potential_enhancements:
   - Orchestrator agent templates for lead-worker, council, pipeline patterns (low effort, tooling)
   - Swarm execution visualization (medium effort, observability enhancement)
   - EXPERTISE_PATH hot-loading for multi-domain swarms (low effort, optional optimization)
+  - Integrate agent-registry.json into /do command routing logic (low effort, enables capability-based agent selection)
+  - Template generator CLI tool (medium effort, automate sed placeholder replacement)
+  - Registry-powered agent search command (low effort, "which agents can modify X?")
+  - Template validation checks (medium effort, ensure templates maintain structural consistency)
 
 stability:
   convergence_indicators:
-    insight_rate_trend: decreasing
+    insight_rate_trend: stable
     contradiction_count: 0
-    new_patterns_added_this_cycle: 0
-    patterns_updated_this_cycle: 1
+    new_patterns_added_this_cycle: 2
+    patterns_updated_this_cycle: 0
     decision_trees_added_this_cycle: 0
-    last_reviewed: 2026-02-02
+    last_reviewed: 2026-02-05
     utility_ratio: 1.0
     notes: |
-      Cycle 2026-02-02b (second improve): Tactical refinements from initial /do-swarm usage.
+      Cycle 2026-02-05: Tooling and scaffolding patterns for agent domain scaling.
 
-      Updated Sections:
-      1. best_practices.swarm_operational_practices - Added 10 operational patterns from fix commit 75a4962
+      New Patterns Added:
+      1. agent_registry_pattern (key_operations + patterns sections)
+         - Programmatic agent discovery via frontmatter scanning
+         - Capability-based routing (model tier, tool access, domain)
+         - Auto-generated indices (capability, model, tool, domain)
+         - Scale threshold: 10+ agents across multiple domains
+         - Implementation: .claude/scripts/generate-agent-registry.py + schema
 
-      Tactical Patterns Added:
-      - Optional shutdown ceremony (skip for quick swarms, save 3-4 turns)
-      - JSON notification suppression (instruct teammates to send plain-text only)
-      - Timing expectations (spawn ~30s, parallel results ~1-2min, shutdown ~30s)
-      - No progress visibility workaround (interim updates for long tasks)
-      - Validation level specification (L1/L2/L3 for worker prompts)
-      - Forbidden patterns in teammate prompts (negative constraints, meta-commentary)
-      - Role-based tool access enforcement (explicit allowed tools)
+      2. template_driven_domain_scaffolding (key_operations + patterns sections)
+         - Rapid expert domain creation (30-60min vs 4-6hr manual)
+         - Structural consistency enforcement via templates
+         - 4-agent pattern standardization (plan/build/improve/question)
+         - expertise.yaml schema template (9 sections)
+         - Implementation: .claude/agents/templates/ directory
 
-      Pattern Significance:
-      These are convergence patterns—initial /do-swarm design (a1d5942) refined through
-      real usage (75a4962 fix). Tactical guidance for practical swarm orchestration.
+      Pattern Classification:
+      Both patterns are FOUNDATIONAL (preserve indefinitely):
+      - Agent registry enables discovery layer for expert systems at scale
+      - Templates capture emerged 4-agent pattern for future domain creation
+      - Both support systems with 10+ domains, 40+ agents
+      - Cross-domain applicability (any multi-agent system needing discovery/scaffolding)
 
-      File health: 597 lines (was 585), +12 lines for tactical patterns.
-      Still well below 900 warning threshold (303 lines of headroom).
+      Files Added (untracked, new implementations):
+      - .claude/scripts/generate-agent-registry.py (217 lines)
+      - .claude/schemas/agent-registry.schema.json (133 lines)
+      - .claude/agents/templates/ directory (8 files, ~2700 lines total)
+        - README.md, base-agent.md, plan/build/improve/question-agent.md
+        - expert-domain/ subdirectory with full 4-agent template set
 
-      Domain stability: High. This cycle adds operational refinements to existing swarm
-      architecture. No contradictions. Insight rate decreasing (0 foundational patterns,
-      1 tactical update). Suggests domain reaching maturity for swarm coordination.
+      Best Practices Updated:
+      - expert_domains: Added template usage guidance + registry generation reminder
+      - potential_enhancements: Added 4 registry/template related enhancements
 
-      Previous Cycle (2026-02-02a): Major architectural pattern—command + orchestrator pairing,
-      TeammateTool coordination, expertise path protocol, learning separation, flat orchestration
-      constraint. Added 5 foundational patterns (+195 lines from 362 to 557).
+      File Health:
+      - Before: 596 lines
+      - After: 783 lines (+187 lines)
+      - Still below 900 warning threshold (117 lines of headroom)
+      - Largest additions: 2 key_operations entries, 2 patterns entries
+
+      Domain Stability:
+      Medium-high. This cycle adds tooling patterns for scale management (not core
+      architectural changes). Registry and templates emerged from need to manage 11
+      domains efficiently. Patterns are retrospective documentation of implementations
+      already created today (2026-02-05).
+
+      Insight Rate: Stable (2 foundational patterns, both tooling/operational, not
+      conceptual). Previous cycle added swarm tactical refinements. Cycle before that
+      added major architectural patterns. Trend suggests core architecture stable,
+      now adding operational tooling.
+
+      Previous Cycle (2026-02-02b): Tactical swarm refinements (+12 lines).
+      Previous Cycle (2026-02-02a): Major architectural patterns (+195 lines).

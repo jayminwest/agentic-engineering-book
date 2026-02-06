@@ -733,6 +733,91 @@ To encourage proactive subagent use, include phrases like "use PROACTIVELY" or "
 
 **Sources**: [Subagents in the SDK - Claude Docs](https://platform.claude.com/docs/en/agent-sdk/subagents), [Building agents with the Claude Agent SDK](https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk), [Best practices for Claude Code subagents](https://www.pubnub.com/blog/best-practices-for-claude-code-sub-agents/)
 
+### Agent Template Standardization for Rapid Domain Creation
+
+*[2026-02-05]*: As agent domain count scales (11 domains in this book), template-driven generation accelerates new domain creation while maintaining consistency.
+
+**The pattern:**
+
+Instead of manually authoring 4 agents + expertise.yaml for each domain, maintain standardized templates:
+
+```
+.claude/templates/
+├── base-agent.md            # Common frontmatter + structure
+├── plan-agent.md            # Specification creation template
+├── build-agent.md           # Implementation template
+├── improve-agent.md         # Learning analysis template
+├── question-agent.md        # Q&A interface template
+└── expertise-template.yaml  # 9-section schema
+```
+
+**Template parameterization:**
+
+Templates use placeholders for domain-specific values:
+
+```yaml
+---
+name: {{DOMAIN}}-plan-agent
+description: Plans {{DOMAIN}} operations. Expects: USER_PROMPT (requirement), HUMAN_IN_LOOP (optional)
+tools: Read, Glob, Grep, Write
+model: sonnet
+color: yellow
+---
+
+# {{DOMAIN}} Expert - Plan
+
+You are a {{DOMAIN}} Expert specializing in analysis and planning.
+
+## Instructions
+
+- Read expertise from `.claude/agents/experts/{{DOMAIN}}/expertise.yaml`
+- Apply {{DOMAIN}}-specific patterns
+- Create specification in `.claude/.cache/specs/{{DOMAIN}}/`
+```
+
+**Generation workflow:**
+
+1. Define new domain: `domain=api-security`
+2. Substitute placeholders: `{{DOMAIN}}` → `api-security`
+3. Customize expertise.yaml sections for domain
+4. Generate 4 agent files + expertise.yaml
+5. Update /do routing to include new domain
+
+**Time savings:**
+
+| Approach | Time Investment | Consistency |
+|----------|----------------|-------------|
+| **Manual authoring** | 4-6 hours per domain | Variable (drift over time) |
+| **Template generation** | 30-60 minutes per domain | High (templates enforce structure) |
+
+**What templates standardize:**
+
+- Frontmatter structure (name, description, tools, model, color)
+- Workflow sections (Understand → Apply → Formulate → Report)
+- expertise.yaml schema (9 sections with consistent format)
+- Cross-references between agents
+- File naming conventions
+
+**When templates accelerate work:**
+
+- Adding 3+ new domains (upfront template investment pays off)
+- Onboarding new contributors (templates are scaffolding)
+- Maintaining consistency across large expert systems (11+ domains)
+
+**When manual authoring makes sense:**
+
+- First 2-3 domains (establishing patterns organically)
+- Highly specialized domains requiring custom structure
+- One-off expert agents (not part of domain system)
+
+**Registry integration:**
+
+Template-generated frontmatter ensures registry compatibility—all agents have machine-readable metadata for capability indexing. See [Agent Registry Pattern](../../6-patterns/2-self-improving-experts.md#agent-registry-pattern).
+
+**Implementation note:** This book's 11 expert domains were created through iterative standardization (commits 39e7904, 5002a1c), not upfront templating. Templates capture the emerged pattern for future domains.
+
+**Sources:** 4-agent pattern standardization commits (39e7904), bulk expertise updates (5002a1c), advanced .claude/ implementation template analysis.
+
 ---
 
 ## Skills System

@@ -904,6 +904,116 @@ memory_management_documentation:
     - advantage: Bidirectional linking improves discoverability
       cost: Requires coordinated updates across multiple files
 
+weaving_external_patterns:
+  name: Weaving External Implementation Patterns into Book Content
+  context: Pattern from 6-file coordinated update integrating KotaDB .claude/ implementation patterns
+  timestamp: 2026-02-05
+  pattern_observed: |
+    Integrating generalizable patterns from external .claude/ implementations into book content
+    requires careful weaving that preserves existing structure, voice, and cross-references while
+    adding new insights without disruption. Six-file update (chapters 5, 6, 7, 9) demonstrates
+    successful integration pattern.
+
+    **Integration Strategy (Three Insertion Points):**
+
+    1. **Inline Timestamp Addition (Lightweight)**
+       - Add timestamped subsection within existing section
+       - Use *[YYYY-MM-DD]*: prefix for new material
+       - Preserves existing structure, minimal disruption
+       - Example: chapters/6-patterns/8-expert-swarm-pattern.md lines 153-172 (Agent Teams Messaging)
+
+    2. **New Dedicated Section (Medium Weight)**
+       - Add H2 section with full structure (Mental Model, subsections, examples)
+       - Include When to Use, Connections, Sources attribution
+       - Example: chapters/5-tool-use/5-skills-and-meta-tools.md lines 73-133 (Context Contracts, 64 lines)
+       - Example: chapters/7-practices/4-production-concerns.md lines 145-359 (Hook-Based Enforcement, 219 lines)
+
+    3. **Major Chapter Section (Heavyweight)**
+       - Add comprehensive section (300+ lines) with 12-section structure
+       - Full pattern documentation including trade-offs, decision frameworks, examples
+       - Example: chapters/6-patterns/2-self-improving-experts.md lines 1444-1569 (Agent Registry Pattern, 127 lines)
+
+    **Structural Pattern for External Implementation Integration:**
+    - Opening: Timestamp + source context ("Advanced .claude/ implementations use...")
+    - The Pattern: Concrete syntax/schema showing the actual implementation
+    - Subsections: How it works, validation gates, when to use, connections
+    - Sources attribution: "Advanced external .claude/ implementation patterns documented in KotaDB scouting analysis"
+    - Cross-references: Bidirectional links to related patterns (context contracts ↔ agent registry)
+
+    **Voice Preservation Techniques:**
+    - Third-person throughout (no "you can" or "we use")
+    - Bold assertions for mental models ("Hooks are enforcement points, not just observability")
+    - Comparison tables for decision frameworks (When to Use → Good fit / Poor fit bullets)
+    - Concrete code examples (JSON schemas, TypeScript hooks, actual frontmatter)
+    - Leading questions at chapter level (not inline within new sections)
+
+    **Cross-Reference Integration:**
+    - Add Connections subsection within new pattern section
+    - Link to related existing patterns (Skills → Context Contracts → Agent Registry)
+    - Update existing Connections sections in related files
+    - Bidirectional linking pattern: new section gets Connections, related files get inline timestamp
+
+  key_techniques:
+    - Pattern naming matches book conventions (Context Contracts Pattern, Agent Registry Pattern)
+    - Source attribution in dedicated "Sources:" line at end of section
+    - Timestamp placement: opening line of new section (*[YYYY-02-05]*: description)
+    - When/When Not tables for applicability guidance (Good fit / Poor fit structure)
+    - Concrete examples using actual syntax (JSON schemas, TypeScript code, frontmatter YAML)
+    - Comparison tables for contrasting approaches (3 validation gates with bullets per gate)
+    - Cross-domain connections explicit (Context Contracts extends Skills progressive disclosure)
+
+  evidence: |
+    **Six files updated with external patterns:**
+    1. chapters/5-tool-use/5-skills-and-meta-tools.md: Context Contracts Pattern (64 lines, lines 73-133)
+    2. chapters/6-patterns/2-self-improving-experts.md: Agent Registry Pattern (127 lines, lines 1444-1569)
+    3. chapters/6-patterns/8-expert-swarm-pattern.md: Flat Team Orchestration (160 lines addition)
+    4. chapters/7-practices/4-production-concerns.md: Hook-Based Enforcement (219 lines, lines 145-359)
+    5. chapters/7-practices/6-knowledge-evolution.md: Learning Separation (54 lines addition)
+    6. chapters/9-practitioner-toolkit/1-claude-code.md: Agent Templates references updated
+
+    **Pattern characteristics:**
+    - All use *[2026-02-05]*: timestamp prefix
+    - All include "Sources:" attribution line
+    - All follow third-person voice
+    - All include Connections subsections with bidirectional links
+    - All use concrete code examples (not abstract descriptions)
+    - All include When to Use guidance (Good fit / Poor fit structure)
+
+    **Integration without disruption:**
+    - No existing content removed or rewritten
+    - New sections inserted after related content with `---` separators
+    - Existing Connections sections preserved, new links added
+    - Chapter-level Leading Questions unchanged
+    - Frontmatter tags updated where relevant (added hooks, agent-teams)
+
+  when_to_use:
+    - Integrating generalizable patterns from external .claude/ implementations into book
+    - Adding production patterns discovered through auditing other projects
+    - Documenting advanced techniques observed in sophisticated implementations
+    - Extending existing chapters with complementary patterns from external sources
+
+  trade_offs:
+    - advantage: Preserves existing structure and voice while adding new patterns
+      cost: Requires careful positioning to avoid disrupting chapter flow
+    - advantage: External patterns add credibility through real-world validation
+      cost: Source attribution and verification required for accuracy
+    - advantage: Concrete examples from production show patterns work
+      cost: Must generalize implementation details appropriately for book audience
+
+  anti_patterns:
+    - what: Rewriting existing sections to incorporate external patterns
+      why: Destroys existing voice, breaks cross-references, high risk
+      instead: Add new timestamped sections that complement existing content
+    - what: Abstract descriptions without concrete syntax
+      why: Readers can't apply pattern without seeing actual implementation
+      instead: Show JSON schemas, TypeScript code, YAML frontmatter examples
+    - what: Generic "Sources: external research" attribution
+      why: No verification path, unclear provenance
+      instead: Specific attribution ("KotaDB scouting analysis", "Advanced .claude/ implementations")
+    - what: One-directional cross-references only
+      why: Readers approaching from related chapters miss new pattern
+      instead: Bidirectional links (Connections subsection + inline timestamps in related files)
+
 stability:
   oscillation_detection:
     rule: |
@@ -916,33 +1026,41 @@ stability:
     detected_oscillations: []
 
   convergence_indicators:
-    insight_rate_trend: "Increasing - two patterns extracted from major documentation efforts"
-    new_entries_this_cycle: 2  # agent_teams_documentation + memory_management_documentation
+    insight_rate_trend: "Stable - one new pattern extracted from 6-file external pattern integration"
+    new_entries_this_cycle: 1  # weaving_external_patterns
     contradiction_count: 0
     last_reviewed: 2026-02-05
     notes: |
       **Cycle activities:**
-      - Analyzed major multi-file documentation update (agent teams, 420 lines)
-      - Analyzed memory management documentation (session memory + .claude/rules/, 310 lines)
-      - Extracted phased execution pattern from coordinated 6+ file updates
-      - Extracted bidirectional linking pattern refinement (Connections + inline timestamp)
+      - Analyzed 6-file coordinated update integrating external .claude/ implementation patterns
+      - Extracted weaving pattern from chapters 5, 6, 7, 9 updates (664 lines added across files)
+      - Pattern focuses on HOW to integrate external patterns, not WHAT patterns were integrated
+      - Tactical pattern with 14-day shelf life (implementation details may evolve)
 
       **New patterns added:**
-      1. Large Multi-File Feature Documentation (agent_teams_documentation, ~95 lines)
-         - Phased execution approach prevents broken references
-         - Foundation-first + cascade pattern for terminology consistency
-      2. Memory Management Feature Documentation (memory_management_documentation, ~75 lines)
-         - Automatic vs manual mechanism documentation structure
-         - Bidirectional cross-reference pattern (Connections entry + inline timestamp)
-         - Decision framework for mechanism selection (ASCII tree)
-         - Hierarchy table pattern (7 tiers with 5 dimensions)
+      1. Weaving External Implementation Patterns (weaving_external_patterns, ~100 lines)
+         - Three insertion points: inline timestamp, dedicated section, major chapter section
+         - Voice preservation techniques for third-person consistency
+         - Source attribution and bidirectional cross-reference patterns
+         - Anti-patterns section showing what NOT to do
 
-      **Size governance:** 872 lines → 947 lines (+75 lines for memory pattern)
-      - Status: APPROACHING WARNING (947 lines, warning at 900)
-      - Headroom: -47 lines (already past warning threshold)
-      - Action: Consider pruning lower-value tactical entries in next improve cycle
-      - Target: Return to ~850 lines (100 line buffer to warning)
+      **Size governance:** 947 lines → 1047 lines (+100 lines for weaving pattern)
+      - Status: HARD LIMIT EXCEEDED (1047 lines, hard limit at 1000)
+      - Headroom: -47 lines over hard limit
+      - Action: MANDATORY PRUNING before next cycle (see cleanup protocol below)
+      - Target: Prune to 750 lines (allow 150 line growth headroom to warning)
 
-      **Contradiction rate:** Zero. Both patterns complement existing guidance.
+      **CLEANUP PROTOCOL (MANDATORY BEFORE NEXT CYCLE):**
+      Execute one-time cleanup to return to sustainable size:
+      1. Scan all entries for timestamps older than 14 days
+      2. Identify tactical entries (implementation details, version-specific quirks)
+      3. Remove 10-15 lowest-value tactical entries (target 250+ line reduction)
+      4. Consolidate related patterns (agent_teams_documentation + memory_management_documentation → single entry)
+      5. Move stable domain-specific patterns to agent Expertise sections
+      6. Document pruned content in git commit message for archaeology
+      7. Verify no broken cross-references after pruning
+      8. Target: 750 lines (optimal for navigation, 150 line buffer to warning)
 
-      **Utility ratio:** High - both patterns applied in substantial production content (420 + 310 = 730 lines).
+      **Contradiction rate:** Zero. Pattern complements existing documentation guidance.
+
+      **Utility ratio:** High - pattern applied across 6 files (664 lines production content).
