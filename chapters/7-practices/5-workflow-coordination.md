@@ -2,7 +2,7 @@
 title: Workflow Coordination for Agents
 description: Using structured metadata and persistent stores as coordination layers between agents
 created: 2025-12-08
-last_updated: 2025-12-09
+last_updated: 2026-02-06
 tags: [practices, coordination, workflow, handoff, metadata, spec-files]
 part: 2
 part_title: Craft
@@ -235,6 +235,128 @@ and implement according to the design section"
 ```
 
 The spec file becomes the single source of truth. Agents coordinate by reading and writing to it, not by accumulating context in conversation threads.
+
+---
+
+## Atomic Operations and State Persistence
+
+*[2026-02-06]*: Multi-session workflows require three complementary patterns: atomic commits for independent revertability, structured state files for session survival, and goal-backward verification to prevent drift. These patterns emerged from production agent workflows where sessions span days and context resets between executions.
+
+### Atomic Commits as Revertability Strategy
+
+**Per-task commits enable independent rollback without cascading failures.** Each logical task becomes a single commit, allowing git-bisect debugging and surgical reverts.
+
+**Commit pattern:**
+```
+One feature = One commit
+- Single logical change
+- Complete functionality (tests included)
+- Independent of other commits
+- Bisectable (repo works at every commit)
+```
+
+**Why this matters:**
+- **Surgical reversion**: Roll back feature B without affecting feature A
+- **Bisect-friendly**: `git bisect` identifies breaking commits quickly
+- **Clear history**: Each commit represents decision point
+- **Agent-friendly**: New sessions understand changes via commit messages
+
+**Anti-pattern** (accumulated commits):
+```bash
+# Bad: Multiple features in single commit
+git commit -m "Add auth, fix database, update tests, refactor utils"
+```
+
+**Better** (atomic):
+```bash
+git commit -m "feat: add JWT authentication middleware"
+git commit -m "test: add integration tests for auth flow"
+git commit -m "fix: handle token refresh edge case"
+```
+
+Each commit stands alone. Reverting authentication doesn't break the database changes that followed.
+
+### Structured State Files
+
+**STATE.md captures current position, accumulated decisions, and blockers.** This pattern provides session-independent context—agents can resume work after interruptions without reconstructing history from chat logs.
+
+**STATE.md structure:**
+```markdown
+# Current State
+
+## Position
+- **Current Phase**: Implementation (Day 2 of 3)
+- **Last Completed**: Database schema migration (#45)
+- **Next Task**: API endpoint implementation (#52)
+- **Session**: 3 of estimated 5
+
+## Accumulated Decisions
+- Using PostgreSQL over MongoDB (performance requirements)
+- JWT tokens expire after 24h (security review approved)
+- Rate limiting: 100 req/min per user (infrastructure constraints)
+
+## Active Blockers
+- [ ] Waiting on API key from external service (ETA: tomorrow)
+- [ ] Database credentials for staging environment
+- [x] ~~Design review approval~~ (completed 2026-02-05)
+```
+
+**Session survival benefits:**
+1. **Resume without reconstruction**: New agent reads STATE.md, continues immediately
+2. **Decision tracking**: Why choices were made, preventing re-litigation
+3. **Blocker visibility**: Clear obstacles, prevents spinning on known issues
+4. **Progress measurement**: Phase tracking shows velocity
+
+**Update pattern:**
+- Write STATE.md after completing each task
+- Commit with implementation changes (atomic commit includes state update)
+- Move completed blockers to decisions section with timestamps
+
+### Goal-Backward Verification
+
+**Define success criteria before execution, verify after completion.** The must_haves pattern prevents drift by establishing measurable goals that implementations must satisfy.
+
+**must_haves structure:**
+```yaml
+must_haves:
+  truths:
+    - "Authentication middleware rejects expired tokens"
+    - "Rate limiter enforces 100 req/min per user"
+    - "Token refresh extends expiration by 24h"
+
+  artifacts:
+    - "src/middleware/auth.ts with JWT validation"
+    - "tests/integration/auth.test.ts with 95%+ coverage"
+    - "docs/api/authentication.md with examples"
+
+  key_links:
+    - "Issue #45 closed with validation evidence"
+    - "PR merged to main with approvals"
+```
+
+**Verification workflow:**
+1. **Before execution**: Write must_haves in spec file
+2. **During implementation**: Reference must_haves to stay on track
+3. **After completion**: Check each truth/artifact/link explicitly
+4. **Validation**: All must_haves satisfied = task complete
+
+**Drift prevention:**
+Without goal-backward verification, implementations expand scope. With must_haves, agents have clear stopping criteria.
+
+**Example verification:**
+```markdown
+## Verification Results
+
+✅ Truth: Expired tokens rejected (test: auth.test.ts:45)
+✅ Truth: Rate limiter enforces limits (test: rate-limit.test.ts:23)
+✅ Artifact: auth.ts created (127 lines, reviewed)
+✅ Artifact: tests written (96.2% coverage)
+✅ Key Link: Issue #45 closed (PR #67 merged)
+
+Status: All must_haves satisfied. Task complete.
+```
+
+**Pattern observed in production:** GSD project (12K-star open source tool) uses must_haves to coordinate multi-day agent sessions. Each task defines success upfront, preventing scope creep and enabling objective completion verification.
 
 ---
 

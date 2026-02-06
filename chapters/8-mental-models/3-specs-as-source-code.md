@@ -2,7 +2,7 @@
 title: Specs as Source Code
 description: Specifications are the primary programming surface in agentic systems
 created: 2025-12-10
-last_updated: 2025-12-10
+last_updated: 2026-02-06
 tags: [mental-models, specifications, documentation, programming]
 part: 3
 part_title: Perspectives
@@ -157,6 +157,8 @@ Use Redis for session storage with 24-hour TTL.
 ```
 
 An agent can execute this plan directly. It's not pseudo-code—it's the program.
+
+*[2026-02-06]*: Production example from GSD (Get Shit Done) project—PLAN.md files are not transformed into prompts, they ARE the prompts. The executor reads them verbatim. This imposes strict requirements: plans must be unambiguous, action-oriented, and include verification criteria. GSD uses semantic XML within markdown (`<action>`, `<verify>`, `<done>`) for Claude comprehension. Real-world validation of treating plans as executable specifications.
 
 ### Documentation IS Executable
 

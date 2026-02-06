@@ -2,7 +2,7 @@
 title: Context Management Strategies
 description: Practical techniques for handling context limits, compression, and structured context
 created: 2025-12-10
-last_updated: 2026-01-17
+last_updated: 2026-02-06
 tags: [foundations, context, strategies, compression, retrieval]
 part: 1
 part_title: Foundations
@@ -98,6 +98,10 @@ Whether context rot can be reversed within a session or requires agent restart r
 ### Distinction from Model Confusion
 
 Context rot differs from standard model errors or confusion. Model errors stem from capability limits or ambiguous prompts. Context rot results from degraded working memory—the model's capability remains intact, but its operational context has compromised output quality.
+
+### Context Window as Finite Resource
+
+*[2026-02-06]*: GSD project (12K-star open source tool) treats context window as a non-renewable resource with explicit quality relationship: **Quality ∝ 1/(% context used)**. This inverse relationship suggests quality degrades proportionally to context fill. Their mitigation: each plan execution gets fresh 200K context window, sized to remain <50% utilized. Main context never accumulates degradation. Context rot emerges from resource depletion—once context fills, quality cannot be recovered through compression, only through fresh allocation. This aligns with the "boot fresh agents" guidance above but adds quantified threshold: target <50% utilization for sustained quality, not just "avoid 95%."
 
 ---
 
