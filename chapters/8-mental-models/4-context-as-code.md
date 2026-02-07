@@ -2,7 +2,7 @@
 title: Context as Code
 description: Treat agent knowledge like software, not documents
 created: 2025-12-10
-last_updated: 2025-12-10
+last_updated: 2026-02-06
 tags: [mental-models, context, knowledge-management, versioning]
 part: 3
 part_title: Perspectives
@@ -177,6 +177,198 @@ You don't need to jump straight to the "code" end. The ACE playbook hits a sweet
 
 ---
 
+## Agent-as-Code: Version-Controlled Agent Definitions
+
+*[2026-02-06]*: The "context as code" mental model extends to agent definitions themselves. BMAD-METHOD demonstrates treating agents as first-class version-controlled code artifacts—portable, reusable, and shareable like any code file.
+
+### The Pattern
+
+Instead of runtime configurations or opaque API settings, agents are **self-contained markdown files with embedded YAML**:
+
+```markdown
+<!-- agent-definition.md -->
+# Security Expert Agent
+
+Specialized agent for security architecture, threat modeling, and vulnerability analysis.
+
+## Role
+You are a security architect with expertise in authentication, authorization,
+and secure system design.
+
+## Capabilities
+- OAuth2/OIDC protocol implementation
+- Threat modeling and risk assessment
+- Security audit and code review
+- Compliance requirements (SOC 2, HIPAA)
+
+## Workflows
+- security-audit: Comprehensive security review
+- threat-model: Analyze attack surfaces
+- auth-design: Design authentication flows
+
+---
+# Agent Configuration (YAML)
+name: security-expert
+type: specialist
+model: claude-sonnet-4.5
+temperature: 0.3
+tools: [Read, Grep, Execute]
+```
+
+### Why This Matters
+
+**Institutional knowledge preservation:**
+A security expert's knowledge—how to think about threat models, what to check in audits, which patterns prevent vulnerabilities—becomes **portable code**. When team members change, the expertise remains.
+
+**Cross-project reusability:**
+```bash
+# Copy agent definition to new project
+cp ~/agents/security-expert.md ./project-x/.agents/
+
+# Agent immediately available with full expertise
+```
+
+**Transparent system composition:**
+```
+agents/
+├── security-expert.md         # 245 lines
+├── architect.md               # 312 lines
+├── developer.md               # 289 lines
+└── qa-engineer.md             # 198 lines
+
+Total expertise: 1,044 lines of version-controlled knowledge
+```
+
+### Manifest-Driven Transparency
+
+BMAD tracks agents, workflows, and tasks via CSV manifests:
+
+```csv
+# agents.csv
+AgentId,Name,Description,FilePath,WorkflowTriggers
+bmm-001,Security Expert,Security architecture and threat modeling,agents/security-expert.md,security-audit|threat-model
+bmm-002,Architect,System design and technical decisions,agents/architect.md,create-architecture|tech-review
+```
+
+This provides:
+- **Complete inventory**: What agents exist?
+- **Capability mapping**: What can each agent do?
+- **Dependency tracking**: Which workflows require which agents?
+- **Easier debugging**: Manifest shows system composition at a glance
+
+### Version Control Benefits
+
+Agents under version control enable:
+
+```bash
+# Track agent evolution
+git log agents/security-expert.md
+a3f2b1c Added OWASP Top 10 checks to security audit workflow
+e4d5c6f Updated OAuth2 PKCE flow recommendations
+f7g8h9i Improved threat modeling methodology
+
+# Compare agent versions
+git diff v1.0..v2.0 agents/security-expert.md
+
+# Rollback problematic changes
+git revert f7g8h9i
+```
+
+When agent behavior regresses, version control enables diagnosis: "What changed in the agent definition that caused this?"
+
+### Production Example: BMAD-METHOD
+
+BMAD-METHOD (34.5k GitHub stars) implements agent-as-code across 26 agents:
+
+**Core orchestrator:**
+- BMad Master: Coordinates all 26 agents
+
+**Business Method Module (9 agents):**
+- Mary (Analyst), John (PM), Winston (Architect), Amelia (Developer)
+- Quinn (QA), Bob (Scrum Master), Barry (Quick Flow Dev)
+- Sally (UX), Paige (Technical Writer)
+
+**Builder Module (3 agents):**
+- Agents for creating custom agents, modules, workflows
+
+**Each agent:**
+- Self-contained markdown file
+- Embedded YAML configuration
+- Fuzzy-match triggers for activation
+- Portable across projects
+
+### Framework Extension: BMB Module
+
+BMAD includes agents specifically for *creating* agents:
+
+```
+/create-agent "API integration specialist"
+    ↓
+Builder agent generates:
+- agent-definition.md (role, capabilities, instructions)
+- agent-config.yaml (model, tools, workflows)
+- workflow templates for common tasks
+```
+
+**Meta-pattern:** Agents as code enables agents that *generate* agents. The builder module creates new agent definitions following the same markdown + YAML pattern.
+
+### Comparison to Runtime Configurations
+
+| Runtime Config | Agent-as-Code |
+|---------------|---------------|
+| JSON/YAML blob in API call | Markdown file with embedded config |
+| Exists only during execution | Persists as version-controlled file |
+| Opaque system composition | Transparent (read the files) |
+| Hard to share across projects | Copy file, instant reuse |
+| Manual documentation required | Self-documenting |
+| No change history | Full git history |
+
+### When to Use Agent-as-Code
+
+**Good fit:**
+- Building reusable agent libraries for organization
+- Multi-project environments where agents should be consistent
+- Teams needing audit trail of agent behavior changes
+- Complex agent systems requiring transparency
+
+**Not necessary for:**
+- One-off agent uses
+- Simple single-agent systems
+- Exploratory prototyping (formalize later)
+- Projects with stable, unchanging agent requirements
+
+### Integration with Other Patterns
+
+**Self-Improving Experts pattern:**
+Agent-as-code enables the improve phase to update agent definitions directly. Learnings from production update the markdown file, improving future runs.
+
+**Orchestrator pattern:**
+Manifest-driven transparency shows which agents the orchestrator can coordinate, their capabilities, and dependencies.
+
+**Knowledge Evolution:**
+Agent definitions are knowledge artifacts that evolve over time, following same version control practices as other context.
+
+### Implementation Checklist
+
+If implementing agent-as-code:
+
+- [ ] Define agent structure (markdown format, YAML schema)
+- [ ] Create agent manifest (CSV or JSON tracking system)
+- [ ] Version control agent definitions
+- [ ] Document agent creation guidelines
+- [ ] Build tooling for agent discovery (loading from manifest)
+- [ ] Test agent portability (copy to new project, verify function)
+- [ ] Add agent update workflow (how to improve agents)
+
+### Open Questions
+
+- What's the right balance between reusable generic agents vs specialized project-specific agents?
+- How to handle agent definition conflicts when merging across projects?
+- Can agent-as-code support dynamic agent generation at runtime, or only static definitions?
+- What testing framework validates agent definitions without executing them?
+
+---
+
 ## Implications
 
 ### Knowledge Reviews Like Code Reviews
@@ -260,7 +452,13 @@ Coverage by category:
 
 ## Connections
 
-- **To [Specs as Source Code](3-specs-as-source-code.md)**: Context as code extends this mental model beyond specs to all knowledge artifacts
-- **To [Knowledge Evolution](../7-practices/6-knowledge-evolution.md)**: Practical patterns for evolving knowledge bases over time
-- **To [Self-Improving Experts](../6-patterns/2-self-improving-experts.md)**: Expertise files are context that agents execute—they're source code for behavior
-- **To [Context](../4-context/_index.md)**: The mechanics of how context enters the agent's working memory
+- **To [Specs as Source Code](3-specs-as-source-code.md)**: Agent definitions are specs for agent behavior—same mental model applied to agents
+- **To [Knowledge Evolution](../7-practices/6-knowledge-evolution.md)**: Agent definitions evolve through version control like other knowledge artifacts
+- **To [Self-Improving Experts](../6-patterns/2-self-improving-experts.md)**: Expertise files are context that agents execute—agent-as-code makes the agent itself executable source
+- **To [Context](../4-context/_index.md)**: Agent definitions shape what context enters working memory and how it's interpreted
+
+## Sources
+
+- ACE framework paper (helpful/harmful counters, knowledge metrics)
+- [BMAD-METHOD GitHub Repository](https://github.com/bmad-code-org/BMAD-METHOD) - Production agent-as-code implementation with 26 agents
+- [Agent As Code: BMAD-METHOD™](https://dev.to/vishalmysore/agent-as-code-bmad-method-4no9) - Practitioner article on agent-as-code paradigm

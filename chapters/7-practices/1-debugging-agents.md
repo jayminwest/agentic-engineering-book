@@ -2,7 +2,7 @@
 title: Debugging Agents
 description: Finding and fixing what went wrong in agentic systems
 created: 2025-12-08
-last_updated: 2026-01-30
+last_updated: 2026-02-06
 tags: [practices, debugging, troubleshooting, failure-modes, diagnostics]
 part: 2
 part_title: Craft
@@ -282,6 +282,87 @@ The agent or tooling produced an error.
 - Use numbered steps with "confirm each step complete"
 - Require verification of completion conditions
 - Break long task lists into phases
+
+### Quality Gate Failures
+
+*[2026-02-06]*: **Symptoms**: Agent progresses through multi-phase workflow despite incomplete artifacts, ambiguous specifications, or missing dependencies. Downstream phases fail because upstream artifacts weren't validated.
+
+**Diagnosis:**
+- Review phase transition points—was artifact complete before progression?
+- Check artifact quality—are completion criteria met?
+- Examine dependencies—does this phase reference things that don't exist?
+
+**Root causes:**
+- No validation between workflow phases
+- Completion criteria too vague or easily satisfied
+- Pressure to ship fast bypasses quality checks
+- Agent unaware of artifact requirements for next phase
+
+**Fixes:**
+
+**Implement adversarial review gates:**
+```markdown
+# Between phases, add critical examination step
+
+Phase 1: Research → Generate research summary
+    ↓
+Quality Gate: Is research summary complete?
+- [ ] All dependencies identified
+- [ ] Root cause documented with evidence
+- [ ] Constraints explicitly stated
+- [ ] Recommended approach justified
+    ↓
+If incomplete → return to Research
+If complete → proceed to Plan
+```
+
+**Add artifact validation prompts:**
+```markdown
+Before accepting Research output:
+- Does this answer "what problem are we solving?"
+- Are all file paths/dependencies concrete (not "probably in auth.py")
+- Can the next phase execute from this artifact alone?
+```
+
+**Example validation logic:**
+```python
+def validate_research_artifact(artifact: str) -> tuple[bool, str]:
+    """Validate research artifact before allowing Plan phase."""
+    checks = {
+        "root_cause": "Root cause:" in artifact,
+        "dependencies": "Dependencies:" in artifact,
+        "evidence": any(marker in artifact for marker in ["/path/", "line ", ".py"]),
+        "recommendation": "Recommend" in artifact or "Approach" in artifact
+    }
+
+    if not all(checks.values()):
+        missing = [k for k, v in checks.items() if not v]
+        return False, f"Incomplete research: missing {', '.join(missing)}"
+
+    return True, "Research artifact complete"
+```
+
+**BMAD-METHOD implementation:**
+BMAD uses adversarial review as XML task (one of 4 core framework tasks). Orchestrator critically examines artifacts before phase progression, catching incomplete PRDs, ambiguous user stories, and missing architectural decisions before they cascade into thousands of lines of wrong code.
+
+**Why this matters:**
+Bad research compounds exponentially. A 10-minute research mistake can create a 10-week refactoring disaster. Quality gates prevent cascade failures by validating artifacts when mistakes are cheap to fix (specification phase) rather than expensive (post-implementation).
+
+**Trade-offs:**
+- **Slower progression** through phases (validation takes time)
+- **Higher quality output** (prevents compounding errors)
+- **Better debugging** (clear failure point when gates reject artifacts)
+
+**When to use quality gates:**
+- Multi-phase workflows (Research → Plan → Build)
+- High-cost-of-failure scenarios (production systems, regulated industries)
+- Complex domains where upfront validation saves downstream rework
+- Team environments where quality standards must be enforced
+
+**When to skip:**
+- Simple single-phase tasks (no handoff, no cascade risk)
+- Prototyping (speed over quality initially)
+- Well-understood domains (team expertise reduces validation need)
 
 ### State Confusion in Multi-Agent Systems
 

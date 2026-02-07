@@ -259,7 +259,7 @@ key_operations:
   configure_swarm_coordination:
     name: Configure Expert Swarm Coordination
     description: Set up lead + worker structure for parallel execution with expertise inheritance
-    when_to_use: Creating /do-swarm command agents or expert swarms requiring parallel coordination
+    when_to_use: Creating /do-teams command agents or expert swarms requiring parallel coordination
     approach: |
       *[2026-02-02]*: Pattern from commits 9fa2447 and a1d5942.
 
@@ -301,7 +301,7 @@ key_operations:
       - Workers load themselves: "Read the expertise file before starting"
       - Focus attention: "Focus on sections: key_operations.{X}, patterns.{Y}"
     examples:
-      - location: .claude/commands/do-swarm.md
+      - location: .claude/commands/do-teams.md
         note: 400+ lines with canonical prompt templates for lead/worker/council patterns
       - location: chapters/6-patterns/8-expert-swarm-pattern.md
         note: Full pattern documentation with production evidence (10 agents, 3,082 lines, 4 minutes)
@@ -611,7 +611,7 @@ patterns:
     name: Expert Swarm Pattern
     context: Domain experts coordinate parallel workers with expertise inheritance
     implementation: |
-      *[2026-02-02]*: Commit 9fa2447 documented pattern, commit a1d5942 added /do-swarm command.
+      *[2026-02-02]*: Commit 9fa2447 documented pattern, commit a1d5942 added /do-teams command.
       Pattern combines expertise consistency with parallel execution scale.
 
       Core structure:
@@ -670,7 +670,7 @@ patterns:
       - advantage: Learning separation prevents race conditions
         cost: Cannot update expertise during swarm execution
     real_examples:
-      - location: .claude/commands/do-swarm.md
+      - location: .claude/commands/do-teams.md
         note: 400+ lines, TeammateTool coordination with canonical prompt templates
       - location: chapters/6-patterns/8-expert-swarm-pattern.md
         note: 532-line pattern documentation with production evidence
@@ -817,17 +817,17 @@ best_practices:
       - practice: Dual-file ownership - single expert domain manages tightly-coupled files
         evidence: curriculum domain owns both CURRICULUM.md and RUBRIC.md
         timestamp: 2025-12-27
-      - practice: /do-swarm command for parallel execution with TeammateTool coordination
+      - practice: /do-teams command for parallel execution with TeammateTool coordination
         evidence: Commit a1d5942 added command, commit 9fa2447 documented Expert Swarm Pattern
         timestamp: 2026-02-02
         implementation: |
-          Use /do-swarm when requiring:
+          Use /do-teams when requiring:
           - Parallel execution with inter-agent messaging
           - Multiple expert perspectives (council pattern)
           - Complex multi-agent workflows
           Use /do for sequential workflows (plan→build→improve) or simple delegation.
 
-          Key difference: /do-swarm has TeammateTool access for message-passing coordination,
+          Key difference: /do-teams has TeammateTool access for message-passing coordination,
           /do uses traditional Task spawning for sequential expert orchestration.
 
 known_issues:
@@ -883,11 +883,11 @@ stability:
     contradiction_count: 0
     last_reviewed: 2026-02-02
     notes: |
-      *[2026-02-02 - Expert Swarm Pattern and /do-swarm command]*
+      *[2026-02-02 - Expert Swarm Pattern and /do-teams command]*
       New learnings: +1 pattern, +1 command pattern, +1 best practice
       Size after additions: ~830 lines (within healthy 750-900 range)
 
-      Key learnings from commits 9fa2447 (swarm documentation) and a1d5942 (do-swarm command):
+      Key learnings from commits 9fa2447 (swarm documentation) and a1d5942 (do-teams command):
 
       1. Expert Swarm Pattern: Domain experts coordinate parallel workers via path-passing protocol
          - Workers receive EXPERTISE_PATH (not full content) to keep prompts lean
@@ -895,7 +895,7 @@ stability:
          - Learning separation: workers execute, improve agents analyze afterward
          - Production evidence: 10 agents, 3,082 lines, 4 minutes, consistent quality
 
-      2. /do-swarm Command: Orchestrator-level swarm coordination with TeammateTool
+      2. /do-teams Command: Orchestrator-level team coordination with TeammateTool
          - Flat architecture: command directly spawns lead + workers (no nested subagents)
          - Canonical prompt structure reduces variance across teammates
          - Path-passing: EXPERTISE_PATH in all worker prompts for domain knowledge inheritance

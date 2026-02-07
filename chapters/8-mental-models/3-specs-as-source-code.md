@@ -203,6 +203,157 @@ The spec is the source. Everything else derives from it.
 
 ---
 
+## Living Artifacts: Documentation as Primary, Code as Derivative
+
+*[2026-02-06]*: BMAD-METHOD demonstrates an extreme application of specs-as-source-code philosophy: **code is merely a downstream derivative of specifications**. In traditional development, source code is the truth and documentation is secondary (often outdated). BMAD inverts this completely.
+
+### The Inversion
+
+```
+Traditional:                      BMAD Living Artifacts:
+
+Source Code                       Documentation (PRD, Architecture, Stories)
+    ↓                                 ↓
+Documentation                     Source Code
+(often outdated)                  (can be regenerated)
+```
+
+### Four-Phase Artifact Methodology
+
+BMAD structures development as document-producing phases:
+
+**1. Analysis Phase (optional)**
+- Outputs: Product Brief, Research Summary
+- Purpose: Problem definition before solution
+
+**2. Planning Phase**
+- Outputs: PRD (Product Requirements Document), UX Design
+- Purpose: Requirements + user flows
+
+**3. Solutioning Phase**
+- Outputs: Architecture Document, Epics/Stories, Readiness Assessment
+- Purpose: Technical design + implementation plan
+
+**4. Implementation Phase**
+- Outputs: Working Code, Code Reviews, Test Automation
+- Purpose: Execute designs from phases 1-3
+
+**Key insight:** Phases 1-3 produce *documents*. Phase 4 produces code *from* those documents. Each document becomes context for the next phase and audit trail for future changes.
+
+### Compliance Value
+
+For organizations under regulatory constraints (SOC 2, HIPAA, financial services), living artifacts transform compliance from post-hoc documentation to inherent process:
+
+- **Versioned decisions**: Each document captures not just WHAT was built, but WHY
+- **Audit trails**: Automated extraction of decision history for auditors
+- **Requirement traceability**: Code links back to stories, stories link to architecture, architecture links to PRD
+- **Change justification**: When code changes later, documents explain original intent
+
+### When Code Changes
+
+Traditional approach: Archaeologically excavate code to understand intent, make changes, hope nothing breaks.
+
+Living artifacts approach:
+1. Read original PRD/Architecture documents (context for why it works this way)
+2. Update documents with new requirements or constraints
+3. Regenerate code from updated specifications
+4. Documents and code stay synchronized
+
+### Adversarial Review Gates
+
+BMAD implements quality gates between phases—an orchestrator critically examines each artifact before allowing progression. This prevents cascade failures:
+
+- Incomplete PRD → flawed architecture → thousands of lines of wrong code
+- Ambiguous user story → unclear implementation → bugs in production
+
+**Quality gate checks:**
+- Are completion criteria met?
+- Are ambiguities resolved?
+- Are dependencies documented?
+- Can downstream phase execute from this artifact?
+
+### Scale-Adaptive Artifact Depth
+
+Not every project needs full four-phase documentation. BMAD adjusts:
+
+**Quick Flow (3-step rapid path):**
+```
+/quick-spec → /dev-story → /code-review
+```
+Skips Product Brief, PRD, Architecture for bug fixes and small features.
+
+**Full Planning Path (6-phase comprehensive):**
+```
+/product-brief → /create-prd → /create-architecture →
+/create-epics-and-stories → /sprint-planning → [Dev Story Cycle]
+```
+Required for new products, multi-team efforts, compliance needs.
+
+**Framework intelligence:** System recommends path based on project type. Medical diagnostic system → Full Planning. Bug fix → Quick Flow.
+
+### Production Evidence
+
+BMAD-METHOD (MIT-licensed, 34.5k GitHub stars, 19 releases) demonstrates this approach at scale:
+- 68 workflows spanning full SDLC
+- 26 specialized agents executing from documents
+- Modular artifact system enabling reuse across projects
+- Community adoption validates practical viability
+
+### Living Artifacts vs. Traditional Specs
+
+| Traditional Specs | Living Artifacts |
+|------------------|------------------|
+| Written after code (documentation) | Written before code (specification) |
+| Code is source of truth | Documents are source of truth |
+| Specs drift from reality | Code regenerated from specs |
+| "Comments lie, code doesn't" | "Code is derivative, specs are canonical" |
+| Manual synchronization required | Specs → Code generation enforces sync |
+
+### Connections to Other Mental Models
+
+**To [Context as Code](4-context-as-code.md):** Living artifacts are structured knowledge that agents execute—they're source code for behavior.
+
+**To [Plan-Build-Review](../6-patterns/1-plan-build-review.md):** Living artifacts provide the research and plan documents that build phase executes from.
+
+**To [Agent-as-Code](#):** BMAD extends "specs as source code" to agents themselves—agent definitions are markdown + YAML artifacts version-controlled like specifications.
+
+### When to Use Living Artifacts
+
+**Good fit:**
+- Regulated industries requiring audit trails
+- Long-lived systems where "why" matters as much as "what"
+- Multi-team projects needing shared understanding
+- Complex domains where upfront design prevents costly rework
+
+**Overkill for:**
+- Throwaway prototypes
+- One-person hobby projects
+- Well-understood, stable problem spaces
+- Projects without compliance requirements
+
+### Implementation Considerations
+
+**Tooling requirements:**
+- Agents capable of reading structured documents (PRDs, architecture specs)
+- Quality gates between phases (validation before progression)
+- Version control for documents (Git for markdown/YAML)
+- Traceability system (linking code → stories → architecture → PRD)
+
+**Process requirements:**
+- Team buy-in on documents-first philosophy
+- Discipline to update documents before code
+- Quality standards for artifact completeness
+- Review processes for specifications
+
+### Open Questions
+
+- How to handle exploratory coding where specs can't be written upfront?
+- What level of spec detail is optimal? (too vague → unusable, too detailed → brittle)
+- Can living artifacts work for frontend development, or only backend?
+- How to migrate existing code-first projects to living artifacts approach?
+
+---
+
 ## Common Pitfalls
 
 ### Spec Drift
@@ -227,8 +378,14 @@ The spec is the source. Everything else derives from it.
 
 ## Connections
 
-- **To [Context as Code](4-context-as-code.md)**: This mental model extends beyond specs to all context artifacts—knowledge bases, expertise files, and system prompts should be treated as source code
-- **To [Plan-Build-Review](../6-patterns/1-plan-build-review.md)**: The plan IS the source code—it's not throwaway scaffolding
-- **To [Self-Improving Experts](../6-patterns/2-self-improving-experts.md)**: Expertise files are specs for agent behavior
-- **To [Knowledge Evolution](../7-practices/6-knowledge-evolution.md)**: Knowledge bases are specs for how to think about domains
+- **To [Context as Code](4-context-as-code.md)**: Living artifacts are structured context that determines agent behavior
+- **To [Plan-Build-Review](../6-patterns/1-plan-build-review.md)**: The plan IS the source code, not scaffolding—BMAD's four-phase methodology demonstrates this at scale
+- **To [Self-Improving Experts](../6-patterns/2-self-improving-experts.md)**: Expertise files are specs for agent behavior—same "spec as source code" philosophy
+- **To [Knowledge Evolution](../7-practices/6-knowledge-evolution.md)**: Knowledge bases are specs for domain understanding
 - **To [Prompt Structuring](../2-prompt/2-structuring.md)**: Structured prompts are executable specifications
+
+## Sources
+
+- Sean Grove's original articulation of specs-as-source-code mental model
+- [BMAD-METHOD GitHub Repository](https://github.com/bmad-code-org/BMAD-METHOD) - Production implementation of living artifacts methodology
+- [BMAD Scout Report](/.claude/.cache/research/external/bmad-method-scout-report.md) - Comprehensive analysis

@@ -1,6 +1,6 @@
 # Table of Contents
 
-*Generated: 2026-02-05*
+*Generated: 2026-02-06*
 
 ---
 
@@ -71,6 +71,7 @@ Recurring architectures and approaches for building agentic systems
 - [Human-in-the-Loop Pattern](chapters/6-patterns/6-human-in-the-loop.md)
 - [Progressive Disclosure Pattern](chapters/6-patterns/7-progressive-disclosure.md)
 - [Expert Swarm Pattern](chapters/6-patterns/8-expert-swarm-pattern.md)
+- [Multi-Agent Collaboration Pattern](chapters/6-patterns/9-multi-agent-collaboration.md)
 
 ### Chapter 7: Practices
 

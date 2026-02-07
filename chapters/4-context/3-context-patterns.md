@@ -2,7 +2,7 @@
 title: Advanced Context Patterns
 description: Progressive disclosure, context loading vs. accumulation, and ACE framework for growing contexts
 created: 2025-12-10
-last_updated: 2025-12-10
+last_updated: 2026-02-06
 tags: [foundations, context, patterns, progressive-disclosure, ace]
 part: 1
 part_title: Foundations
@@ -74,6 +74,8 @@ Slight latency on selection (additional tool call to fetch full content) for dra
 - Tool descriptions as metadata layer (Read/Grep as on-demand fetchers)
 - Structured indices with `description` fields (see [MCP Tool Declarations](../5-tool-use/3-tool-restrictions.md#mcp-tool-declarations-in-frontmatter))
 - Skills systems (see [Claude Code: Skills](../9-practitioner-toolkit/1-claude-code.md))
+
+*[2026-02-06]*: Federated knowledge architecture uses progressive disclosure to navigate multi-repository contexts. Instead of loading all repos upfront, load source metadata first (repo names, descriptions), then expand specific repos on-demand. See [Federated Knowledge Architecture](2-context-strategies.md#federated-knowledge-architecture) for distributed context management patterns.
 
 ---
 

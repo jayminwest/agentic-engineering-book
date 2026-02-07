@@ -271,14 +271,302 @@ Our default advice remains "boot a new agent" for most cases. Frequent intention
 
 ---
 
+## Federated Knowledge Architecture
+
+*[2026-02-06]*: Most context strategies assume a single repository or bounded knowledge source. Federated knowledge extends context management to distributed systems—multiple repositories, microservices, external APIs, and community knowledge sources.
+
+### The Distributed Context Problem
+
+**Scenario:** Agent needs to understand authentication flow that spans:
+- `api-gateway` repo (entry point)
+- `auth-service` repo (token validation)
+- `user-database` repo (schema definitions)
+- Company wiki (design decisions)
+- Third-party OAuth docs (protocol specs)
+
+**Traditional approaches fail:**
+- Loading all repos into context → token budget exhausted
+- Loading one repo → agent misses cross-repo dependencies
+- Manual context assembly → error-prone, doesn't scale
+
+### How Federated Knowledge Works
+
+**1. Knowledge Aggregation**
+
+Pull from multiple sources into unified cache:
+
+```
+.bmad-fks-cache/
+├── api-gateway/           # Git repo 1
+│   └── [cached files]
+├── auth-service/          # Git repo 2
+│   └── [cached files]
+├── design-docs/           # Web pages converted to PDF
+│   └── auth-flow.pdf
+└── oauth-spec/            # External docs
+    └── rfc-6749.pdf
+```
+
+Each source maintains independent cache directory. Updates refresh caches without disrupting other sources.
+
+**2. Unified Context Map**
+
+Central `context.md` file maps sources → cached locations:
+
+```markdown
+# Federated Knowledge Sources
+
+## Internal Repositories
+- **api-gateway**: `.bmad-fks-cache/api-gateway/` - Entry point, routing logic
+- **auth-service**: `.bmad-fks-cache/auth-service/` - Token validation, session management
+- **user-database**: `.bmad-fks-cache/user-database/` - User schema, migrations
+
+## Design Documentation
+- **Authentication Flow**: `.bmad-fks-cache/design-docs/auth-flow.pdf` - 2024-11 design decision
+- **Session Strategy**: `.bmad-fks-cache/design-docs/session-strategy.pdf` - Redis vs JWT tradeoff
+
+## External References
+- **OAuth 2.0 RFC**: `.bmad-fks-cache/oauth-spec/rfc-6749.pdf` - Protocol specification
+```
+
+The agent loads `context.md` first, gaining awareness of all available knowledge sources. Specific sources load on-demand based on task needs.
+
+**3. Multi-Source Navigation**
+
+Agent workflow:
+1. Read `context.md` to understand available sources
+2. Identify relevant sources for current task
+3. Load specific files from relevant source caches
+4. Cross-reference between sources when dependencies exist
+
+Example for "implement JWT validation":
+- Load `auth-service/jwt.py` (current implementation)
+- Load `oauth-spec/rfc-6749.pdf` (protocol requirements)
+- Load `design-docs/auth-flow.pdf` (why JWT was chosen)
+
+**4. Priority-Based Conflict Resolution**
+
+When sources provide conflicting information:
+
+```
+Priority hierarchy:
+1. Local directory (current working context)
+2. Project-specific repos (company codebases)
+3. Organization-wide docs (internal wikis)
+4. Community knowledge (external docs, RFCs)
+```
+
+Example conflict:
+- Local `auth.py` uses JWT expiry = 1 hour
+- OAuth RFC recommends 10 minutes
+- Company wiki says "use 1 hour for mobile clients"
+
+**Resolution:** Local implementation (priority 1) takes precedence. Agent notes the discrepancy but trusts local context unless explicitly asked to align with external standards.
+
+### When to Use Federated Knowledge
+
+**Good fit:**
+
+**Microservices architectures:**
+- Authentication service + API gateway + multiple backends
+- Event-driven systems with producers/consumers across repos
+- Shared libraries with separate documentation repos
+
+**Multi-repo organizations:**
+- Frontend + backend + infrastructure as separate repos
+- Platform teams maintaining shared components
+- Services with cross-cutting concerns (logging, monitoring, auth)
+
+**Hybrid internal/external knowledge:**
+- Internal implementation + external protocol specs (OAuth, SAML)
+- Company code + third-party API documentation
+- Custom solutions + industry standards
+
+**Poor fit:**
+
+**Single repository projects:**
+- Monolithic applications
+- Small services without external dependencies
+- Projects with self-contained documentation
+
+**When context already fits:**
+- Simple codebases where everything loads in one context
+- Well-documented single repos
+- Projects without cross-repo dependencies
+
+### Implementation: BMAD-METHOD Example
+
+BMAD-METHOD implements federated knowledge via external extension: [vishalmysore/bmad-federated-knowledge](https://github.com/vishalmysore/bmad-federated-knowledge)
+
+**Configuration example:**
+
+```yaml
+# .bmad-fks.yaml
+sources:
+  - name: api-gateway
+    type: git
+    url: https://github.com/company/api-gateway
+    branch: main
+    cache_dir: .bmad-fks-cache/api-gateway
+
+  - name: auth-service
+    type: git
+    url: https://github.com/company/auth-service
+    branch: main
+    cache_dir: .bmad-fks-cache/auth-service
+
+  - name: design-docs
+    type: web
+    urls:
+      - https://wiki.company.com/auth-flow
+      - https://wiki.company.com/session-strategy
+    cache_dir: .bmad-fks-cache/design-docs
+    format: pdf
+
+  - name: oauth-spec
+    type: web
+    urls:
+      - https://datatracker.ietf.org/doc/html/rfc6749
+    cache_dir: .bmad-fks-cache/oauth-spec
+    format: pdf
+```
+
+**Workflow:**
+1. Developer runs `bmad-fks sync` - pulls all sources into cache
+2. Agent loads `context.md` - gains awareness of federated sources
+3. Task-specific context loading - agent reads relevant cached files
+4. Updates propagate independently - each source can refresh without affecting others
+
+### Context Loading Pattern for Federated Sources
+
+**Progressive disclosure applies:**
+
+```markdown
+# Initial load (metadata only, ~50 tokens)
+Available sources: api-gateway, auth-service, user-database, design-docs, oauth-spec
+
+# On selection (full context, ~2000 tokens per source)
+Loading: auth-service
+  - jwt.py (implementation)
+  - tests/test_jwt.py (test coverage)
+  - README.md (setup instructions)
+```
+
+Don't load all sources upfront. Load source summaries, then expand relevant sources on-demand.
+
+### Trade-Offs
+
+| Approach | Context Budget | Discoverability | Maintenance |
+|----------|---------------|-----------------|-------------|
+| **Single-repo** | Tight (everything visible) | Perfect (grep finds all) | Simple |
+| **Manual multi-repo** | Varies (per-task assembly) | Poor (what exists?) | High (manual sync) |
+| **Federated knowledge** | Moderate (metadata + selected) | Good (unified map) | Medium (automated sync) |
+
+**Federated knowledge wins when:**
+- Multiple repos are inevitable (microservices, org structure)
+- Context budget can't fit everything (large codebases)
+- Cross-repo understanding is critical (dependencies, shared concerns)
+
+**Avoid when:**
+- Single repo works fine
+- External dependencies are minimal
+- Context budget is unconstrained
+
+### Integration with Existing Context Strategies
+
+**Combines with frequent intentional compaction:**
+- Load federated sources → compact irrelevant sections → proceed with focused context
+- Compaction at 40-60% still applies, but now across multi-source context
+
+**Combines with context loading (vs accumulation):**
+- Federated sources are perfect for curated payload model
+- Orchestrator stages: "load auth-service for this subagent, api-gateway for that one"
+- Each agent receives precisely the sources it needs
+
+**Enables progressive disclosure:**
+- Tier 1: Source names and descriptions (metadata)
+- Tier 2: File listings within selected source
+- Tier 3: Specific file contents from selected source
+
+### Token Economics
+
+**Example:** 5 federated sources, 3 active for current task
+
+```
+Metadata for 5 sources:        5 × 50 tokens =     250 tokens
+Context map file:                              +   300 tokens
+Selected source 1 (auth-service):              + 2,000 tokens
+Selected source 2 (api-gateway):               + 1,500 tokens
+Selected source 3 (design-docs):               + 1,000 tokens
+──────────────────────────────────────────────────────────────
+Total:                                         = 5,050 tokens
+```
+
+Compare to loading all 5 sources: 5 × 2,000 = 10,000 tokens. Federated approach with selective loading saves ~5k tokens.
+
+### Practical Patterns
+
+**1. Cross-Repo Dependency Analysis**
+
+```markdown
+Task: "Update authentication to use refresh tokens"
+
+Agent reasoning:
+- auth-service: Implements token generation (needs update)
+- api-gateway: Validates tokens (may need refresh logic)
+- design-docs: Why current design doesn't use refresh tokens (context)
+
+Agent loads all three sources, analyzes dependencies, proposes update spanning repos.
+```
+
+**2. Protocol Compliance Verification**
+
+```markdown
+Task: "Ensure OAuth implementation follows RFC 6749"
+
+Agent reasoning:
+- oauth-spec: Load RFC 6749 requirements
+- auth-service: Load current implementation
+- Compare: Identify gaps between spec and implementation
+
+Agent cross-references external standard with internal code.
+```
+
+**3. Historical Context Recovery**
+
+```markdown
+Task: "Why do we use 1-hour JWT expiry instead of 10 minutes?"
+
+Agent reasoning:
+- design-docs: Load historical design decision (2024-11)
+- auth-service: Current implementation confirms 1-hour
+- oauth-spec: Protocol recommendation is 10 minutes
+
+Agent explains: Company decision prioritized mobile UX over security recommendation.
+```
+
+### Open Questions
+
+- How to handle version skew between cached sources and live repos?
+- What's the optimal cache refresh strategy? (on-demand, scheduled, manual)
+- Can conflict resolution be learned from usage patterns?
+- How to detect when cross-repo dependencies are missing from federated sources?
+- Does priority-based resolution cover all conflict scenarios, or are there edge cases?
+
+---
+
 ## Connections
 
-- **To [Context Fundamentals](1-context-fundamentals.md):** The "One Agent, One Task" principle this technique extends
-- **To [Advanced Context Patterns](3-context-patterns.md):** How frequent intentional compaction relates to ACE's growing contexts
+- **To [Context Fundamentals](1-context-fundamentals.md):** The "One Agent, One Task" principle this technique extends, and Federated knowledge extends "context as payload" to multi-source payloads
+- **To [Advanced Context Patterns](3-context-patterns.md):** How frequent intentional compaction relates to ACE's growing contexts, and Progressive disclosure pattern enables federated source navigation
+- **To [Multi-Agent Context](4-multi-agent-context.md):** Orchestrators can stage different federated sources for different subagents
+- **To [Tool Use](../5-tool-use/_index.md):** Read tool becomes gateway to federated sources, not just local files
 - **To [Patterns](../6-patterns/_index.md):** Emergency Context Rewriting anti-pattern demonstrates why reactive compaction fails
 
 ---
 
 ## Sources
 
-ACE-FCA framework by HumanLayer — Demonstrated in production shipping 35K LOC in 7 hours using proactive compaction at 40-60% utilization
+- ACE-FCA framework by HumanLayer — Demonstrated in production shipping 35K LOC in 7 hours using proactive compaction at 40-60% utilization
+- [vishalmysore/bmad-federated-knowledge](https://github.com/vishalmysore/bmad-federated-knowledge) - BMAD extension implementing federated architecture
+- [BMAD-METHOD Scout Report](/.claude/.cache/research/external/bmad-method-scout-report.md) - Detailed analysis including federated knowledge section

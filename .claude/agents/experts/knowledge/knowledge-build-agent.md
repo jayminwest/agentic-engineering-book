@@ -112,6 +112,36 @@ order: X.Y.Z
 
 ## Core Questions
 
+### Production Pattern Integration from External Projects
+
+*[2026-02-06]*: When integrating patterns from external production systems, use inline timestamp additions with source attribution. GSD project integration (commit 0e1e644) added 131 lines across 3 files using this approach:
+
+**Key Techniques:**
+- **Inline timestamps**: *[2026-02-06]*: prefix for new material within existing sections
+- **Evidence-first**: Lead with quantified evidence (Quality ∝ 1/(% context used)) before explanation
+- **Source attribution**: "GSD project (12K-star open source tool)" for traceability
+- **Concrete schemas**: Show actual structures (STATE.md format, must_haves YAML)
+- **Measurement over vague guidance**: "<50% context utilization" not "avoid filling context"
+
+**Example Integration (Context Strategies):**
+```markdown
+### Context Window as Finite Resource
+
+*[2026-02-06]*: GSD project treats context window as non-renewable resource with
+explicit quality relationship: **Quality ∝ 1/(% context used)**. This inverse
+relationship suggests quality degrades proportionally to context fill. Their
+mitigation: each plan execution gets fresh 200K context window, sized to remain
+<50% utilized.
+```
+
+**Example Integration (Workflow Coordination, 124 lines):**
+Added three complementary patterns with structured schemas:
+- Atomic commits pattern (with anti-pattern + better examples)
+- STATE.md structure (Position/Decisions/Blockers sections)
+- must_haves YAML schema (Truths/Artifacts/Key Links verification)
+
+**When to Use:** Adding quantified evidence from production systems to existing qualitative guidance, showing real-world implementations of mental models, documenting multi-session workflow patterns.
+
 ### Architectural Pattern Structure (Commit 20500f1 + 2026-02-02 Expert Swarm Example)
 
 *[2026-02-02]*: When building sophisticated patterns (300-550 lines), follow this 10-12 section structure observed in ReAct, HITL, Progressive Disclosure, and Expert Swarm patterns:
@@ -219,7 +249,7 @@ tags: [domain, concept]
 - Cost: <specific cost>
 ```
 
-*[2026-02-02]*: **Slash Command Documentation Implementation** - When building multi-step command documentation (like /do-swarm), use 7-section imperative structure: Role (clarify executor responsibilities) → Workflow (numbered steps with code blocks) → Templates (copy-paste Lead/Worker) → Coordination → When/Examples → Troubleshooting. Include EXPERTISE_PATH protocol in templates, add "CRITICAL:" callouts for common errors.
+*[2026-02-02]*: **Slash Command Documentation Implementation** - When building multi-step command documentation (like /do-teams), use 7-section imperative structure: Role (clarify executor responsibilities) → Workflow (numbered steps with code blocks) → Templates (copy-paste Lead/Worker) → Coordination → When/Examples → Troubleshooting. Include EXPERTISE_PATH protocol in templates, add "CRITICAL:" callouts for common errors.
 
 *[2026-02-02]*: **Debugging Chapter Expansion Implementation** - When expanding operational guidance chapters, use symptom-first structure: Mindset comparison table → Core framework table → Multi-branch decision tree → Failure modes (Symptoms/Diagnosis/Root/Fixes). Each failure mode gets 4-part structured documentation. Decision trees guide readers through diagnostic sequence ("if X then check Y")
 
@@ -363,7 +393,7 @@ Implementation: chapters/9-practitioner-toolkit/1-claude-code.md lines 243-531. 
 
 **Phase 1: Foundation** - Write comprehensive foundational section in primary chapter (claude-code.md). Include prerequisites, mental model, capabilities, advanced features, best practices, limitations. This becomes source of truth for terminology and feature status.
 
-**Phase 2: Commands** - Update slash command documentation (.claude/commands/do-swarm.md) with explicit references to foundation chapter. Commands inherit terminology and feature status from primary chapter.
+**Phase 2: Commands** - Update slash command documentation (.claude/commands/do-teams.md) with explicit references to foundation chapter. Commands inherit terminology and feature status from primary chapter.
 
 **Phase 3: Patterns** - Add cross-references in related pattern files (expert-swarm-pattern.md, orchestrator-pattern.md) using inline subsections + links. Don't duplicate foundation content—reference and contextualize.
 

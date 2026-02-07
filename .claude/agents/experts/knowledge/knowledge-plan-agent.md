@@ -190,16 +190,45 @@ Use these when documenting "how to decide" workflows. They make implicit decisio
 
 **When to Use This Structure:** Sophisticated multi-agent architectural patterns (3+ components), patterns solving known tensions, production patterns with quantified evidence, patterns requiring protocol specification. Typical length: 300-550 lines.
 
+### Integrating Production Patterns from External Projects
+
+*[2026-02-06]*: Integrating patterns from external open source projects requires careful framing that generalizes principles while attributing examples. GSD project integration (commit 0e1e644 - 12K-star meta-prompting system) demonstrates effective pattern extraction:
+
+**Integration Approach:**
+- **Inline timestamp additions** (*[YYYY-MM-DD]*:) to existing sections, not wholesale rewrites
+- **Evidence-first framing**: Lead with formula/quantified evidence, then explanation
+- **Source attribution**: Explicit project name and scale ("GSD project, 12K-star open source tool")
+- **Concrete examples**: Show schemas (must_haves YAML), structured formats (STATE.md), formulas (Quality ∝ 1/(% context used))
+- **Production validation emphasis**: Real-world evidence over theory
+
+**Three Patterns from GSD Integration:**
+1. **Context Window as Non-Renewable Resource** (chapters/4-context/2-context-strategies.md)
+   - Quantified threshold: <50% utilization for sustained quality
+   - Quality degrades inversely with context fill percentage
+   - Mitigation: Fresh context per plan execution
+
+2. **Plans as Executable Prompts** (chapters/8-mental-models/3-specs-as-source-code.md)
+   - PLAN.md files ARE the prompts (read verbatim, not transformed)
+   - Requirements: unambiguous, action-oriented, verification criteria
+   - Implementation: Semantic XML within markdown (<action>, <verify>, <done>)
+
+3. **Multi-Session Workflow Patterns** (chapters/7-practices/5-workflow-coordination.md)
+   - Atomic commits: One feature per commit (independent revertability)
+   - STATE.md: Position/Decisions/Blockers structure (session survival)
+   - must_haves: Truths/Artifacts/Key Links (goal-backward verification)
+
+**When to Use:** Integrating open source patterns with quantified evidence, adding measurement guidance to qualitative recommendations, documenting multi-session workflows with structured state.
+
 ### Slash Command Documentation Structure
 
-*[2026-02-02]*: Multi-step command workflows require imperative instruction format. The /do-swarm command (.claude/commands/do-swarm.md - 623 lines) demonstrates effective structure for coordination workflows:
+*[2026-02-02]*: Multi-step command workflows require imperative instruction format. The /do-teams command (.claude/commands/do-teams.md - 623 lines) demonstrates effective structure for coordination workflows:
 
 **7-Section Format:**
 1. **Your Role** (3 bullets): Clarify command executor responsibilities ("You are the team leader")
 2. **Workflow** (7 numbered steps): Step 1 (Create Team) → Step 7 (Cleanup), each with code block + constraints
 3. **Templates** (2 sections): Copy-paste Lead agent template + Worker agent template
 4. **Coordination Patterns**: SendMessage usage (direct messages, broadcasts)
-5. **When To Use**: Comparison table (/do vs /do-swarm decision guidance)
+5. **When To Use**: Comparison table (/do vs /do-teams decision guidance)
 6. **Examples**: Real execution scenarios
 7. **Troubleshooting**: Common errors with resolutions
 

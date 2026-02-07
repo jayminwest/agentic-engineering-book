@@ -307,34 +307,34 @@ best_practices:
   - category: Canonical Swarm Prompting
     practices:
       - practice: Use canonical prompt structure (ROLE/CONTEXT/TASK/CONSTRAINTS/OUTPUT) for all teammates
-        evidence: .claude/commands/do-swarm.md#teammate-prompting-format
+        evidence: .claude/commands/do-teams.md#teammate-prompting-format
         rationale: Reduces variance - 10-agent swarm with canonical format showed zero voice drift vs 15-20% without
         timestamp: 2026-02-02
       - practice: Avoid negative constraints ("Never X") - use positive alternatives ("Do Y")
-        evidence: .claude/commands/do-swarm.md#forbidden-patterns
+        evidence: .claude/commands/do-teams.md#forbidden-patterns
         rationale: Pink elephant effect - negative constraints focus model attention on prohibited action
         timestamp: 2026-02-02
       - practice: Specify validation level explicitly (Quick/Standard/Critical)
-        evidence: .claude/commands/do-swarm.md#validation-levels
+        evidence: .claude/commands/do-teams.md#validation-levels
         rationale: Prevents inconsistent quality across parallel workers
         timestamp: 2026-02-02
       - practice: End prompts with "Use this exact format. No preamble." to prevent meta-commentary
-        evidence: .claude/commands/do-swarm.md#output-consistency-enforcement
+        evidence: .claude/commands/do-teams.md#output-consistency-enforcement
         timestamp: 2026-02-02
 
-  - category: /do vs /do-swarm Selection
+  - category: /do vs /do-teams Selection
     practices:
       - practice: Use /do for sequential workflows (plan→build→improve), simple delegation
-        evidence: .claude/commands/do.md + .claude/commands/do-swarm.md
+        evidence: .claude/commands/do.md + .claude/commands/do-teams.md
         timestamp: 2026-02-02
-      - practice: Use /do-swarm for parallel coordination with inter-agent messaging, multiple experts
-        evidence: .claude/commands/do-swarm.md
+      - practice: Use /do-teams for parallel coordination with inter-agent messaging, multiple experts
+        evidence: .claude/commands/do-teams.md
         timestamp: 2026-02-02
-      - practice: /do-swarm requires TeammateTool access (server-side gated, requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
-        evidence: .claude/commands/do-swarm.md#requirements
+      - practice: /do-teams requires TeammateTool access (server-side gated, requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
+        evidence: .claude/commands/do-teams.md#requirements
         timestamp: 2026-02-02
       - practice: For quick research swarms, skip shutdown ceremony (teammates timeout naturally ~5 min)
-        evidence: .claude/commands/do-swarm.md#cleanup
+        evidence: .claude/commands/do-teams.md#cleanup
         rationale: Saves 3-4 conversation turns without downside
         timestamp: 2026-02-02
 
@@ -742,24 +742,24 @@ patterns_discovered_in_recent_work:
     cross_references:
       - chapters/6-patterns/2-self-improving-experts.md (expertise evolution)
       - chapters/4-context/4-multi-agent-context.md (path-passing protocol)
-      - .claude/commands/do-swarm.md (implementation)
+      - .claude/commands/do-teams.md (implementation)
     timestamp: 2026-02-02
 
   do_swarm_direct_orchestration:
-    name: /do-swarm Direct Orchestration Pattern
+    name: /do-teams Direct Orchestration Pattern
     context: TeammateTool coordination at command level, not subagent
     discovered: 2026-02-02 (commit a1d5942)
     implementation: |
-      /do-swarm command orchestrates TeammateTool swarms directly without
+      /do-teams command orchestrates TeammateTool swarms directly without
       spawning coordinator agent. This avoids nested subagent issues while
       enabling full TeammateTool primitives.
 
       **Architecture:**
-      /do-swarm → YOU are team leader → spawn teammates → coordinate → synthesize
+      /do-teams → YOU are team leader → spawn teammates → coordinate → synthesize
 
       Contrast with /do:
       - /do: Orchestrates via Task tool (spawn plan→build→improve)
-      - /do-swarm: Orchestrates via Teammate operations (spawn, message, join)
+      - /do-teams: Orchestrates via Teammate operations (spawn, message, join)
 
       **Workflow:**
       1. Create team: Teammate(operation="spawnTeam")
@@ -796,14 +796,14 @@ patterns_discovered_in_recent_work:
       adds 3-4 conversation turns. For quick research swarms, skip shutdown—
       teammates timeout after ~5 min naturally.
 
-      **When to Use /do-swarm vs /do:**
+      **When to Use /do-teams vs /do:**
       - /do: Sequential workflows (plan→build→improve), simple delegation
-      - /do-swarm: Parallel coordination with inter-agent messaging, multiple
+      - /do-teams: Parallel coordination with inter-agent messaging, multiple
         expert perspectives, complex multi-agent workflows
 
       **Requirements:**
       TeammateTool access (server-side gated, requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 environment variable)
-    evidence: .claude/commands/do-swarm.md
+    evidence: .claude/commands/do-teams.md
     cross_references:
       - chapters/6-patterns/8-expert-swarm-pattern.md (pattern documentation)
       - chapters/6-patterns/3-orchestrator-pattern.md (orchestration principles)
@@ -857,7 +857,7 @@ patterns_discovered_in_recent_work:
       10-agent swarm (commit 20500f1) with canonical prompting: zero voice drift,
       consistent structure across all 20 files. Prior swarms without canonical
       format showed 15-20% variance in section structure and output style.
-    evidence: .claude/commands/do-swarm.md#teammate-prompting-format
+    evidence: .claude/commands/do-teams.md#teammate-prompting-format
     cross_references:
       - chapters/6-patterns/8-expert-swarm-pattern.md
     timestamp: 2026-02-02
@@ -898,7 +898,7 @@ stability:
       Key patterns validated: flat orchestration, single-message parallelism,
       4-agent expert pattern, approval gates, expertise size governance.
 
-      New learnings this cycle: 4 patterns (expert swarm, /do-swarm direct orchestration,
+      New learnings this cycle: 4 patterns (expert swarm, /do-teams direct orchestration,
       canonical prompting format, expertise inheritance protocol)
       Cross-domain contributions: 3 patterns (expertise inheritance, learning separation,
       canonical prompting - apply to any swarm coordination domain)
@@ -913,7 +913,7 @@ stability:
 
       Major architectural addition:
       - Expert Swarm Pattern bridges generic orchestration and domain expertise
-      - /do-swarm enables TeammateTool swarms at command level (no coordinator nesting)
+      - /do-teams enables TeammateTool swarms at command level (no coordinator nesting)
       - Production validated: 10× speedup, zero voice drift across 20 files
       - Canonical prompting format reduces variance in parallel swarm execution
       - Path-passing protocol solves context bloat problem (750 lines → 3K tokens vs copying)

@@ -682,7 +682,7 @@ external_research_integration:
 
   slash_command_documentation_pattern:
     name: Slash Command Documentation Structure (623 lines)
-    context: /do-swarm command (.claude/commands/do-swarm.md, commit a1d5942)
+    context: /do-teams command (.claude/commands/do-teams.md, commit a1d5942)
     timestamp: 2026-02-02
     pattern_observed: |
       Slash commands requiring multi-step workflows benefit from imperative instruction
@@ -703,12 +703,12 @@ external_research_integration:
       - Allowed tools listed explicitly in CONSTRAINTS
 
       **Decision guidance:**
-      - "When to use /do vs /do-swarm" comparison table
+      - "When to use /do vs /do-teams" comparison table
       - "/do" for sequential workflows (plan→build→improve)
-      - "/do-swarm" for parallel coordination requiring inter-agent messaging
+      - "/do-teams" for parallel coordination requiring inter-agent messaging
 
     evidence: |
-      .claude/commands/do-swarm.md (623 lines)
+      .claude/commands/do-teams.md (623 lines)
       - Sections: Role (1), Workflow (7 steps), Templates (2), Coordination, When/Examples, Troubleshooting
       - Templates include EXPERTISE_PATH protocol
       - 7-step workflow mirrors actual swarm execution
@@ -782,7 +782,7 @@ agent_teams_documentation:
     - Updated terminology section to include official status and feature gate migration
 
     **Phase 2: Command Documentation**
-    - .claude/commands/do-swarm.md: Updated prerequisites, display modes, limitations (623 lines)
+    - .claude/commands/do-teams.md: Updated prerequisites, display modes, limitations (623 lines)
     - Mirrored terminology from official docs
     - Added explicit CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 instructions
     - Included validation patterns for feature availability
@@ -818,9 +818,9 @@ agent_teams_documentation:
 
   evidence: |
     - chapters/9-practitioner-toolkit/1-claude-code.md: 420-line Agent Teams section (2026-02-05)
-    - .claude/commands/do-swarm.md: Updated prerequisites + display modes (2026-02-05)
+    - .claude/commands/do-teams.md: Updated prerequisites + display modes (2026-02-05)
     - chapters/6-patterns/8-expert-swarm-pattern.md: Agent Teams Messaging subsection
-    - Terminology synchronized across 14 files (1-claude-code.md, do-swarm.md, 6 chapter files, 6 expertise.yaml files, CLAUDE.md)
+    - Terminology synchronized across 14 files (1-claude-code.md, do-teams.md, 6 chapter files, 6 expertise.yaml files, CLAUDE.md)
     - Official docs (code.claude.com) serve as authoritative source
 
   anti_patterns:
@@ -1014,6 +1014,55 @@ weaving_external_patterns:
       why: Readers approaching from related chapters miss new pattern
       instead: Bidirectional links (Connections subsection + inline timestamps in related files)
 
+gsd_production_patterns:
+  name: GSD Project Production Patterns (Get Shit Done Meta-Prompting System)
+  context: 12K-star open source project integration (commit 0e1e644)
+  timestamp: 2026-02-06
+  pattern_observed: |
+    GSD project provides three production-validated patterns integrated into chapters 4, 7, 8:
+
+    1. **Context Window as Non-Renewable Resource** (Ch 4: Context Strategies)
+       - Quality ∝ 1/(% context used) - inverse relationship formula
+       - Quantified threshold: <50% utilization for sustained quality
+       - Mitigation: Fresh 200K context per plan execution
+       - Aligns with "boot fresh agents" but adds measurement guidance
+
+    2. **Plans as Executable Prompts** (Ch 8: Specs as Source Code)
+       - PLAN.md files ARE the prompts (not transformed)
+       - Executor reads them verbatim
+       - Requirements: unambiguous, action-oriented, verification criteria
+       - Semantic XML within markdown (<action>, <verify>, <done>)
+
+    3. **Multi-Session Workflow Patterns** (Ch 7: Workflow Coordination)
+       - Atomic commits: One feature = one commit (independent revertability)
+       - STATE.md: Position, decisions, blockers (session survival)
+       - must_haves: Truths, artifacts, key links (goal-backward verification)
+
+  integration_approach:
+    - Inline timestamp additions (*[2026-02-06]*:) to existing sections
+    - Evidence-first framing: Formula, then explanation
+    - Source attribution: "GSD project (12K-star open source tool)"
+    - Concrete examples: STATE.md structure, must_haves YAML schema
+    - Production validation emphasis: Real-world evidence, not theory
+
+  key_techniques:
+    - Quantified thresholds over vague guidance (<50% utilization vs "avoid filling")
+    - Structured state files with explicit sections (Position/Decisions/Blockers)
+    - Goal-backward verification prevents scope creep
+    - Atomic commits enable surgical rollback
+
+  evidence: |
+    Commit 0e1e644 (2026-02-06): 131 lines added across 3 files
+    - chapters/4-context/2-context-strategies.md: Quality formula (+6 lines)
+    - chapters/7-practices/5-workflow-coordination.md: Atomic commits, STATE.md, must_haves (+124 lines)
+    - chapters/8-mental-models/3-specs-as-source-code.md: Plans as executable (+4 lines)
+
+  when_to_use:
+    - Integrating open source production patterns with quantified evidence
+    - Adding measurement guidance to existing qualitative recommendations
+    - Documenting multi-session workflow coordination patterns
+    - Showing real-world implementations of mental models (specs as code)
+
 stability:
   oscillation_detection:
     rule: |
@@ -1026,41 +1075,45 @@ stability:
     detected_oscillations: []
 
   convergence_indicators:
-    insight_rate_trend: "Stable - one new pattern extracted from 6-file external pattern integration"
-    new_entries_this_cycle: 1  # weaving_external_patterns
+    insight_rate_trend: "Stable - one compact pattern from GSD production integration"
+    new_entries_this_cycle: 1  # gsd_production_patterns
     contradiction_count: 0
-    last_reviewed: 2026-02-05
+    last_reviewed: 2026-02-06
     notes: |
       **Cycle activities:**
-      - Analyzed 6-file coordinated update integrating external .claude/ implementation patterns
-      - Extracted weaving pattern from chapters 5, 6, 7, 9 updates (664 lines added across files)
-      - Pattern focuses on HOW to integrate external patterns, not WHAT patterns were integrated
-      - Tactical pattern with 14-day shelf life (implementation details may evolve)
+      - Analyzed GSD project integration (commit 0e1e644)
+      - Extracted compact production pattern (3 sub-patterns in ~50 lines)
+      - Focus: External framework integration with quantified evidence
 
       **New patterns added:**
-      1. Weaving External Implementation Patterns (weaving_external_patterns, ~100 lines)
-         - Three insertion points: inline timestamp, dedicated section, major chapter section
-         - Voice preservation techniques for third-person consistency
-         - Source attribution and bidirectional cross-reference patterns
-         - Anti-patterns section showing what NOT to do
+      1. GSD Production Patterns (gsd_production_patterns, ~50 lines)
+         - Context window quality formula (quantified threshold)
+         - Plans as executable prompts (semantic XML approach)
+         - Multi-session workflow patterns (atomic commits, STATE.md, must_haves)
+         - Integration approach using inline timestamps
+         - Evidence from 131-line, 3-file commit
 
-      **Size governance:** 947 lines → 1047 lines (+100 lines for weaving pattern)
-      - Status: HARD LIMIT EXCEEDED (1047 lines, hard limit at 1000)
-      - Headroom: -47 lines over hard limit
-      - Action: MANDATORY PRUNING before next cycle (see cleanup protocol below)
-      - Target: Prune to 750 lines (allow 150 line growth headroom to warning)
+      **Size governance:** 1066 lines → 1116 lines (+50 lines for GSD patterns)
+      - Status: CRITICAL - HARD LIMIT EXCEEDED (1116 lines, hard limit at 1000)
+      - Headroom: -116 lines over hard limit
+      - Action: MANDATORY MASSIVE PRUNING before next cycle
+      - Target: Prune to 700 lines (allow 200 line buffer to warning, 300 to hard limit)
 
-      **CLEANUP PROTOCOL (MANDATORY BEFORE NEXT CYCLE):**
-      Execute one-time cleanup to return to sustainable size:
-      1. Scan all entries for timestamps older than 14 days
-      2. Identify tactical entries (implementation details, version-specific quirks)
-      3. Remove 10-15 lowest-value tactical entries (target 250+ line reduction)
-      4. Consolidate related patterns (agent_teams_documentation + memory_management_documentation → single entry)
-      5. Move stable domain-specific patterns to agent Expertise sections
-      6. Document pruned content in git commit message for archaeology
-      7. Verify no broken cross-references after pruning
-      8. Target: 750 lines (optimal for navigation, 150 line buffer to warning)
+      **CLEANUP PROTOCOL (EXECUTE IMMEDIATELY NEXT CYCLE):**
+      Mandatory 400+ line reduction:
+      1. Remove all tactical entries >14 days old (~200 lines):
+         - agent_teams_documentation (2026-02-05, 68 lines) - move to claude-config expert
+         - memory_management_documentation (2026-02-05, 69 lines) - move to claude-config expert
+         - external_research_integration (2026-01-30, 97 lines) - consolidate into weaving_external_patterns
+      2. Consolidate redundant patterns (~100 lines):
+         - Merge documenting_system_patterns + complex_system_pattern_documentation
+         - Merge slash_command_documentation into do-management expert
+         - Merge debugging_chapter_expansion into comprehensive_research_chapter_pattern
+      3. Trim verbose examples in best_practices (~50 lines)
+      4. Move domain-specific entries to agent Expertise sections (~50 lines)
+      5. Document all pruned content in git commit for archaeology
+      6. Target: 700 lines (allows growth headroom)
 
-      **Contradiction rate:** Zero. Pattern complements existing documentation guidance.
+      **Contradiction rate:** Zero.
 
-      **Utility ratio:** High - pattern applied across 6 files (664 lines production content).
+      **Utility ratio:** High - compact pattern, high production evidence density.

@@ -109,7 +109,7 @@ key_operations:
       3. Update CLAUDE.md with command documentation
     examples:
       - .claude/commands/do.md - 600+ lines, orchestrates plan→build→improve directly
-      - .claude/commands/do-swarm.md - 650+ lines, orchestrates swarm coordination directly
+      - .claude/commands/do-teams.md - 650+ lines, orchestrates team coordination directly
     rationale: |
       - TeammateTool operations MUST happen at command level
       - Delegation adds broken indirection layer (subagent can't spawn)
@@ -213,7 +213,7 @@ decision_trees:
       - if: Domain expertise with plan/build/improve/question
         then: Expert domain (.claude/agents/experts/<domain>/)
       - if: Command needs complex coordination (messaging, parallel, patterns)
-        then: Command + Orchestrator Agent pair (do-swarm pattern)
+        then: Command + Orchestrator Agent pair (do-teams pattern)
 
   simple_vs_orchestrator_command:
     question: Is this a simple command or does it need orchestration?
@@ -223,7 +223,7 @@ decision_trees:
         example: "/book:toc - regenerate table of contents"
       - if: Complex coordination, multi-pattern support, rich messaging
         then: Command + Orchestrator Agent pairing
-        example: "/do-swarm - parallel coordination with leader-worker/council/pipeline patterns"
+        example: "/do-teams - parallel coordination with leader-worker/council/pipeline patterns"
       - reasoning: |
           Orchestrator agents enable:
           - Multiple coordination patterns (lead-worker, council, pipeline)
@@ -295,7 +295,7 @@ patterns:
       - Keeps spawned agent prompts compact
       - Expertise evolves independently (agents pick up changes on spawn)
       - Multiple workers read same file without duplication
-    timestamp: "[2026-02-02] Discovered in /do-swarm orchestrator pattern"
+    timestamp: "[2026-02-02] Discovered in /do-teams orchestrator pattern"
 
   learning_separation_principle:
     purpose: Decouple swarm execution from expertise learning
@@ -320,7 +320,7 @@ patterns:
       learning (analyze multiple swarm outputs together). Improves can fail
       without blocking successful execution.
     implementation: |
-      1. Swarm execution via /do-swarm command
+      1. Swarm execution via /do-teams command
          Result: Files committed/modified, task complete
       2. User (or future: scheduled automation) runs:
          /do "improve {domain} expertise"
@@ -330,7 +330,7 @@ patterns:
          - Updates expertise.yaml
          - Documents learnings with timestamps
     workflow_diagram: |
-      User: /do-swarm "complex task"
+      User: /do-teams "complex task"
         ↓ swarm executes
       Result: Files modified, task complete
         ↓ separately:
@@ -340,7 +340,7 @@ patterns:
     trade_offs:
       pros: [No race conditions, Focused execution, Batch learning, Fail-safe]
       cons: [Extra step for user, Learning not automatic, Requires discipline]
-    timestamp: "[2026-02-02] Pattern established in /do-swarm design"
+    timestamp: "[2026-02-02] Pattern established in /do-teams design"
 
   flat_orchestration_architecture:
     constraint: "Phase 1 enforces flat architecture—no nested sub-swarms"
@@ -349,7 +349,7 @@ patterns:
       that themselves spawn teams). Flat architecture is safer, faster, and
       simpler to reason about.
     implementation: |
-      /do-swarm orchestrator spawns lead + workers (all flat).
+      /do-teams orchestrator spawns lead + workers (all flat).
       Workers do not spawn sub-teams.
       If nesting needed: orchestrator manually spawns agents sequentially.
     future_enhancement: |
@@ -357,7 +357,7 @@ patterns:
       - Pipeline pattern (sequential handoffs)
       - Hierarchical coordination (manager agents spawn sub-teams)
       - Tree-based decomposition (hierarchical task breakdown)
-    timestamp: "[2026-02-02] Constraint documented in do-swarm.md (orchestration moved to command level)"
+    timestamp: "[2026-02-02] Constraint documented in do-teams.md (orchestration moved to command level)"
 
   skill_as_workflow_template:
     structure: |
@@ -486,7 +486,7 @@ patterns:
       - Inter-agent communication (Write/Broadcast)
       - Selective waiting (join specific agents, not all)
       - Coordination patterns: lead-worker, council, pipeline
-      - /do-swarm command uses TeammateTool
+      - /do-teams command uses TeammateTool
     decision_criteria:
       - If agents work independently → Task (sequential)
       - If agents need messaging → TeammateTool (parallel)
@@ -509,7 +509,7 @@ patterns:
         spawn: Agents in sequence
         coordination: Agent N writes to Agent N+1
         wait_strategy: Join final agent
-    timestamp: "[2026-02-02] Pattern extracted from /do-swarm implementation"
+    timestamp: "[2026-02-02] Pattern extracted from /do-teams implementation"
 
   generate_agent_registry:
     when: Need programmatic agent discovery for routing logic (10+ agents across multiple domains)
@@ -632,7 +632,7 @@ best_practices:
     - DEPRECATED PATTERN: Originally designed separate orchestrator agents for multi-pattern coordination
     - ARCHITECTURE CHANGE [2026-02-02]: Orchestration must happen at command level, not in subagents
     - Reason: Subagents spawned via Task tool cannot use Task/TeammateTool to spawn nested agents
-    - New pattern: Command file contains ALL orchestration logic (see /do and /do-swarm as examples)
+    - New pattern: Command file contains ALL orchestration logic (see /do and /do-teams as examples)
     - Supports multiple coordination patterns (lead-worker, council, pipeline)
     - Use TeammateTool for parallel coordination with messaging
     - Do NOT include improve phase (learning handled separately per learning_separation_principle)
@@ -668,7 +668,7 @@ best_practices:
     - Validation levels in worker prompts: Level 1 (syntax only), Level 2 (tests + types), Level 3 (full suite + manual)
     - Forbidden patterns: negative constraints, meta-commentary, vague instructions, unbounded scope
     - Role-based tool access: specify allowed tools explicitly to prevent confusion
-    - timestamp: "[2026-02-02] Tactical patterns from initial /do-swarm usage and refinement (commit 75a4962)"
+    - timestamp: "[2026-02-02] Tactical patterns from initial /do-teams usage and refinement (commit 75a4962)"
 
   hooks:
     - uv shebang for Python dependencies
