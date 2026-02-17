@@ -7,7 +7,7 @@ tags: [patterns, meta-prompting, self-improvement]
 part: 2
 part_title: Craft
 chapter: 6
-section: 1
+section: 2
 order: 2.6.2
 ---
 

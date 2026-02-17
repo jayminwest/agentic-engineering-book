@@ -704,3 +704,5 @@ Is the work decomposable into 10+ independent units?
 - **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** The orchestrator coordinates individual swarm runs; operating practices cover the ongoing management of repeated swarm deployments.
 - **To [Workflow Coordination](5-workflow-coordination.md):** Structured metadata enables the task tracking and agent communication that swarm operations depend on.
 - **To [Context Strategies](../4-context/2-context-strategies.md):** Context window management is critical at swarm scale, where context exhaustion is a primary failure mode requiring handoff protocols.
+
+- **To [Production Multi-Agent Systems](../6-patterns/11-production-multi-agent-systems.md)**: Production Multi-Agent Systems defines the architectural patterns (persistent identity, watchdog chains, convoy tracking); this section covers the day-to-day operational practices that depend on those patterns.

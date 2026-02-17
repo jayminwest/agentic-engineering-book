@@ -796,6 +796,8 @@ Each pattern builds on the previous. Self-Cleaning Workers is the foundation bec
 
 - **To [Production Concerns](../7-practices/4-production-concerns.md)**: These patterns directly address production concerns: resource management (Self-Cleaning), failure recovery (Watchdog Chains), integration safety (Merge Queue), and operational visibility (Convoy Tracking).
 
+- **To [Operating Agent Swarms](../7-practices/7-operating-agent-swarms.md)**: Production Multi-Agent Systems defines the architectural patterns (persistent identity, watchdog chains, merge queues); Operating Agent Swarms covers the operational practices for running these systems day-to-day (cost management, scale transitions, incident response).
+
 ---
 
 ## Open Questions

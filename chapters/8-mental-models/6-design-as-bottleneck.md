@@ -674,6 +674,8 @@ Each model is useful independently. Together, they describe a coherent philosoph
 
 - **[Context Fundamentals](../4-context/1-context-fundamentals.md):** Ephemeral execution is a context management strategy. Disposing sessions and loading identity via CV keeps context windows fresh and relevant.
 
+- **[Operating Agent Swarms](../7-practices/7-operating-agent-swarms.md)**: Operational practices for when the factory floor is running—cost management, incident response, and scale transitions that emerge once design bottlenecks are addressed.
+
 ---
 
 ## Sources

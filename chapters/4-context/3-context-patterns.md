@@ -298,6 +298,8 @@ It's a shift from **context as constraint** to **context as knowledge base**. Th
 - **To [Tool Use](../5-tool-use/_index.md):** MCP tool declarations and progressive disclosure via tool metadata
 - **To [Claude Code](../9-practitioner-toolkit/1-claude-code.md):** Skills implement progressive disclosure in production
 
+- **To [Progressive Disclosure Pattern](../6-patterns/7-progressive-disclosure.md)**: Progressive Disclosure applies context loading principles from this section as a standalone agent design pattern with tier-based loading strategies.
+
 ---
 
 ## Sources

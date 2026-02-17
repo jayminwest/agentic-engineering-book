@@ -113,15 +113,19 @@ Agents load only relevant documentation for their layer, reducing context usage.
 
 ---
 
-## Planned Examples
+## Additional Examples
 
-The following examples are referenced in `_index.md` but not yet implemented:
+### gastown
 
-### context-loading-demo (planned)
-Basic context management and tool use patterns. Will demonstrate progressive disclosure and context loading fundamentals.
+A Go-based multi-agent workspace manager demonstrating production-grade daemon-based coordination. Validates patterns from the Expert Swarm, Production Multi-Agent Systems, and Operating Agent Swarms chapters.
 
-### orchestrator (planned)
-Standalone orchestration pattern examples. May extract simplified patterns from kotadb for educational purposes.
+**Location:** `gastown/`
+
+### overstory
+
+A TypeScript/Bun-based swarm coordination system demonstrating session-based multi-agent orchestration. Provides a companion case study to Gas Town, validating patterns as language-agnostic.
+
+**Location:** `overstory/`
 
 ---
 
