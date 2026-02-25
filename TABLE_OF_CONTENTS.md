@@ -1,6 +1,6 @@
 # Table of Contents
 
-*Generated: 2026-02-13*
+*Generated: 2026-02-24*
 
 ---
 
@@ -103,5 +103,9 @@
 
 ### Chapter 10: Case Studies
 
+- [Appendices](appendices/_index.md)
+- [Examples](appendices/examples/README.md)
+- [KotaDB Case Study: Patterns in Production](appendices/examples/kotadb/CASE_STUDY.md)
 - [Gas Town: Multi-Agent Workspace Manager](appendices/examples/gastown/_index.md)
 - [Overstory: Session-as-Orchestrator Multi-Agent System](appendices/examples/overstory/_index.md)
+- [Pi: Minimal Core Agent Architecture](appendices/examples/pi-mono/_index.md)

@@ -127,6 +127,12 @@ A TypeScript/Bun-based swarm coordination system demonstrating session-based mul
 
 **Location:** `overstory/`
 
+### pi-mono
+
+A TypeScript monorepo coding agent toolkit demonstrating aggressively extensible architecture with minimal core. Provides a contrasting philosophy to other examples — extensibility through 20+ lifecycle hooks rather than built-in features.
+
+**Location:** `pi-mono/`
+
 ---
 
 ## Using These Examples

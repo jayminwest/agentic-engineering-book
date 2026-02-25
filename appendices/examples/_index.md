@@ -23,6 +23,7 @@ Examples organized by project:
 - `kotadb/` - KotaDB database project examples (Level 2-3 patterns)
 - `gastown/` - [Gas Town: Multi-Agent Workspace Manager](gastown/_index.md) case study
 - `overstory/` - [Overstory: Swarm Coordination System](overstory/_index.md) case study
+- `pi-mono/` - [Pi: Minimal Core Agent Architecture](pi-mono/_index.md) case study
 
 ## Using These Examples
 
