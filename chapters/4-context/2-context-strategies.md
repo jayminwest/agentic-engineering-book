@@ -2,7 +2,7 @@
 title: Context Management Strategies
 description: Practical techniques for handling context limits, compression, and structured context
 created: 2025-12-10
-last_updated: 2026-02-06
+last_updated: 2026-03-09
 tags: [foundations, context, strategies, compression, retrieval]
 part: 1
 part_title: Foundations
@@ -38,6 +38,10 @@ See [Frequent Intentional Compaction](#frequent-intentional-compaction) below fo
 Compression works in conversational exchanges where information density matters less than continuity. Technical work like coding demands precision—context compression typically introduces gaps that manifest as "context rot" or "context bloat."
 
 The "one agent, one task" principle applies: if an agent can't complete a task within its context budget, adjust the prompt or scope. Chaining multiple agents to compact and summarize context invites hallucination without guaranteeing quality preservation.
+
+### Architecture-Centric Approaches
+
+*[2026-03-09]*: Deterministic context management architectures (LCM, Sapling) formalize compaction into engineered systems rather than emergency measures. See [Context Management Architectures](5-context-management-architectures.md) for a comparative survey of lossless preservation, continuous curation, and the passive baseline.
 
 ---
 
@@ -570,3 +574,4 @@ Agent explains: Company decision prioritized mobile UX over security recommendat
 - ACE-FCA framework by HumanLayer — Demonstrated in production shipping 35K LOC in 7 hours using proactive compaction at 40-60% utilization
 - [vishalmysore/bmad-federated-knowledge](https://github.com/vishalmysore/bmad-federated-knowledge) - BMAD extension implementing federated architecture
 - [BMAD-METHOD Scout Report](/.claude/.cache/research/external/bmad-method-scout-report.md) - Detailed analysis including federated knowledge section
+- Ehrlich, C. & Blackman, T. (2026). "LCM: Lossless Context Management." Voltropy PBC. [arXiv:submit/7269166](https://papers.voltropy.com/LCM) — Deterministic context architecture with lossless compaction, benchmarked against Claude Code on OOLONG

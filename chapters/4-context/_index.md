@@ -86,6 +86,16 @@ How context management changes in multi-agent systems. Context isolation keeps o
 - State scoping (session, user, app, temp)
 - Cross-session continuity
 
+### [5. Context Management Architectures](5-context-management-architectures.md)
+
+Architectural approaches to active context management. Surveys three points on the design spectrum: passive accumulation (the default), lossless preservation (LCM), and continuous curation (Sapling). Comparative analysis of trade-offs, with practitioner guidance on when to use each approach.
+
+**Key concepts:**
+- Passive accumulation and its failure modes
+- Lossless Context Management (LCM) — immutable store, hierarchical DAG, operator-level recursion
+- Continuous curation (Sapling) — five-stage inter-turn pipeline, operation model
+- Design spectrum and composability
+
 ---
 
 ## When to Read What
@@ -97,6 +107,8 @@ How context management changes in multi-agent systems. Context isolation keeps o
 **Building sophisticated systems?** Explore [Advanced Context Patterns](3-context-patterns.md) for progressive disclosure, context loading, and ACE.
 
 **Working with multiple agents?** Read [Multi-Agent Context](4-multi-agent-context.md) for isolation patterns and persistent state.
+
+**Evaluating context management systems?** See [Context Management Architectures](5-context-management-architectures.md) for architectural options beyond the passive default.
 
 ---
 
