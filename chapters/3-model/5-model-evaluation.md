@@ -2,7 +2,7 @@
 title: Model Evaluation for Agents
 description: How to evaluate models for agentic tasks—metrics, benchmarks, observability, and the compound error problem
 created: 2025-12-10
-last_updated: 2025-12-10
+last_updated: 2026-03-18
 tags: [model, evaluation, benchmarks, observability, metrics, agentic]
 part: 1
 part_title: Foundations
@@ -187,6 +187,67 @@ Traditional NLP benchmarks don't measure agentic capabilities. Newer benchmarks 
 *[2025-12-10]*: 2025 agent benchmarks are significantly harder than 2024 benchmarks. Best-in-class agents score as low as 5% on some tasks. This reflects both reduced data contamination and more realistic task complexity.
 
 Benchmark scores should be interpreted as lower bounds on capability, not predictions of production performance. Agents often perform better on domain-specific tasks than on generic benchmarks, especially when paired with well-designed tools and context.
+
+---
+
+## Cognitive Frameworks for Capability Assessment
+
+*[2026-03-18]*: Google DeepMind's "Measuring Progress Toward AGI: A Cognitive Framework" (Burnell et al., 2026) offers a structured lens for understanding *what* an AI system can and cannot do—directly useful for agent architecture decisions.
+
+### The Cognitive Taxonomy
+
+The framework identifies 10 cognitive faculties that underpin general intelligence, drawn from decades of research in psychology, neuroscience, and cognitive science:
+
+| Faculty | Definition | Agent Relevance |
+|---------|-----------|-----------------|
+| **Perception** | Extract and process sensory information | Multimodal input handling, image/document understanding |
+| **Generation** | Produce outputs (text, code, actions) | Core LLM capability; tool call generation |
+| **Attention** | Focus cognitive resources on specific aspects | Context window utilization, instruction following |
+| **Learning** | Acquire new knowledge through experience | In-context learning, few-shot adaptation |
+| **Memory** | Store and retrieve information over time | Context management, RAG integration |
+| **Reasoning** | Draw valid conclusions via logical principles | Multi-step planning, debugging, chain-of-thought |
+| **Metacognition** | Monitor and control own cognitive processes | Self-correction, knowing when to ask for help |
+| **Executive Functions** | Planning, inhibition, cognitive flexibility | Workflow orchestration, task decomposition |
+| **Problem Solving** | Find effective solutions (composite faculty) | End-to-end task completion |
+| **Social Cognition** | Process and respond to social information | User intent understanding, collaborative behavior |
+
+The taxonomy focuses on *what* the system can accomplish, not *how*—remaining agnostic to underlying mechanisms. This makes it applicable whether evaluating a single model or a multi-agent system with tools.
+
+### Jagged Cognitive Profiles
+
+A system's capabilities are not uniform across faculties. DeepMind's "cognitive profiles" (radar charts across all 10 faculties) reveal the **jagged frontier**: a model might score at the 99th percentile on generation and reasoning while falling below the human median on metacognition or social cognition.
+
+This matters for agent design because:
+
+- **Strengths inform delegation.** If a model excels at reasoning but struggles with memory, architecture should compensate—use external memory systems (RAG, structured context) rather than relying on in-context retention.
+- **Weaknesses predict failure modes.** Low metacognition scores predict agents that don't know when they're failing. Low executive function scores predict poor multi-step planning. These map directly to the failure modes observed in production agents.
+- **Profiles differ across model families.** Choosing between Claude, GPT, and Gemini isn't about "which is better" but about which cognitive profile fits the task's demands.
+
+### System vs. Model Evaluation
+
+The paper argues that evaluating the model checkpoint alone is increasingly insufficient—and potentially misleading:
+
+> Modern AI systems are deployed with specific system instructions, have access to tools, can manipulate their environments via actions, and may even have the ability to make calls to other AI systems.
+
+This directly validates the agent evaluation approach: measure the *system* (model + tools + prompts + orchestration), not just the model. A model that scores poorly on memory benchmarks might perform excellently when paired with a well-designed RAG system. Conversely, a model with strong reasoning might fail in practice when given poorly designed tools.
+
+The analogy: evaluating a person's intelligence changes when you give them a calculator. For agents, the "calculator" is the entire tool and context infrastructure. Evaluate with it, not without it.
+
+### Capabilities vs. Propensities
+
+A critical distinction the paper raises: what a system *can* do versus what it *tends* to do. Propensities—risk tolerance, communication style, default problem-solving strategies—significantly affect deployment outcomes. This connects directly to model behavioral patterns (see [Model Behavior](2-model-behavior.md)): two models with identical capability profiles can behave very differently in production due to different propensities.
+
+### Evaluation Protocol Implications
+
+DeepMind's three-stage protocol maps to agent evaluation practice:
+
+1. **Cognitive assessment** → Run broad capability benchmarks across multiple faculties (not just task completion)
+2. **Human baselines** → Compare against human performance under the same conditions (same tools, same instructions)
+3. **Cognitive profiles** → Build per-system capability maps that inform architecture decisions
+
+The key insight: benchmark coverage gaps in metacognition, attention, learning, and social cognition mean current agent evaluations may miss critical capability dimensions. Agents that pass task-completion benchmarks might still fail on metacognitive tasks (knowing when to stop, when to ask for help) or social cognition tasks (understanding user intent in ambiguous requests).
+
+**Source:** [Measuring Progress Toward AGI: A Cognitive Framework](https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/measuring-progress-toward-agi/measuring-progress-toward-agi-a-cognitive-framework.pdf) (Burnell et al., Google DeepMind, 2026)
 
 ---
 
@@ -379,3 +440,4 @@ Common evaluation mistakes waste time and produce misleading results.
 - [LangChain State of AI Agents Report 2024](https://www.langchain.com/stateofaiagents): Production agent deployment patterns, observability requirements
 - [τ-Bench: A Benchmark for Tool-Augmented LLMs](https://www.sierra.ai/research/tau-bench) (Sierra): Dynamic user/tool interaction evaluation
 - [SWE-bench Pro](https://www.scale.com/blog/swe-bench-pro) (Scale AI): Data contamination in agent benchmarks, difficulty progression
+- [Measuring Progress Toward AGI: A Cognitive Framework](https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/measuring-progress-toward-agi/measuring-progress-toward-agi-a-cognitive-framework.pdf) (Burnell et al., Google DeepMind, 2026): Cognitive taxonomy, capability profiling, system vs. model evaluation
