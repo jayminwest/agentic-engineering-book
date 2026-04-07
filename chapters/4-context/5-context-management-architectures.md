@@ -280,6 +280,8 @@ The approaches are not mutually exclusive. A system could apply Sapling-style co
 
 ## Connections
 
+- **To [Context at Codebase Scale](6-context-at-codebase-scale.md):** Where this section addresses depth (long sessions, compaction, LCM, Sapling), Section 6 addresses width (large codebases). The two sections are designed to be read together for enterprise deployments — a brownfield deployment faces both long-session degradation and codebase-scale navigation simultaneously.
+
 - **To [Context Fundamentals](1-context-fundamentals.md):** LCM challenges the "boot fresh" default by showing that lossless compaction can maintain continuity across long sessions. Sapling operationalizes the capability capacity model by targeting 50% utilization as a steady state, not a warning threshold.
 - **To [Context Strategies](2-context-strategies.md):** Both architectures formalize frequent intentional compaction into deterministic systems. Passive accumulation with emergency compaction is the failure mode that proactive compaction strategies (and these architectures) address.
 - **To [Advanced Context Patterns](3-context-patterns.md):** Progressive disclosure appears in both architectures: LCM uses exploration summaries that expand on demand; Sapling places operation summaries in the system prompt as a progressive view over compacted history.

@@ -2,7 +2,7 @@
 title: Scaling Tool Use
 description: Patterns for managing large numbers of tools without overwhelming context or degrading selection accuracy
 created: 2025-12-10
-last_updated: 2026-01-17
+last_updated: 2026-04-07
 tags: [scaling, dynamic-discovery, orchestration, mcp, deployment]
 part: 1
 part_title: Foundations
@@ -228,3 +228,4 @@ Manual mode requires explicit tool declarations in prompts or configuration. Use
 - **To [Context](../4-context/_index.md):** Progressive disclosure and context management
 - **To [Cost and Latency](../7-practices/3-cost-and-latency.md):** Token cost models by feature type
 - **To [Google ADK](../9-practitioner-toolkit/2-google-adk.md):** MCP implementation patterns
+- **To [Enterprise Codebase Context Tools](../9-practitioner-toolkit/6-enterprise-context-tools.md):** For tool selection in enterprise brownfield contexts, the MCP deployment patterns documented here (transport mechanism, auto-selection thresholds, tool filtering) apply directly to tools like Serena MCP, Augment's Context Engine MCP, and Sourcegraph's MCP server surveyed there.

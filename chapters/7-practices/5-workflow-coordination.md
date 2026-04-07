@@ -2,7 +2,7 @@
 title: Workflow Coordination for Agents
 description: Using structured metadata and persistent stores as coordination layers between agents
 created: 2025-12-08
-last_updated: 2026-02-06
+last_updated: 2026-03-20
 tags: [practices, coordination, workflow, handoff, metadata, spec-files]
 part: 2
 part_title: Craft
@@ -356,7 +356,7 @@ Without goal-backward verification, implementations expand scope. With must_have
 Status: All must_haves satisfied. Task complete.
 ```
 
-**Pattern observed in production:** GSD project (12K-star open source tool) uses must_haves to coordinate multi-day agent sessions. Each task defines success upfront, preventing scope creep and enabling objective completion verification.
+**Pattern observed in production:** GSD project (open source workflow harness) uses must_haves to coordinate multi-day agent sessions. Each task defines success upfront, preventing scope creep and enabling objective completion verification. See [Workflow Harnesses: GSD as Production Example](#workflow-harnesses-gsd-as-production-example) for the full case study.
 
 ---
 
@@ -461,6 +461,54 @@ The patterns (labels, relationships, validation evidence) apply to both.
 
 ---
 
+## Workflow Harnesses: GSD as Production Example
+
+*[2026-03-20]*: A distinct category is emerging between raw coding agents and full workspace managers: **workflow harnesses** — meta-prompting systems that structure how a human-AI pair approaches complex projects through context engineering, phase decomposition, and state persistence.
+
+[GSD (Get Shit Done)](https://github.com/gsd-build/get-shit-done) is the clearest example. Built as a Claude Code skill ecosystem, GSD addresses "context rot" — the quality degradation that occurs as context fills during extended sessions — through a five-stage lifecycle:
+
+| Phase | Purpose | Agent Role |
+|-------|---------|------------|
+| **Discuss** | Capture decisions and gray areas | Interactive clarification |
+| **Plan** | Research approach, create XML-structured task plans | Specialized planner + plan-checker |
+| **Execute** | Run tasks in parallel waves with fresh 200K contexts | Per-task executors (isolated) |
+| **Verify** | User acceptance testing with automated diagnosis | Verification agent |
+| **Ship** | Create PRs from verified work | Shipping agent |
+
+### Key Design Decisions
+
+**Fresh context per executor.** Each task executor receives a clean 200K-token context loaded only with the relevant plan, project files, and state. This is the "boot fresh agents" pattern (see [Context Strategies](../4-context/2-context-strategies.md#current-practice-boot-fresh-agents)) implemented systematically — rather than one long conversation degrading over time, GSD spawns specialized executors that never experience context rot.
+
+**Persistent state files as coordination layer.** Four markdown files form the persistent substrate:
+
+- `PROJECT.md` — Project identity, tech stack, constraints
+- `REQUIREMENTS.md` — What to build, acceptance criteria
+- `ROADMAP.md` — Phases and milestones
+- `STATE.md` — Current position, decisions, blockers
+
+These map directly to the [structured state files](#structured-state-files) and [spec files as persistent context](#spec-files-as-persistent-context) patterns described earlier. Agents read state on boot, write state on completion.
+
+**Wave-based parallelism.** Tasks are dependency-grouped into waves. Independent tasks within a wave execute simultaneously across fresh executor contexts, each producing atomic commits. This combines dependency-aware scheduling (see [Work Item Relationships](#work-item-relationships)) with the [atomic commits](#atomic-commits-as-revertability-strategy) pattern.
+
+**XML prompt formatting for plans.** Every plan uses structured XML with action steps, file lists, and verification criteria — giving executors unambiguous, machine-parseable instructions rather than natural language descriptions.
+
+### Category Distinction
+
+Workflow harnesses occupy a specific niche in the tooling hierarchy:
+
+```
+Scale and abstraction:
+  Raw coding agent       → Single-session, ad-hoc interaction
+  Workflow harness (GSD) → Multi-phase structured lifecycle, context-engineered
+  Workspace manager      → 20+ agent infrastructure (worktrees, merge queues, supervision)
+```
+
+Workspace managers (see [Multi-Agent Workspace Managers](../9-practitioner-toolkit/5-multi-agent-workspace-managers.md)) solve infrastructure problems — merge conflicts, agent supervision, work attribution across dozens of simultaneous branches. Workflow harnesses solve *workflow* problems — context degradation, phase discipline, verification gates, state persistence across sessions.
+
+The two are complementary, not competing. A workspace manager could orchestrate multiple GSD-structured workflows in parallel.
+
+---
+
 ## Questions to Explore
 
 - How do agents handle GitHub API rate limiting during parallel operations?
@@ -476,6 +524,7 @@ The patterns (labels, relationships, validation evidence) apply to both.
 - **[Expert Swarm Pattern](../6-patterns/8-expert-swarm-pattern.md)**: Architectural pattern enabling workflow coordination at scale. Production evidence: 10 agents, 11 tasks, 4 minutes, 3000+ lines. Spec-as-artifact and TeammateTool coordination primitives support Expert Swarm execution.
 - **[Context Management](../4-context/_index.md)**: Issues/PRs as persistent context stores
 - **[Production Concerns](4-production-concerns.md)**: GitHub workflows as part of deployment pipeline
+- **[Multi-Agent Workspace Managers](../9-practitioner-toolkit/5-multi-agent-workspace-managers.md)**: GSD workflow harnesses complement workspace managers — harnesses structure workflow within a project, workspace managers coordinate infrastructure across agents
 
 ---
 

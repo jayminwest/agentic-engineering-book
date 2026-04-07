@@ -352,6 +352,6 @@ Does the action modify shared state?
 - As memory architectures mature, does the two-tier pattern (ephemeral + persistent) stabilize or fragment into more specialized tiers?
 - What observability standards emerge for tracing decisions across multi-agent topologies? Current debugging remains ad hoc.
 - How does the bounded autonomy consensus shift as model capabilities improve — does the "bounded middle" move toward higher autonomy, or do safeguard requirements scale proportionally?
-- What architectural patterns address the 60% enterprise failure rate — is the solution better agent design or better legacy system instrumentation?
+- What architectural patterns address the 60% enterprise failure rate — is the solution better agent design or better legacy system instrumentation? This question is addressed in [Context at Codebase Scale](../4-context/6-context-at-codebase-scale.md).
 - How do memory contamination defenses compose with the performance benefits of shared memory pools?
 - When (if ever) does full autonomy become viable, and what safeguard architecture makes it safe?
