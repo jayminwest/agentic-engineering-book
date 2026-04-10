@@ -47,7 +47,7 @@ This book includes Claude Code slash commands for content maintenance:
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. This book is developed through the [Agentic Engineering Skool community](https://www.skool.com/prompt-to-prod).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Author
 

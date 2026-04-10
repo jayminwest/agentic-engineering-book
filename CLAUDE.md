@@ -139,5 +139,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - Style guidelines
 - Attribution conventions
 - Code of conduct
-
-This book is developed through the [Agentic Engineering Skool community](https://www.skool.com/prompt-to-prod).

@@ -528,10 +528,8 @@ patterns:
 
   parallel_hierarchy_pattern:
     name: Parallel Content Hierarchy for External Distribution
-    context: Creating derivative content structures for external platforms (Skool, LMS, etc.) while maintaining book source
+    context: Creating derivative content structures for external platforms (LMS, course platforms, etc.) while maintaining book source
     implementation: |
-      Pattern observed in .skool/ directory addition (commit d1a6306, 33 files):
-
       Structure characteristics:
       - Parallel to chapters/ directory (not nested within book structure)
       - Different frontmatter schema reflecting external platform needs
@@ -546,7 +544,7 @@ patterns:
       - created/last_updated: Independent version tracking
 
       Process:
-      1. Create top-level directory outside chapters/ (e.g., .skool/)
+      1. Create top-level directory outside chapters/
       2. Define infrastructure: categories, workflows, templates (_index.md files)
       3. Scaffold structure with complete frontmatter schema
       4. Reference book chapters via source_chapter field
@@ -566,9 +564,6 @@ patterns:
         cost: Must keep source_chapter references in sync
       - advantage: Platform-specific optimizations possible
         cost: More directories to maintain
-    real_examples:
-      - location: .skool/
-        note: "33 files across courses/, categories/, .journal/, posts/ (commit d1a6306). Foundation Library: 18 lessons referencing chapters/1-5. source_chapter field links back to book."
 
   retroactive_frontmatter_pattern:
     name: Retroactive Frontmatter Addition for Previously Unstructured Content
@@ -689,16 +684,16 @@ best_practices:
   - category: Parallel Hierarchies
     practices:
       - practice: Place derivative content structures in top-level directories outside chapters/ to prevent book structure pollution
-        evidence: .skool/ directory (33 files) parallel to chapters/ for external platform content (commit d1a6306)
+        evidence: Parallel hierarchy for external course platform (commit d1a6306)
         timestamp: 2026-01-21
       - practice: Use source_chapter frontmatter field to link derivative content back to canonical book chapters
-        evidence: .skool/courses/foundation-library/ lessons reference chapters/1-5 via source_chapter field
+        evidence: Course lessons reference chapters/1-5 via source_chapter field
         timestamp: 2026-01-21
       - practice: Build infrastructure (categories, templates, workflows) before creating derivative content
-        evidence: .skool/ scaffolded with 7 categories + planning structure before curriculum content
+        evidence: Infrastructure scaffolded before curriculum content (commit d1a6306)
         timestamp: 2026-01-21
       - practice: Parallel hierarchies get own _index.md navigation structure, not integrated into book TOC
-        evidence: .skool/courses/_index.md + foundation-library/_index.md separate from TABLE_OF_CONTENTS.md
+        evidence: External platform _index.md files kept separate from TABLE_OF_CONTENTS.md
         timestamp: 2026-01-21
 
   - category: TOC Generation
@@ -843,7 +838,7 @@ stability:
 
       Improvement cycle 2026-01-21:
       - Added 1 new pattern (parallel_hierarchy_pattern) + 4 best practices for derivative content
-      - Analyzed .skool/ infrastructure addition (commit d1a6306): 33 files, external platform hierarchy
+      - Analyzed external platform hierarchy addition (commit d1a6306)
       - Pattern: Parallel directories outside chapters/ for platform-specific content with source_chapter linkage
       - Learning: Infrastructure-first before content prevents structural refactoring mid-build
       - Zero contradictions with existing patterns (parallel hierarchies complement, not conflict)

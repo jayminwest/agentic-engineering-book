@@ -1,10 +1,9 @@
 # Contributing to Agentic Engineering Knowledge Base
 
-This book is developed through the [Agentic Engineering Skool community](https://www.skool.com/prompt-to-prod). We welcome contributions from community members who are actively practicing agentic engineering.
+We welcome contributions from practitioners who are actively practicing agentic engineering.
 
 ## Who Can Contribute
 
-- Active Skool community members
 - Practitioners with production experience
 - Contributors following the [STYLE_GUIDE.md](STYLE_GUIDE.md)
 
@@ -67,12 +66,10 @@ git checkout -b contrib/your-topic-name
 ### 3. Submit Pull Request
 - Write a clear PR description
 - Reference any related issues or discussions
-- Include context from Skool if applicable
 - Link to production examples (if public)
 
 ### 4. Review Process
 - Maintainers will review for style and technical accuracy
-- Community discussion may occur on Skool
 - Revisions may be requested
 - Attribution will be preserved
 
@@ -125,10 +122,10 @@ The optional `contributor` field allows attribution:
 ```yaml
 contributor: Jane Smith
 contributor: Jane Smith (Company Name)
-contributor: Jane Smith - Skool @username
+contributor: Jane Smith - @github_username
 ```
 
-Maintainers will verify Skool membership before merging contributions with attribution.
+Maintainers will review contributions before merging with attribution.
 
 ## Content Placement
 
@@ -158,7 +155,6 @@ Maintainers will verify Skool membership before merging contributions with attri
 
 ## Questions?
 
-- Ask in the Skool community first
 - Open a GitHub Discussion for clarification
 - Tag maintainers in your PR if urgent
 
