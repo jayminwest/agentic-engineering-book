@@ -29,33 +29,7 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
 - Update expertise sections with new learnings
 - Improve content planning and implementation guidance
 
-### SIZE GOVERNANCE
-
-**HARD LIMIT:** 1000 lines - file becomes unmanageable beyond this size
-**TARGET SIZE:** 750 lines - optimal for navigation and comprehension
-**WARNING THRESHOLD:** 900 lines - prune lower-value content before next update
-
-**When expertise.yaml exceeds 900 lines:**
-- Identify oldest, low-value entries (check timestamps)
-- Remove entries older than 14 days with minimal cross-references
-- Consolidate similar patterns into single comprehensive entries
-- Move stable, domain-specific patterns to appropriate agent Expertise sections
-- Preserve all high-utility patterns regardless of age
-
 ## Workflow
-
-0. **Size Governance Check (REQUIRED FIRST)**
-
-   Before any analysis, check expertise.yaml size:
-   ```bash
-   wc -l .claude/agents/experts/knowledge/expertise.yaml
-   ```
-
-   **If >1000 lines:** STOP. Execute One-Time Cleanup Protocol immediately.
-   **If >900 lines:** Execute cleanup BEFORE adding any new content.
-   **If ≤900 lines:** Proceed to Step 1.
-
-   This check is mandatory - never skip to analysis without verifying size first.
 
 1. **Analyze Recent Changes**
    - Review recent commits affecting book content
@@ -99,74 +73,35 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
    - Note areas needing clearer standards
    - Assess recommendation accuracy
 
-6. **Update Expertise**
-   The improve command updates the expertise.yaml file AND the `## Expertise` sections in the expert agent files.
-   Follow these conservative update rules:
+6. **Record Learnings via Mulch**
 
-   **Primary Target (Source of Truth):**
-   - Edit `.claude/agents/experts/knowledge/expertise.yaml`
-   - This is the canonical, structured version of knowledge expertise
-
-   **Content Classification:**
-   Before adding new entries, classify by longevity:
-   - **Foundational** (preserve indefinitely): Core patterns, safety protocols, universal principles
-   - **Tactical** (14-day shelf life): Implementation details, specific workarounds, version-specific quirks
-   - **Observational** (prune if unused): Experimental patterns, unvalidated hypotheses
-
-   Tag tactical entries with expiration estimates in timestamp field.
-
-   **Secondary Targets (Backward Compatibility):**
-   - Edit `.claude/agents/experts/knowledge/knowledge-plan-agent.md` ## Expertise section
-   - Edit `.claude/agents/experts/knowledge/knowledge-build-agent.md` ## Expertise section
-   - Add new patterns discovered in recent commits
-   - Refine existing guidance based on real implementations
-   - Add examples from actual knowledge base content
-
-   **Update Rules:**
-   - PRESERVE existing patterns that are still valid
-   - APPEND new learnings with `[YYYY-MM-DD]` timestamps
-   - DATE new entries with commit references when relevant
-   - REMOVE entries ONLY if directly contradicted by multiple recent implementations
-   - NEVER modify the ## Workflow section (that stays stable)
-   - NEVER modify the ## Instructions or ## Report sections
-   - UPDATE examples to use real file paths from the book
-
-   **Update Format:**
-   ```markdown
-   ## Expertise
-
-   ### Existing Section
-
-   <existing content preserved>
-
-   *[2025-12-08]*: New pattern observed in commit abc1234 - when creating mental model
-   entries, lead with a concrete example before diving into abstract principles. This
-   improves clarity and makes the mental model immediately actionable.
-
-   **Example from pit-of-success.md:**
-   The entry opens with the API design example before explaining the broader framework.
-   ```
-
-7. **Record Tactical Learnings via mulch**
-
-   After updating expertise.yaml with foundational insights, capture tactical and observational learnings via mulch for automatic lifecycle management:
+   All expertise is stored in Mulch records. Classify and record:
 
    ```bash
    # See what files changed and which domains they map to
    mulch learn
 
-   # Record tactical learnings (auto-expire after 14 days)
-   mulch record knowledge --type <convention|pattern|failure|decision> \
-     --description "..." --classification tactical \
+   # Record learnings with appropriate classification
+   mulch record knowledge --type <convention|pattern|failure|decision|guide> \
+     --description "..." --classification <foundational|tactical|observational> \
      --tags "relevant,tags" --evidence-commit $(git rev-parse --short HEAD)
    ```
 
-   **What goes where:**
-   - **Foundational** (permanent truths) → expertise.yaml (Step 6)
-   - **Tactical** (14-day shelf life) → `mulch record --classification tactical`
-   - **Observational** (30-day shelf life) → `mulch record --classification observational`
+   **Classification guide:**
+   - **Foundational** (permanent): Core patterns, universal principles, decision trees
+   - **Tactical** (14-day shelf life): Implementation details, workarounds, version-specific quirks
+   - **Observational** (30-day shelf life): Experimental patterns, unvalidated hypotheses
 
-   Records auto-inject into future sessions via `mulch prime` (SessionStart hook) and auto-expire via `mulch prune`.
+   **Record types:**
+   - `convention` — rules and standards (voice, naming, structure)
+   - `pattern` — recurring successful approaches
+   - `failure` — what went wrong + resolution
+   - `decision` — architectural choices + rationale
+   - `guide` — decision trees, multi-step workflows
+
+   Records auto-inject into future sessions via `mulch prime` and auto-expire via `mulch prune`.
+
+   **Governance:** Mulch handles size governance automatically. Use `mulch compact --analyze knowledge` to find consolidation opportunities.
 
 8. **Cross-Timescale Learning**
 
@@ -209,7 +144,7 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
    **Capture method:**
    - Compare multiple commits over time
    - Identify repeated patterns across changes
-   - Assess expertise.yaml guidance against actual implementations
+   - Assess mulch record guidance against actual implementations
    - Track how often same issues recur
 
    **Transfer Protocol:**
@@ -217,8 +152,8 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
    | Source Timescale | Target Persistence | Mechanism |
    |------------------|-------------------|-----------|
    | Inference-time | Session-time | Document reasoning patterns in spec file templates |
-   | Inference-time | Cross-session | Add to expertise.yaml as "common_reasoning_failures" |
-   | Session-time | Cross-session | Extract workflow patterns to expertise.yaml key_operations |
+   | Inference-time | Cross-session | Record as mulch failure with --classification foundational |
+   | Session-time | Cross-session | Record as mulch pattern/guide with --classification foundational |
    | Cross-session | Inference-time | Improve agent prompts embed learned patterns |
 
    **Example Mappings:**
@@ -229,7 +164,7 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
 
    *Session → Cross-session:*
    - Observed: Build phase took 8 seconds (spec parsing) + 3 seconds (implementation)
-   - Transfer: Add timing benchmark to expertise.yaml for future estimation
+   - Transfer: Record timing benchmark as mulch guide for future estimation
 
    *Cross-session → Inference:*
    - Observed: 80% of failures involve missing cross-file references
@@ -238,13 +173,13 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
    **Implementation in This Cycle:**
    1. Review recent changes for all three timescale patterns
    2. Map observed patterns to appropriate persistence layer
-   3. Update expertise.yaml with cross-session learnings (primary)
+   3. Record cross-session learnings as foundational mulch records
    4. Note session-time patterns for workflow improvement
    5. Document inference-time observations for prompt enhancement
 
 8. **Cross-Domain Contribution**
 
-   After updating knowledge expertise, assess if patterns apply beyond book content:
+   After recording knowledge learnings, assess if patterns apply to other domains:
 
    **Decision Criteria:**
    - Pattern is about content organization, documentation structure, or writing quality
@@ -253,108 +188,25 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
    - Pattern has potential applicability to 2+ other domains
 
    **If cross-domain applicable:**
+   Record in the most relevant domain with cross-domain tags:
+   ```bash
+   mulch record <target-domain> --type pattern \
+     --name "cross-domain-pattern-name" \
+     --description "..." --classification foundational \
+     --tags "cross-domain,knowledge,<target-domain>"
+   ```
 
-   1. Read existing patterns to avoid duplication:
-      ```bash
-      cat .claude/agents/experts/.shared/observations.yaml
-      ```
-
-   2. Append to `.shared/observations.yaml` under `cross_domain_patterns`:
-      ```yaml
-      - pattern: <Pattern Name>
-        source: knowledge
-        observation: |
-          <Multi-line description>
-          Include: what the pattern is, why it matters, when to apply
-        applicability: [<domain1>, <domain2>, ...]
-        evidence: "<Concrete evidence from this domain>"
-        timestamp: <YYYY-MM-DD>
-      ```
-
-   3. Consider adding to `potential_patterns` if uncertain about applicability:
-      ```yaml
-      potential_patterns:
-        - pattern: <Pattern Name>
-          source: knowledge
-          observation: "<Description>"
-          needs_validation: true
-          hypothesis: "<Expected cross-domain benefit>"
-          timestamp: <YYYY-MM-DD>
-      ```
-
-   **Examples of Cross-Domain Patterns from Knowledge:**
-   - Content organization patterns (applies to any documentation domain)
-   - Voice consistency techniques (applies to any writing domain)
-   - Cross-reference strategies (applies to any interconnected content)
-   - Example-first writing approaches (applies to any technical documentation)
-   - Clarity improvement techniques (applies to any domain writing documentation)
-
-   **Examples of Domain-Specific (NOT cross-domain):**
-   - Book frontmatter schema (book-structure only)
-   - Specific chapter organization (knowledge only)
-   - Book-specific voice patterns (knowledge only)
-   - Part/chapter/section hierarchy (book-structure only)
-
-9. **Convergence Detection**
-
-   Track across improve cycles (for human review):
-
-   ### Metrics
-   - **insight_rate**: New entries added this cycle
-   - **contradiction_rate**: Entries that conflict with prior entries (should be zero)
-   - **utility_ratio**: helpful / (helpful + harmful) observations
-
-   ### Stability Indicators
-   When domain expertise shows:
-   - Decreasing insight_rate over multiple cycles
-   - Zero contradictions
-   - High utility ratio (>0.9)
-
-   → Domain may be reaching stability. Flag for human review.
-
-   Note: This is awareness only. Humans decide when to reduce improve frequency.
-
-   ### SIZE-BASED CONVERGENCE ACTIONS
-
-   **At 900+ lines (WARNING):**
-   - Flag for pruning in next cycle
-   - Identify 3-5 lowest-value tactical entries for removal
-   - Prepare consolidation candidates
-
-   **At 1000+ lines (HARD LIMIT):**
-   - MUST prune before adding new entries
-   - Remove all tactical entries >14 days old
-   - Consolidate related patterns aggressively
-   - Move domain-specific stable patterns to agent Expertise sections
-   - Document pruned content in git commit message for archaeology
-
-   **Post-Pruning:**
-   - Target 750 lines to allow growth headroom
-   - Verify no broken cross-references after pruning
-   - Update cross-domain observations if foundational patterns were consolidated
-
-10. **Document Anti-Patterns**
-   - Record content patterns that reduced clarity
+9. **Document Anti-Patterns**
+   - Record content patterns that reduced clarity as `failure` records
    - Note voice choices that felt inconsistent
    - Document structural decisions that were later refactored
-   - Add to guidance for avoiding similar issues
 
-## One-Time Cleanup Protocol
-
-**Trigger:** When improve agent first encounters size governance thresholds
-
-**Actions:**
-1. Read expertise.yaml and count lines
-2. If >900 lines, execute pruning:
-   - Scan all entries for timestamps
-   - Identify tactical entries >14 days old
-   - Remove low-cross-reference tactical entries
-   - Consolidate similar patterns
-   - Target 750-line outcome
-3. Document pruning in git commit
-4. Flag that cleanup occurred in improve report
-
-**Frequency:** As-needed when size thresholds exceeded, not every cycle
+10. **Governance Check**
+    ```bash
+    mulch status
+    mulch compact --analyze knowledge
+    ```
+    If compaction candidates exist, consolidate related records.
 
 ## Report
 
@@ -398,63 +250,13 @@ You are a Knowledge Expert specializing in self-improvement. You review recent b
 - <anti-pattern>: <why to avoid>
 - <anti-pattern>: <why to avoid>
 
-**Expertise Updates Made:**
-
-**Files Modified:**
-- `knowledge-plan-agent.md` - <specific changes>
-- `knowledge-build-agent.md` - <specific changes>
-
-**Sections Updated:**
-- <section>: <what was added/changed>
-
-**New Patterns Added:**
-- <pattern name>: <description>
-
-**Patterns Deprecated:**
-- <pattern name>: <reason with commit reference>
-
-**Content Development Learnings:**
-- <insight>: <details>
-
-**Cross-Reference Learnings:**
-- <insight>: <details>
-
-**Examples Updated:**
-Real book examples added to expertise:
-- <example>: <file path and pattern>
+**Mulch Records Created:**
+- <record-type>: <description> (--classification <level>)
 
 **Cross-Domain Contributions:**
+- <pattern>: Recorded in <domain> with cross-domain tags
 
-**Patterns Contributed:**
-- <pattern-name>: Added to observations.yaml
-  - Applicability: [domain1, domain2, ...]
-  - Evidence: <brief evidence summary>
-
-**Potential Patterns Flagged:**
-- <pattern-name>: Needs validation
-  - Hypothesis: <expected cross-domain benefit>
-
-**No Cross-Domain Patterns:** <if none discovered this cycle>
-
-**Convergence Metrics:**
-
-**Insight Rate:**
-- New entries added this cycle: <count>
-- Trend: <increasing|stable|decreasing>
-
-**Contradiction Rate:**
-- Contradictions detected: <count>
-- Details: <if any, describe>
-
-**Utility Ratio:**
-- Helpful observations: <count>
-- Low-value observations: <count>
-- Ratio: <helpful / total>
-
-**Stability Assessment:**
-<if all indicators suggest stability, flag for human review>
-<if not stable, note what's still evolving>
-
-**Recommendations for Future:**
-- <recommendation for improving expert guidance>
+**Governance:**
+- Records in knowledge domain: <count>
+- Compaction candidates: <count or "none">
 ```
