@@ -2,7 +2,7 @@
 title: Mental Models
 description: Frameworks for thinking about agentic systems
 created: 2025-12-08
-last_updated: 2026-02-11
+last_updated: 2026-04-09
 tags: [mental-models, frameworks, thinking]
 part: 3
 part_title: Perspectives
@@ -27,6 +27,7 @@ Mental models are frameworks for thinking about agentic systems. They're evaluat
 | [Context as Code](4-context-as-code.md) | Treat agent knowledge like software, not documents |
 | [Execution Topologies](5-execution-topologies.md) | A measurement framework for understanding and improving agent execution structures |
 | [Design as Bottleneck](6-design-as-bottleneck.md) | When implementation is automated, design becomes the constraint |
+| [Software Factories](7-software-factories.md) | The resurgence of industrial-scale software production — what the factory metaphor reveals about agentic systems at scale |
 
 
 
