@@ -2,7 +2,7 @@
 title: "Gas Town: Multi-Agent Workspace Manager"
 description: "Case study of Steve Yegge's Gas Town system for orchestrating 20-30 parallel coding agents"
 created: 2026-02-11
-last_updated: 2026-02-11
+last_updated: 2026-04-11
 tags: [case-study, multi-agent, orchestration, gastown, production]
 part: 4
 part_title: Appendices
@@ -708,7 +708,7 @@ Git-backed issue tracking commands:
 - **GitHub** --- github.com/steveyegge/gastown (MIT licensed, ~189K LOC Go)
 
 ### Analysis and Commentary
-- **Maggie Appleton** --- Design analysis of Gas Town's agent coordination model
+- **Maggie Appleton**, "Gas Town's Agent Patterns, Design Bottlenecks, and Vibecoding at Scale" (January 2026) --- Designer-perspective analysis framing Gas Town as speculative design fiction rather than a production blueprint; introduces six-factor code-proximity framework; argues Gas Town itself is "poorly designed" because Yegge did not deliberate which metaphors and primitives to use — a productive counterpoint to Yegge's own case-study framing. https://maggieappleton.com/gastown/
 - **TWiT Network** --- Coverage of Gas Town and multi-agent development trends
 - **Pragmatic Engineer Newsletter** --- Industry context for AI-assisted development at scale
 

@@ -2,8 +2,8 @@
 title: Claude Code
 description: Anthropic's CLI coding agent with subagents, Skills, and hooks
 created: 2025-12-08
-last_updated: 2026-02-05
-tags: [tools, claude-code, coding-agent, anthropic, slash-commands, expert-pattern, skills, orchestration, tool-restriction, hooks, sandbox, security, multi-agent, teammatetool, coordination, agent-teams, session-memory, memory-management, persistent-memory, rules, path-scoping]
+last_updated: 2026-04-11
+tags: [tools, claude-code, coding-agent, anthropic, slash-commands, expert-pattern, skills, orchestration, tool-restriction, hooks, sandbox, security, multi-agent, teammatetool, coordination, agent-teams, session-memory, memory-management, persistent-memory, rules, path-scoping, cowork, dispatch, knowledge-work, asynchronous-delegation, harness-quality, context-quality, raschka, coding-agent-architecture]
 part: 3
 part_title: Perspectives
 chapter: 9
@@ -23,6 +23,24 @@ Anthropic's official coding agent. A primary tool for agentic software developme
 
 The shift from "assistant" to "system" thinking changes how you use it—instead of asking Claude to do everything, design the environment where Claude coordinates specialists.
 
+*[2026-04-11]*: **Harness Quality as the Distinguishing Factor** — Raschka's cross-source analysis of coding agent architectures (Aider, Anthropic's SWE-bench work, production agent systems) yields a diagnosis principle: "the harness can often be the distinguishing factor" separating model capability from product performance. Apparent model quality is frequently context quality in disguise.
+
+**What the harness comprises:**
+
+| Component | Role | Claude Code Equivalent |
+|-----------|------|----------------------|
+| Repo context | Stable workspace summary injected once | CLAUDE.md + auto memory |
+| Prompt shape | Stable prefix / dynamic session split | System prompt + session context |
+| Tool access | Defined, bounded tool inventory | Tools list + hooks enforcement |
+| Context management | Output clipping, deduplication, transcript compression | Skills (progressive disclosure) + subagent context isolation |
+| Session memory | Working memory (distilled) + full transcript (durable) | Auto memory + session context |
+| Subagent delegation | Bounded subtasks with inherited context | Task tool with context scoping |
+
+**The diagnostic implication:** When a coding agent underperforms, the first audit target is the harness, not the model. Raschka's empirical observation is that context design — what the agent sees, when it sees it, and in what form — explains most of the variation that practitioners attribute to model selection.
+
+**Cross-reference:** Raschka's six-component taxonomy provides one decomposition framework for reasoning about harness quality. For coding-specific tool design within that harness, see [Coding Agent Edit Formats](../5-tool-use/1-tool-design.md#coding-agent-edit-formats) and [Coding Agent Specialization in the ReAct Pattern](../6-patterns/5-react-pattern.md#coding-agent-specialization).
+
+**Sources:** [Components of a Coding Agent — Raschka](https://magazine.sebastianraschka.com/p/components-of-a-coding-agent) (2026-04-04), [Building Effective Agents — Anthropic](https://www.anthropic.com/research/building-effective-agents)
 
 ---
 
@@ -96,6 +114,47 @@ When referencing files, always use absolute paths to enable terminal linking.
 **Supported terminals:** iTerm2, WezTerm, Ghostty, Kitty, Windows Terminal, and others implementing the OSC 8 standard. Verify support in terminal documentation.
 
 **Sources:** [Claude Code Changelog 2.1.2](https://code.claude.com/docs/en/changelog)
+
+*[2026-03-19]*: **Claude Cowork and Claude Dispatch** — Claude Cowork is Anthropic's desktop application for agentic knowledge work, distinct from Claude Code. Where Claude Code targets software development workflows, Cowork targets office knowledge tasks: email processing, document editing, slide updates, and Slack coordination. Claude Dispatch is a research preview feature within Cowork that enables asynchronous task delegation via phone-to-desktop remote control.
+
+**Architectural relationship:**
+
+```
+Claude Cowork (desktop app)
+  └── Claude Dispatch (research preview)
+        ├── Local file access
+        ├── Email/Slack connectors
+        ├── MCP integrations
+        └── Computer use fallback (mouse/keyboard)
+```
+
+**How Dispatch works:**
+
+1. User scans a QR code in Claude Desktop, pairing their phone to their desktop
+2. User sends task instructions from the mobile app
+3. Claude executes on the desktop using local files, app connectors, and MCP integrations
+4. Falls back to direct mouse/keyboard computer use when app connectors are insufficient
+
+**Pricing and availability:**
+
+- Max plan ($100/month) and Pro plan ($20/month)
+- Requires Claude Desktop + Claude mobile app
+- Desktop must remain awake during execution
+- macOS (launch) and Windows (added 2026-04-03)
+
+**Key distinction from Claude Code backgrounding:**
+
+Claude Code's `Ctrl+B` backgrounds a task within the CLI tool; the desktop keeps running Claude Code. Claude Dispatch is an entirely separate product — Cowork executes knowledge-worker tasks, not code. Do not conflate the two.
+
+**Practitioner reliability note:**
+
+Dispatch is a research preview as of April 2026. Practitioners report approximately 50% success rate on non-trivial tasks. Reported failure modes: single-threaded execution (one task at a time), desktop must stay on, and research-preview instability. The delegation paradigm is validated; reliability is actively improving.
+
+**Paradigm distinction:**
+
+Anthropic's own framing: "Unlike Chat, Cowork lets Claude complete work on its own. Describe the outcome and cadence, and it takes action." This positions Cowork at the asynchronous-delegation end of the interaction spectrum, contrasting with the synchronous chat model that dominates most AI interfaces.
+
+**Sources:** [Claude Cowork product page](https://claude.com/product/cowork), [Storyboard18 launch coverage](https://www.storyboard18.com/digital/anthropic-introduces-dispatch-feature-turning-claude-into-a-remote-ai-assistant-ws-l-92666.htm), [WinBuzzer Windows expansion](https://winbuzzer.com/2026/04/04/anthropic-claude-desktop-control-windows-cowork-dispatch-xcxwbn/), [Lowcode Agency technical breakdown](https://www.lowcode.agency/blog/claude-dispatch-explained), [dev.to practitioner report](https://dev.to/ji_ai/claude-dispatch-has-a-50-success-rate-heres-why-im-still-using-it-58gk)
 
 ---
 

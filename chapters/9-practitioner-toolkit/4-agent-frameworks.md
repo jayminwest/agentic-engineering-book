@@ -2,8 +2,8 @@
 title: Agent Frameworks
 description: Comparing LangGraph, CrewAI, AutoGen, and Claude Agent SDK for multi-agent orchestration
 created: 2026-01-30
-last_updated: 2026-01-30
-tags: [tools, frameworks, langchain, langgraph, crewai, autogen, claude-agent-sdk, multi-agent, orchestration, comparison]
+last_updated: 2026-04-11
+tags: [tools, frameworks, langchain, langgraph, crewai, autogen, claude-agent-sdk, multi-agent, orchestration, comparison, hermes, persistent-runtime]
 part: 3
 part_title: Perspectives
 chapter: 9
@@ -14,6 +14,34 @@ order: 3.9.4
 # Agent Frameworks
 
 The agent framework landscape has consolidated around four major approaches: graph-based workflows (LangGraph), role-based teams (CrewAI), conversational coordination (AutoGen/Microsoft Agent Framework), and harness-powered delegation (Claude Agent SDK). Each embodies fundamentally different philosophies about how agents should coordinate.
+
+---
+
+## Harness Capability Tiers
+
+Before selecting an orchestration framework, practitioners face a more fundamental choice: which type of execution environment to build within.
+
+Mollick (2026) identifies three distinct components in the AI selection stack:
+
+- **Model** — the underlying capability (what it knows and reasons)
+- **App** — the chat interface (how a human interacts with the model)
+- **Harness** — the autonomous execution environment enabling multi-step task completion without continuous human input
+
+These are independent axes. The same model produces dramatically different outcomes in different harnesses. Agent Psychometrics research (arXiv:2604.00594) formalizes this: P(success) = σ(θ_LLM + θ_scaffold − β_difficulty), where LLM capability and scaffold quality are additively independent. Harness investment yields separable gains from model investment.
+
+### Current Harness Landscape
+
+| Tier | Examples | Characteristics |
+|------|----------|-----------------|
+| **Full agentic harnesses** | Claude Code, OpenAI Codex | Autonomous file access, command execution, multi-step loops, tool-native design |
+| **Web-based chat interfaces** | claude.ai, chatgpt.com | Optimized for conversation; limited autonomous execution; session-scoped context |
+| **Constrained agentic environments** | Gemini website, Gemini in Workspace | Capable model with limited harness; agency bounded by platform |
+
+**Practical implication:** Choosing a chat interface as the deployment environment for an agentic system is not a model choice — it is a capability ceiling. The frameworks discussed below (LangGraph, CrewAI, etc.) apply to the full agentic harness tier. If the deployment target is a chat interface, framework selection is moot.
+
+**See Also:**
+- [Model Selection: Cross-Provider Selection](../3-model/1-model-selection.md#cross-provider-selection) — Task-type to provider+harness mapping
+- [Claude Code](1-claude-code.md) — Reference implementation of the full agentic harness tier
 
 ---
 
@@ -287,6 +315,7 @@ Frameworks are not mutually exclusive. Common patterns:
 - **Agent interoperability**: A2A protocol and MCP enable cross-framework coordination
 - **Consolidation**: Microsoft merged AutoGen and Semantic Kernel; expect similar consolidation
 - **Multi-modal expansion**: Audio/video streaming becoming framework differentiator
+- **Persistent personal runtimes**: A distinct category is emerging alongside orchestration frameworks — single-agent runtimes optimized for long-running personal use with persistent memory and self-improving skills rather than multi-agent coordination. Nous Research's [Hermes Agent](https://github.com/NousResearch/hermes-agent) (MIT, ~47K GitHub stars, February 2026) is the leading open-source example: multi-platform gateway (Telegram, Discord, Slack, CLI), SQLite-backed memory with full-text search, and a self-improvement loop where tasks generate procedural skills that refine during deployment. This category is not addressed by LangGraph, CrewAI, or AutoGen — those frameworks solve orchestration topology; persistent runtimes solve continuity and recall across sessions.
 
 ### Market Context
 

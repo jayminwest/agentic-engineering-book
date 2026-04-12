@@ -2,8 +2,8 @@
 title: Prompt Maturity Model
 description: Seven levels of prompt sophistication from static to meta-cognitive
 created: 2025-12-08
-last_updated: 2026-01-21
-tags: [prompts, mental-models, maturity]
+last_updated: 2026-04-11
+tags: [prompts, mental-models, maturity, engineer-leverage, workflow-integration, practitioner-progression]
 part: 3
 part_title: Perspectives
 chapter: 8
@@ -205,8 +205,66 @@ After each run:
 
 ---
 
+## Engineer Leverage Progression
+
+*[2026-04-11]*: The seven levels above describe prompt artifact sophistication. A complementary dimension describes practitioner workflow sophistication — how an individual engineer's *framing* of AI use changes as leverage increases. This axis is orthogonal: an engineer can write a structurally sophisticated L4-L5 prompt while still operating in a low-leverage framing. Liu's central observation names the gap precisely: "One engineer treats AI like a better search engine. The other treats AI like an entire engineering team working in concert."
+
+Three stages characterize the progression, observed independently by multiple practitioners:
+
+### Stage 1 — Search-Engine Framing
+
+**Framing:** AI as a better search interface or text transformer.
+
+**Behavior:** Isolated, one-off queries. Context is provided per-query without codebase integration. Output is treated as reference material, not an executable artifact. Each query begins fresh with no compounding context.
+
+**Prompt-level correlation:** Typically L1-L3. Parameterization adds flexibility, but the workflow remains point-to-point. A well-structured L4 prompt can appear in Stage 1 framing when the engineer pastes context manually without workflow integration.
+
+**Named by:** Liu [1] — the "David" example: a meeting transcript pasted into a fresh session produces a plan disconnected from actual system architecture regardless of prompt quality.
+
+**Key limitation:** No feedback loop. Each query begins fresh; there are no compounding returns.
+
+### Stage 2 — Integrated Workflow Framing
+
+**Framing:** AI as a pipeline stage whose output feeds subsequent stages.
+
+**Behavior:** Complete context is provided — full meeting transcript plus codebase, not fragments. Output is designed for downstream consumption: PRD feeds tickets, tickets feed Plan.md, Plan.md feeds agentic execution. Humans design the workflow; AI executes stages within it.
+
+**Prompt-level correlation:** Typically L4-L5. Contextual and higher-order prompts are structurally required by this framing — the workflow's pipeline structure forces L4+ because each stage must be informed by the previous stage's output.
+
+**Named by:** Liu [1] — the "Elena" example: complete workflow from meeting to executable plan; Willison [7] — "lead on design, delegate on implementation."
+
+**Key advancement:** Compounding context. Each stage's output enriches the next stage's input; returns accumulate across the pipeline.
+
+### Stage 3 — System Designer Framing
+
+**Framing:** AI as a component in a designed system with feedback loops, measurement, and self-improvement.
+
+**Behavior:** Engineers define evaluation criteria before implementation. Error analysis precedes optimization. Measurement infrastructure — evals, tracing, human review — is designed first; automation of benchmarks follows manual understanding, not the reverse.
+
+**Prompt-level correlation:** Typically L5-L7. Meta-cognitive prompts (Level 7) emerge from the demands of this framing: once an engineer treats the system as measurable, prompts that improve themselves become structurally necessary rather than optional.
+
+**Named by:** Hamel [4][6] — manual error analysis is the highest-ROI starting point; "good writing is good thinking" — prompt engineering requires active intellectual engagement; Willison [7] — design decisions remain human before delegation to the system.
+
+**Key advancement:** Feedback discipline. Improvement is systematic rather than intuitive; the measurement infrastructure determines what is worth optimizing.
+
+---
+
+| Stage | Framing | Typical Prompt Level | Compounding Returns |
+|-------|---------|---------------------|---------------------|
+| Search-Engine | Query-response | L1-L3 | None — each query begins fresh |
+| Integrated Workflow | Pipeline stage | L4-L5 | Moderate — context accumulates across stages |
+| System Designer | Designed system with feedback | L5-L7 | High — measurement enables systematic improvement |
+
+The stages correlate with but do not determine prompt level. An engineer can reach Stage 2 while using only L3-L4 prompts — the workflow framing will pull prompt sophistication upward as the engineer encounters the structural requirements of pipeline stages. Hamel's principle applies to the transition from Stage 2 to Stage 3: manual engagement precedes effective automation. Stage 3 cannot be reached by automating Stage 1 behaviors; the judgment about what to measure must be developed manually before measurement can compound.
+
+Stage 2 integration maps directly to leverage points [#1 (ADWs) and #3 (Plans)](../1-foundations/1-twelve-leverage-points.md) in the Twelve Leverage Points hierarchy — the pipeline structure of Stage 2 is what makes Plans (#3) genuinely executable and ADWs (#1) designable rather than improvised. Stage 3 maps to #5 (Tests) and the measurement infrastructure that distinguishes production-grade from experimental systems. Stage 3 also corresponds to the individual prerequisite for operating at Shapiro Level 3-4 in the [Software Factories](../8-mental-models/7-software-factories.md) framework.
+
+---
+
 ## Connections
 
 - **To [Prompt Structuring](../2-prompt/2-structuring.md):** Structural choices (output templates, failure sentinels, state machines) enable prompts to move up maturity levels—the techniques that make higher levels possible
 - **To [Self-Improving Experts](../6-patterns/2-self-improving-experts.md):** Self-modifying (Level 6) and meta-cognitive (Level 7) prompts parallel expert system evolution. The three-command expert pattern (Plan-Build-Improve) implements Level 6 maturity.
 - **To [Knowledge Evolution](../7-practices/6-knowledge-evolution.md):** Tracking prompt maturity progression mirrors knowledge base maturity—both evolve from simple to sophisticated through observation and refinement
+- **To [Twelve Leverage Points](../1-foundations/1-twelve-leverage-points.md):** The Engineer Leverage Progression stages map onto the leverage hierarchy: Stage 2 framing enables Plans (#3) and ADWs (#1); Stage 3 framing enables Tests (#5) and system-level measurement. The Anti-Patterns by Leverage Level section in that entry identifies the specific failure modes that Stage 1 framing produces when applied to high-leverage points.
+- **To [Evaluation](../7-practices/2-evaluation.md):** Prompt maturity and evaluation maturity co-evolve. Reaching Level 5+ prompt sophistication (higher-order, self-modifying) without corresponding evaluation infrastructure produces unmeasured complexity—changes to self-modifying prompts can degrade behavior in ways that only systematic evaluation detects. The Evaluation Maturity Curve in that section maps directly: Level 1–2 prompts (static, parameterized) pair with manual evaluation; Level 5+ prompts (higher-order, self-modifying) require at minimum scripted automated evaluation to remain maintainable.

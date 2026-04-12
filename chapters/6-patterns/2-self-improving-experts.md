@@ -2,7 +2,7 @@
 title: Self-Improving Expert Commands
 description: The Plan-Build-Improve pattern for creating commands that learn from experience
 created: 2025-12-08
-last_updated: 2026-02-05
+last_updated: 2026-04-11
 tags: [patterns, meta-prompting, self-improvement]
 part: 2
 part_title: Craft
@@ -26,6 +26,8 @@ The pattern separates two types of prompt content:
 - **Workflow sections**: Stable process descriptions that define how the expert operates
 
 Only Expertise sections get updated, ensuring the process remains consistent while knowledge accumulates.
+
+*[2026-04-11]*: Nous Research's [Hermes Agent](https://github.com/NousResearch/hermes-agent) (MIT license, ~47K GitHub stars within six weeks of its February 2026 launch) instantiates this loop in a consumer-facing open-source runtime: tasks generate skills procedurally, skills refine during use, and consolidation nudges periodically update the agent's persistent memory store. The architecture maps directly onto the Plan-Build-Improve triangle — expertise accumulates in external storage (SQLite + FTS5), workflow logic remains stable, and updates are post-hoc not mid-execution. Hermes demonstrates that the self-improving expert pattern has migrated from developer tooling into general-purpose personal agent systems.
 
 ---
 

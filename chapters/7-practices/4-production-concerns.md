@@ -2,8 +2,8 @@
 title: Production Concerns
 description: Running agents reliably at scale
 created: 2025-12-08
-last_updated: 2026-02-05
-tags: [practices, production, reliability, operations, monitoring, hooks]
+last_updated: 2026-04-11
+tags: [practices, production, reliability, operations, monitoring, hooks, reliability-thresholds, deployment-criteria, augmentation-vs-automation, reliability-dimensions]
 part: 2
 part_title: Craft
 chapter: 7
@@ -14,6 +14,79 @@ order: 2.7.4
 # Production Concerns
 
 Demo agents are easy. Production agents are hard. This is where the craft lives.
+
+---
+
+## Reliability Thresholds for Production Deployment
+
+*[2026-04-11]*: Production deployment is a threshold decision, not a spectrum. An agent either clears the bar for its deployment mode or it does not. The bar differs by deployment mode.
+
+### Two Deployment Modes, Two Threshold Regimes
+
+The most consequential reliability decision is the deployment mode:
+
+| Mode | Definition | Reliability Tolerance |
+|------|------------|----------------------|
+| **Augmentation** | Human review is in the loop; agent error is buffered before reaching consequences | Lower thresholds acceptable — human backstop absorbs inconsistency |
+| **Automation** | Agent operates without human review; errors reach consequences directly | Near-perfect consistency and safety required — no backstop |
+
+An agent succeeding 90% of the time but failing unpredictably on 10% "may assist users yet remain unacceptable for autonomous systems." [Rabanser et al., arXiv:2602.16666, 2026]
+
+This distinction operationalizes the human-in-the-loop patterns covered in [Human-in-the-Loop](../6-patterns/6-human-in-the-loop.md): HITL is not only a usability choice — it is a reliability architecture that determines which threshold regime the system operates in.
+
+### The Four-Dimension Reliability Gate
+
+Before production deployment, evaluate against four dimensions: [Rabanser et al., arXiv:2602.16666, 2026]
+
+**Consistency:** Does the agent produce the same outcome when run on the same input multiple times? Measure by running each representative task K≥5 times. High variance across runs signals unpredictable behavior — the defining characteristic of agents that are acceptable for augmentation but unacceptable for automation.
+
+**Robustness:** Does the agent degrade gracefully under realistic perturbations? Test prompt paraphrases, tool interface format changes, and infrastructure fault injection. Agents that handle "cancel my subscription" but fail on "end my plan" are brittle in ways that lab evals do not reveal.
+
+**Predictability:** Does the agent signal uncertainty reliably? An agent that is 60% accurate but always knows when it's uncertain is more deployable than an agent that is 80% accurate but overconfident in its failures. Calibration — whether stated confidence matches actual performance — determines whether operators can trust confidence signals in production.
+
+**Safety:** Are compliance violations within acceptable bounds, and are severity levels controlled? Safety does not average. A single high-severity violation (unauthorized action, irreversible data deletion, PII exposure) is a deployment blocker regardless of aggregate compliance rate. Evaluate using the risk decomposition: `ℛ_Saf = 1 − (1 − S_comp)(1 − S_harm)`, where compliance and severity are assessed independently.
+
+### Threshold Guidance by Deployment Mode
+
+No universal thresholds apply across all domains. The following are starting points derived from the paper's framework, not prescriptive minimums:
+
+| Dimension | Augmentation Mode | Automation Mode |
+|-----------|-------------------|-----------------|
+| Consistency (outcome) | ≥70% same outcome on K=5 runs | ≥90% same outcome on K=5 runs |
+| Prompt robustness | Passes 3 of 5 paraphrase variants | Passes 5 of 5 paraphrase variants |
+| Safety compliance | Zero high-severity violations in eval set | Zero medium-or-high-severity violations in eval set |
+| Predictability | Calibration error <20% (agent can signal uncertainty) | Calibration error <10%; discrimination AUROC >0.7 |
+
+Adjust thresholds upward for irreversible actions (financial transactions, data deletion, external communications) and downward for low-consequence tasks (summarization, classification with human review).
+
+### Compound Reliability and Architecture Decisions
+
+The compound error math (see [Model Evaluation](../3-model/5-model-evaluation.md#the-compound-error-problem)) shows how per-step accuracy multiplies across a workflow. Reliability dimensions compound the same way: a three-tool pipeline where each tool meets 90% consistency independently yields approximately 73% end-to-end consistency (`0.9³`).
+
+This has a direct architectural implication: the compound reliability of a pipeline sets a lower ceiling than individual component reliability. When a pipeline fails to meet deployment thresholds, the first diagnostic question is not "which component is weakest" but "how many components does this pipeline chain?" Reducing pipeline depth is often more effective than improving individual component reliability.
+
+### Real-World Incident Mapping
+
+Three documented production incidents illustrate what happens when deployment threshold decisions are not grounded in reliability measurement:
+
+| Incident | Root Reliability Failure | Dimension Missed |
+|----------|--------------------------|------------------|
+| Replit database deletion — agent deleted production DB despite explicit prohibition | High-severity compliance violation; instruction constraint not robustly enforced | Safety (S_harm) + Robustness (prompt constraint robustness) |
+| OpenAI Operator unauthorized purchase — agent took action outside declared scope | Out-of-scope action; trajectory consistency violated | Safety (S_comp) + Consistency (trajectory) |
+| NYC chatbot inconsistent legal advice — identical questions yielded different answers | High outcome variance; overconfident wrong answers | Consistency (C_out) + Predictability (calibration) |
+
+[Rabanser et al., arXiv:2602.16666, 2026]
+
+Each incident would have been detectable in pre-deployment evaluation if the corresponding reliability dimension had been measured. None are detectable by mean task success rate alone.
+
+### Connections
+
+- **To [Evaluation](2-evaluation.md#reliability-dimensions-beyond-task-completion):** The four reliability dimensions are operationalized as eval practices in that chapter. Run those evaluations before applying these thresholds.
+- **To [Model Evaluation](../3-model/5-model-evaluation.md#the-capability-reliability-gap):** Benchmark accuracy scores do not predict reliability dimension scores. Capability gains do not improve reliability as a byproduct. The Core Four (prompt / model / context / tool failures) answers "what broke?" — root cause attribution. The four reliability dimensions answer "what properties degrade?" — observable system behavior. Both frames are necessary for production diagnosis; neither replaces the other.
+- **To [Human-in-the-Loop](../6-patterns/6-human-in-the-loop.md):** Augmentation mode's lower reliability tolerance is why HITL is an architectural reliability decision, not only a usability one.
+- **To [Debugging](1-debugging-agents.md):** Production incidents map to specific reliability dimensions; the Core Four root-cause taxonomy and the four-dimension observable-property framework are complementary diagnostic tools.
+
+**Source:** [Towards a Science of AI Agent Reliability](https://arxiv.org/abs/2602.16666) (Rabanser, Kapoor, Narayanan et al., Princeton, 2026)
 
 ---
 

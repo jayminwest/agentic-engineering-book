@@ -2,8 +2,8 @@
 title: Evaluation
 description: Measuring agent performance systematically
 created: 2025-12-08
-last_updated: 2026-02-17
-tags: [practices, evaluation, testing, metrics, development-workflow]
+last_updated: 2026-04-11
+tags: [practices, evaluation, testing, metrics, development-workflow, reliability-dimensions, consistency, robustness, predictability, safety]
 part: 2
 part_title: Craft
 chapter: 7
@@ -115,13 +115,45 @@ Score: count of satisfied criteria / 6
 
 **Constraint satisfaction:** Define must-have constraints (output is valid JSON, contains required fields, stays under token limit). Constraint violations fail the eval regardless of other qualities. Constraints catch catastrophic failures that rubrics might score as "mostly fine."
 
-### Reliability vs Average Performance
+### Reliability Dimensions Beyond Task Completion
 
-Average performance (mean completion rate, median latency) hides critical failures. An agent that succeeds 90% of the time but fails 100% on a specific category is unreliable for production.
+Mean task completion rate is necessary but insufficient for production readiness. An agent succeeding 90% of the time but failing unpredictably on 10% "may assist users yet remain unacceptable for autonomous systems." [Rabanser et al., arXiv:2602.16666, 2026]
 
-**Measure by category:** Break eval sets into slices (input type, task complexity, domain). Track per-category performance. An agent that scores 85% overall but 40% on edge cases needs work on edges, not overall tuning.
+Average performance (mean completion rate, median latency) hides critical failures. Slice eval sets by category, track worst-case performance at p95 and p99, and measure maximum cost per run — not average. An agent that scores 85% overall but 40% on edge cases needs work on edges, not overall tuning.
 
-**Track worst-case performance:** P95 and P99 latency matter more than median. Max cost per run matters more than average. Worst-case metrics reveal what happens when things go wrong.
+Beyond slicing, four reliability dimensions provide a structured framework for production-readiness assessment:
+
+| Dimension | What It Measures | Why Average Completion Misses It |
+|-----------|------------------|----------------------------------|
+| **Consistency** | Whether identical inputs produce identical outcomes across repeated runs | High average success can mask high variance — agent may succeed 80% overall but only 40% on second attempts at the same task |
+| **Robustness** | Whether agents degrade gracefully under prompt paraphrases, format changes, and infrastructure faults | Agents can pass golden-path evals while failing on semantically equivalent prompt reformulations |
+| **Predictability** | Whether confidence aligns with actual performance (calibration) and separates successes from failures (discrimination) | Overconfident agents that fail unpredictably are harder to deploy safely than underconfident agents that reliably flag uncertainty |
+| **Safety** | Whether compliance with constraints and severity of violations remain within acceptable bounds | Safety is not a continuous tradeoff — the presence of any severe violation is a deployment blocker regardless of aggregate score |
+
+**Consistency** requires multi-run protocols. Run each eval case K≥5 times at identical settings (temperature=0 recommended). Measure not just mean success but variance across runs. An agent with 90% mean success and 60% consistency on second attempts fails differently than an agent with 80% mean success and 78% consistency. [Rabanser et al., 2026 — K=5 repetitions per task, temperature=0]
+
+**Robustness** requires deliberate perturbation testing:
+- *Prompt robustness*: Test 3-5 semantically equivalent reformulations of each eval case. "Cancel my subscription" and "end my plan" should produce equivalent outcomes. Prompt robustness is the most differentiating reliability dimension across models — agents that handle genuine technical failures gracefully often fail on surface-level instruction paraphrases. [Rabanser et al., 2026 — J=5 paraphrases per task]
+- *Environment robustness*: Test sensitivity to format changes that preserve semantics (reordered JSON fields, altered date formats, renamed parameters).
+- *Fault robustness*: Test behavior under infrastructure failures (API timeouts, malformed responses, unavailable services). Inject faults at realistic rates (p=0.2 is the paper's protocol) rather than testing only happy-path infrastructure.
+
+**Predictability** requires confidence reporting from agents. If the system under evaluation can report confidence, compute calibration error and discrimination (AUROC) across eval cases. If not, treat predictability as a qualitative assessment: does the agent signal uncertainty reliably, or does it proceed confidently into failures?
+
+**Safety** is not averaged. Measure compliance rate (fraction of tasks meeting all constraints) and severity distribution (among violations, what is the maximum consequence level?). A single high-severity compliance violation — unauthorized action, PII exposure, irreversible state change — is a deployment blocker regardless of the aggregate compliance rate.
+
+#### Mapping to Eval Practice
+
+Integrating the four dimensions into the three-tier evaluation strategy (Smoke / Core / Full) from above:
+
+| Eval Tier | Dimensions to Check |
+|-----------|---------------------|
+| **Smoke (3-10 cases)** | Consistency (2-3 runs per case); Safety (constraint compliance) |
+| **Core (20-50 cases)** | Consistency + Robustness (prompt variants for representative cases) |
+| **Full (all cases)** | All four dimensions; include fault injection; measure calibration if confidence is available |
+
+The four dimensions align with the book's existing open question "How do you evaluate agents that learn and adapt over time?" — consistency measurement across runs surfaces behavioral drift before it becomes a production incident.
+
+**Source:** [Towards a Science of AI Agent Reliability](https://arxiv.org/abs/2602.16666) (Rabanser, Kapoor, Narayanan et al., Princeton, 2026)
 
 ---
 
@@ -175,6 +207,23 @@ Start small. Three well-chosen cases that cover common failures beat 50 random e
 - Review eval sets quarterly; prune obsolete cases
 - Version eval sets alongside prompts (git tags or dated snapshots)
 
+### Annotation Workflow Design
+
+How evaluation cases get labeled determines whether the evaluation set reflects a coherent quality standard or a collection of conflicting opinions.
+
+**The single-arbiter principle.** For most teams, a single domain expert as annotation arbiter outperforms a committee. A committee introduces conflicting judgments that must be resolved, creating overhead and often producing labels that satisfy no one's quality standard. A single expert—one whose judgment defines acceptable performance for the product—labels faster, produces more consistent results, and establishes a clear quality bar. This recommendation applies to small-to-medium teams; large teams with high annotation volume may require additional annotators, but should still designate one person as the authority on ambiguous cases. Husain terms this the "benevolent dictator" framing: one person's standards govern, with clear accountability for annotation decisions.
+
+**Binary labeling over rating scales.** Binary pass/fail judgment forces clearer thinking than Likert scales. Middle values (3 out of 5, "adequate") mask uncertainty about quality standards and produce inconsistent labeling across annotators and across time. Binary decisions require fewer labeled examples to detect meaningful model differences and are easier to calibrate against. "Tracking a bunch of scores on a 1-5 scale is often a sign of a bad eval process" [Husain, 2024]. The binary preference connects to the judge calibration workflow described in [Model Evaluation](../3-model/5-model-evaluation.md#llm-as-judge-evaluation): LLM judges calibrated on binary labels produce more consistent results than those calibrated on rating scales.
+
+**Do not outsource error analysis.** Sending annotation work to third-party labelers severs the feedback loop that makes evaluation valuable. The core benefit of systematic failure examination is the product intuition it builds: teams that inspect their failures understand what needs fixing in ways that teams reviewing summary reports do not. Husain identifies this as an information asymmetry problem—the team that sees the failures learns what to improve; a third-party labeler sees patterns but cannot diagnose product-level causes.
+
+**Criteria drift is expected, not a failure.** Evaluation standards evolve as annotators see more outputs. This is productive: disagreement often reveals requirements that were ambiguous in the original specification. The correct response is to build realignment into the workflow—periodic calibration sessions and versioned rubrics that snapshot the current standard—rather than treating drift as an annotation failure. Academic research corroborates this: "Beyond Agreement: Rethinking Ground Truth in Educational AI Annotation" (arxiv.org/html/2508.00143v1, 2025) demonstrates that annotation disagreement can reflect legitimate interpretive diversity rather than annotator error.
+
+**Sources:**
+- Husain, H. "LLM Evals: Everything You Need to Know (FAQ)." hamel.dev/blog/posts/evals-faq/ (2025)
+- Husain, H. "Using LLM-as-a-Judge For Evaluation: A Complete Guide." hamel.dev/blog/posts/llm-judge/ (2024-10-29)
+- arxiv.org/html/2508.00143v1 — "Beyond Agreement: Rethinking Ground Truth in Educational AI Annotation" (2025)
+
 ### Evaluating Open-Ended Tasks
 
 Open-ended tasks (write an essay, generate a product description, summarize research) resist exact-match evaluation. Decompose quality into measurable sub-criteria.
@@ -195,6 +244,41 @@ Score each dimension independently.
 **Human rubrics for nuanced assessment:** When quality is subjective, use human evaluators with structured rubrics. Multiple evaluators per case reduce individual bias.
 
 **LLM-as-judge for scale:** Use a stronger model to evaluate weaker model outputs. Provide the judge with scoring criteria and example scores. LLM judges are cheaper than humans but require calibration (see [Model Evaluation](../3-model/5-model-evaluation.md#llm-as-judge) for calibration techniques).
+
+---
+
+## Error Analysis Practice
+
+Husain identifies error analysis as the highest-ROI activity in AI product development—higher than prompt engineering, model selection, or infrastructure optimization—based on patterns across 50+ client engagements [Husain, 2024; 2025a; 2025b]. Where most teams design evaluation cases from upfront hypotheses about what might fail, error analysis inverts that sequence: the failure distribution discovered through systematic data inspection determines which cases to build.
+
+This placement matters. Error analysis happens *before* building the evaluation set, not after. The preceding section ("Building Evaluation Sets") describes the artifacts. Error analysis is the process that generates the most valuable ones.
+
+### The Four-Step Methodology
+
+1. **Sample representative interactions from production logs.** Prioritize the most recent traffic that reflects current usage patterns. Aim for 100+ traces for new systems; for stable systems, 50 fresh traces per sprint.
+
+2. **Open coding: write open-ended notes on each trace without predefined categories.** Resist the urge to classify too early. The notes should describe what happened, what the agent did, and what a reasonable user would have expected instead. No predetermined taxonomy at this stage.
+
+3. **Axial coding: group similar failures, count frequency per category.** After reviewing 20–30 traces, patterns emerge. Name each category concisely. Count instances per category. The frequency distribution reveals where to invest.
+
+4. **Iterate until theoretical saturation.** Continue reading traces until no new failure categories emerge across 10–15 consecutive traces. Husain's practical heuristic: "keep reading logs until you feel like you aren't learning anything new." Approximately 100 traces typically reaches saturation for production systems.
+
+### Connection to Eval Set Design
+
+Error analysis generates better evaluation cases than upfront hypothesis design because the cases reflect actual failure distributions rather than engineering assumptions about what might fail. A team that hypothesizes failure modes before seeing production data will systematically miss the failure modes that are common but unexpected. The "Sources of Evaluation Cases" section above describes production failures as the highest-value source—error analysis is the methodology that structures how those failures are found and categorized.
+
+### Anti-Pattern: Generic Dashboards
+
+Teams that skip systematic error analysis tend to build evaluations measuring the wrong things. The failure mode is generic dashboards: aggregate completion rates, average latency, cost-per-run. These metrics are not wrong, but they are insufficient. They answer "how often does the agent fail" without answering "which failure modes dominate." A system with 85% completion rate might fail almost exclusively on one specific input pattern. Error analysis finds that pattern; generic dashboards obscure it.
+
+Evaluation dashboards should be populated by failure categories discovered through error analysis, not constructed before data inspection begins.
+
+**Sources:**
+- Husain, H. "Your AI Product Needs Evals." hamel.dev/blog/posts/evals/ (2024-03-29)
+- Husain, H. "A Field Guide to Rapidly Improving AI Products." hamel.dev/blog/posts/field-guide/ (2025-03-24)
+- Husain, H. "LLM Evals: Everything You Need to Know (FAQ)." hamel.dev/blog/posts/evals-faq/ (2025)
+
+**See Also:** [LLM-as-Judge Evaluation](../3-model/5-model-evaluation.md#llm-as-judge-evaluation) for judge calibration techniques that build on error analysis results.
 
 ---
 
@@ -223,6 +307,14 @@ Evaluation must fit into the development workflow. The right approach balances t
 **When to use it:** When eval metrics show a problem but don't explain it. When developing new capabilities without existing test cases. When debugging non-deterministic failures that vary across runs.
 
 **Process:** Run the agent with verbose logging. Read tool calls, reasoning chains (if visible), and intermediate states. Identify where decisions diverged from expectations. Add specific test cases for observed failure modes.
+
+**Why the discipline breaks down.** Engineers systematically skip manual data inspection because it feels unstructured and slow compared to writing code or running automated tests. Husain identifies this as a documented pattern across his client engagements, not an individual failure: "looking at data" lacks the visible artifacts and completion criteria that make engineering work feel productive. The corrective is to treat data inspection as a professional discipline with defined entry and exit criteria—enter when failures are detected, exit at theoretical saturation (no new failure categories across 10–15 consecutive traces, with 100 traces as a practical minimum).
+
+**Custom viewer infrastructure.** Generic log viewers fail for sustained evaluation because they lack domain-specific rendering. An agent handling customer support tickets needs to display conversation history, user metadata, and agent tool calls in a single view—not raw JSON. Husain's position is that domain-specific viewers are non-optional for teams doing systematic evaluation, and that the investment is smaller than it appears: custom tools can be built in hours using AI-assisted development. Essential features: all relevant context visible in a single screen, one-click feedback capture, open-ended annotation fields, and keyboard shortcuts for velocity. The infrastructure goal is to "remove all friction from the process of looking at data" [Husain, 2025b].
+
+**Sources:**
+- Husain, H. "Your AI Product Needs Evals." hamel.dev/blog/posts/evals/ (2024-03-29)
+- Husain, H. "LLM Evals: Everything You Need to Know (FAQ)." hamel.dev/blog/posts/evals-faq/ (2025)
 
 ### Automated Eval Patterns
 

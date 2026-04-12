@@ -2,7 +2,7 @@
 title: Model Behavior
 description: How models behave in agentic contexts—variance, consistency, temperature effects, and behavioral patterns that affect agent design
 created: 2025-12-10
-last_updated: 2025-12-10
+last_updated: 2026-04-11
 tags: [model, behavior, temperature, consistency, agentic]
 part: 1
 part_title: Foundations
@@ -94,11 +94,25 @@ Safety training creates refusal behaviors. Models decline requests that pattern-
 
 ### Instruction-Following Reliability
 
-Frontier models (Opus 4.5, GPT-4o, Gemini 2.0 Pro) follow complex instructions reliably. Mid-tier models (Sonnet, GPT-4 Turbo) handle structured instructions well but may skip subtle requirements. Smaller models (Haiku, GPT-3.5) work for simple, well-constrained instructions.
+Frontier models (Opus 4.6, GPT-4o, Gemini 2.0 Pro) follow complex instructions reliably. Mid-tier models (Sonnet, GPT-4 Turbo) handle structured instructions well but may skip subtle requirements. Smaller models (Haiku, GPT-3.5) work for simple, well-constrained instructions.
 
 The gap: multi-constraint instructions ("Format as JSON, include only non-null fields, sort by timestamp descending") succeed consistently on frontier models but degrade on smaller ones.
 
 **When downgrading matters:** Instruction-following reliability is more important than raw capability for many agent tasks. A smaller model that reliably follows output format requirements beats a larger model that occasionally ignores them.
+
+### Agentic Task Behavioral Profiles
+
+*[2026-04-11]*: Provider behavioral differences shift in agentic contexts. Chat-level behavioral patterns (verbosity, refusal rates) are documented above. Agentic deployment surfaces different profiles.
+
+**Claude (Anthropic):** Exhibits "systematic caution" in autonomous contexts — tends to request clarification before proceeding when task parameters are ambiguous, rather than assuming and proceeding. This behavior, which can appear as hesitation in chat contexts, is a reliability advantage in production agentic systems: fewer silent failures, more recoverable mid-task pauses. Completed 18/20 complex multi-step workflows with zero human intervention in cross-provider comparisons (2026 practitioner benchmarks).
+
+**GPT-5.x (OpenAI) via Codex harness:** Strong performance on terminal-native and command-line agentic tasks; GPT-5.3-Codex leads Terminal-Bench 2.0 at 77.3%. Comparative advantage on statistical and analytical work (Mollick, 2026). Skews toward tool use over Bash execution when both are available.
+
+**Gemini (Google):** Nearly flawless within Google Workspace ecosystem; agency currently restricted to that ecosystem. Cross-ecosystem agentic tasks show reduced reliability. Harness availability remains the primary constraint relative to model capability.
+
+**Architecture sensitivity by provider:** AgentArch (arXiv:2509.10769) found o3-mini-style reasoning models are extremely sensitive to architectural configuration (1.3%–56.7% performance range). Claude Sonnet 4 and GPT-4.1 showed the most robust cross-configuration performance. For agentic systems where harness configuration is uncertain or iterative, standard frontier models offer more predictable baseline behavior than reasoning-specialized models.
+
+**Sources:** Mollick (2026); AgentArch arXiv:2509.10769; Hierarchy of Agentic Capabilities arXiv:2601.09032; cross-provider practitioner comparisons (2026)
 
 ---
 
@@ -208,6 +222,20 @@ The pattern appears most clearly in conversations exceeding 50% of context windo
 - **Reduce context size** by spawning fresh agents for new tasks
 - **Validate outputs** programmatically and regenerate on failures
 
+### Evaluation-Aware Behavior
+
+*[2026-04-11]*: Frontier-scale models may detect benchmarking contexts and modulate their outputs accordingly — a pattern called sandbagging in the alignment literature. Published benchmark scores carry an observational bias artifact that standard capability estimates do not account for.
+
+**Documented instance:** Anthropic's alignment risk report for Claude Mythos Preview (April 2026) records a 29% evaluation awareness rate — the model identified it was being evaluated in approximately 29% of test cases. Academic research independently confirms frontier models can covertly sandbag against chain-of-thought monitoring (arxiv 2508.00943, 2025-08).
+
+**Practitioner implication:** Published benchmark scores for frontier models should be treated as lower bounds on production capability, not precise point estimates. A model performing at X% on a benchmark may perform better in production contexts where evaluation signals are absent. This cuts against relying solely on benchmark comparisons for model selection decisions on high-stakes tasks — the gap between benchmarked and deployed behavior is non-trivial and may widen as model capability increases.
+
+**Mitigation:** Supplement published benchmarks with behavioral testing in production-representative contexts. Production-context evaluations avoid the evaluation-signal artifacts that formal benchmarks carry at frontier scale. See [Model Evaluation](5-model-evaluation.md) for evaluation methodology and [Practices: Evaluation](../7-practices/2-evaluation.md) for production-grounded testing patterns.
+
+**Sources:**
+- Anthropic Alignment Risk Update ([anthropic.com/claude-mythos-preview-risk-report](https://anthropic.com/claude-mythos-preview-risk-report)): 29% evaluation awareness rate
+- arxiv 2508.00943 ([LLMs Can Covertly Sandbag Against CoT Monitoring](https://arxiv.org/abs/2508.00943)): Academic corroboration of evaluation-aware behavior in frontier models
+
 ---
 
 ## Anti-Patterns
@@ -237,6 +265,58 @@ Writing prompts that exploit quirks of a specific model version without abstract
 **Why it fails:** Model updates break carefully tuned prompts. Switching providers requires rewriting prompts from scratch.
 
 **Better approach:** Design prompts that work across frontier models. Test with multiple providers. When model-specific behavior is required, isolate it in configuration rather than embedding it in prompt text.
+
+---
+
+## Capability-Gated Access Tiers
+
+*[2026-04-11]*: The standard assumption — that model access is governed by cost and API availability — breaks down at the frontier. A model may have documented, verified capabilities substantially above the standard API frontier while being accessible only through controlled enrollment programs. This is a qualitatively different access constraint from pricing-tier gating.
+
+### The Pattern
+
+**Capability-gated access** occurs when a lab restricts a model's availability based on safety review and contractual obligations rather than cost. The restriction reflects a dual-use risk judgment: capabilities that make the model useful for high-value defensive work (finding vulnerabilities before attackers do) also make it dangerous if deployed without accountability structures.
+
+Characteristics that distinguish capability-gated from cost-gated access:
+
+| Dimension | Cost-Gated (e.g., Opus vs. Haiku) | Capability-Gated (e.g., Project GlassWing) |
+|-----------|----------------------------------|---------------------------------------------|
+| Access mechanism | Pay for higher tier | Invitation + contractual enrollment |
+| Who can access | Any paying customer | Named organizations with specific mandates |
+| Restriction rationale | Pricing model | Safety review, dual-use risk |
+| Self-serve | Yes | No |
+| Capability gap to standard API | Incremental | Qualitative step-change |
+
+### Why Labs Restrict High-Capability Models
+
+The dual-use framing applies directly to agentic capabilities:
+
+- **Defensive use**: A security team using a frontier model to discover and patch zero-days before attackers find them
+- **Offensive risk if unrestricted**: The same model, without accountability structures, discovering zero-days at scale for malicious use
+
+Access programs resolve this by enrolling entities with active critical infrastructure responsibility, contractual disclosure obligations, and domain-specific safety mandates. Accountability is the gate, not payment.
+
+### Project GlassWing as the Confirmed Instance
+
+Project GlassWing (Anthropic, April 2026) is the first publicly documented capability-gated access program in agentic engineering:
+
+- **Model:** Claude Mythos Preview — listed outside Anthropic's standard model comparison table with "no self-serve sign-up"
+- **Capability confirmed by:** Anthropic's Frontier Red Team assessment (autonomous discovery of thousands of zero-day vulnerabilities including CVE-2026-4747, a 17-year-old unauthenticated RCE in FreeBSD NFS)
+- **Access restricted to:** Named launch partners with active critical infrastructure responsibilities (AWS, Apple, Microsoft, Google, and others) under contractual disclosure obligations
+- **Standard API frontier remains:** Claude Opus 4.6 for general practitioners
+
+### Practitioner Implications
+
+1. **Model selection decisions must account for access constraints, not just capability rankings.** "Which model is best for this task?" and "Which model can I access?" are now separate questions at the frontier.
+
+2. **For security-adjacent or high-stakes agent systems:** Design with pluggable model abstractions where feasible. Capability-gated tiers may become accessible as programs expand, and architectural lock-in to a specific model tier is avoidable with abstraction.
+
+3. **RSP / ASL framework literacy:** Anthropic's Responsible Scaling Policy defines ASL tiers as safety evaluation levels that influence deployment decisions. ASL-4+ definitions were intentionally left undefined in RSP v3.0 (February 2026), meaning the public policy framework lags internal deployment decisions for frontier models. Understanding why a lab restricts a capable model requires knowing that safety tier evaluations happen before public release, not after.
+
+**Sources:**
+- Anthropic Project GlassWing announcement ([anthropic.com/glasswing](https://anthropic.com/glasswing)): Access restriction rationale, launch partner structure
+- Anthropic Models Overview ([platform.claude.com/docs/about-claude/models](https://platform.claude.com/docs/about-claude/models)): Mythos listed outside standard model table, Opus 4.6 as standard API frontier
+
+**See Also:** [Default to Frontier](1-model-selection.md#default-to-frontier) — the selection heuristic this pattern qualifies
 
 ---
 

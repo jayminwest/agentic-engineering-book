@@ -2,8 +2,8 @@
 title: ReAct Pattern
 description: Interleaved reasoning and action for grounded, observable agent behavior
 created: 2026-01-30
-last_updated: 2026-01-30
-tags: [patterns, reasoning, action, tool-use, grounding]
+last_updated: 2026-04-11
+tags: [patterns, reasoning, action, tool-use, grounding, coding-agent, execution-feedback, verification-driven, lint, test-runner, swe-bench]
 part: 2
 part_title: Craft
 chapter: 6
@@ -249,6 +249,64 @@ For complex tasks requiring 10+ iterations with substantial observations, ReAct 
 
 ---
 
+## Coding Agent Specialization
+
+*[2026-04-11]*: The observation step is the highest-leverage design surface in a coding agent's ReAct loop. Generic tool outputs (file content, search results) are weak feedback signals; coding-specific outputs (test results, lint errors, compiler diagnostics) are strong ones. The difference determines whether the loop converges or drifts.
+
+### Observation Signal Taxonomy for Coding Loops
+
+| Signal Type | Source | Feedback Quality | Why It Works |
+|------------|--------|-----------------|--------------|
+| **Test results** | Test runner (pytest, jest, cargo test) | Binary + localized | Pass/fail is unambiguous; failure messages identify the exact assertion |
+| **Lint output** | Linter (ruff, eslint, clippy) | Binary + localized | Rule violations are precise; line numbers and rule IDs are actionable |
+| **Compiler errors** | Compiler (tsc, gcc, rustc) | Binary + localized | Type errors and missing references cannot be argued with — they are facts |
+| **Build output** | Build system | Binary + systemic | Catches integration failures that unit tests miss |
+| **Generic tool output** | File reads, search results | Non-binary, interpretive | Requires model judgment; hallucination risk higher |
+
+The practical design principle: prefer binary, localized feedback signals over interpretive ones. When the observation is "tests pass" or "lint: 0 errors," the model has an unambiguous success criterion. When the observation is "here is the file content," the model must judge whether the content satisfies the goal — introducing interpretive error.
+
+### Verification-Driven Development
+
+Verification-driven development gives the coding agent explicit, machine-checkable success criteria before the loop begins (Anthropic Building Effective Agents; tianpan.co SWE-bench production analysis, 2026-04-09):
+
+- Provide failing tests the agent must pass
+- Provide linter configuration the agent must satisfy
+- Provide integration test suites for self-evaluation
+
+**Why this works:** The agent's ReAct loop terminates when observations confirm success against objective criteria, not when the model judges its own work complete. The termination condition is external, not self-reported.
+
+**Contrast with open-ended prompting:** "Fix the authentication module" gives the model no ground truth for loop termination. "Fix the authentication module so that `auth_test.py` passes with zero lint errors" gives the loop a binary exit condition tied to real system behavior.
+
+### Execution Feedback Loop Structure (Coding Variant)
+
+```text
+Thought: Analyze the failing test output. The assertion error shows X is returning Y but expected Z.
+Action: read_file("src/auth/token.py")
+Observation: [file content]
+Thought: The issue is in the token expiry calculation at line 47. Plan the fix.
+Action: apply_edit("src/auth/token.py", search="...", replace="...")
+Observation: Edit applied successfully.
+Thought: Verify the fix by running the tests.
+Action: bash("pytest auth_test.py -v")
+Observation: 5 passed, 0 failed
+Thought: Tests pass. Check lint.
+Action: bash("ruff check src/auth/token.py")
+Observation: All checks passed.
+Thought: All verification criteria met. Task complete.
+```
+
+The coding variant differs from generic ReAct in one structural way: verification actions (run tests, run lint) are mandatory loop steps, not optional confirmation. Skipping verification produces agents that "complete" tasks without confirming correctness — the SWE-bench production gap in practical form.
+
+### SWE-bench Evidence on Verification
+
+SWE-bench analysis (tianpan.co, 2026-04-09) identifies the absence of verification-driven loops as the primary explanation for the gap between benchmark scores (80% on SWE-bench Verified, 23% on SWE-bench Pro) and production reliability. The pattern: agents that score well on narrow, verifiable tasks fail on cross-system work precisely because cross-system work lacks the binary feedback signals that ground convergent loops.
+
+**METR controlled study finding (2026):** Experienced developers using AI coding tools were 19% *slower*, despite subjective assessments of ~20% improvement. The gap between perceived and measured productivity is consistent with agents producing outputs that appear correct but require more review time to validate.
+
+**Sources:** [Building Effective Agents — Anthropic](https://www.anthropic.com/research/building-effective-agents), [Agentic Coding in Production: What SWE-bench Scores Don't Tell You — tianpan.co](https://tianpan.co/blog/2026-04-09-agentic-coding-production-swebench-gap) (2026-04-09), [Components of a Coding Agent — Raschka](https://magazine.sebastianraschka.com/p/components-of-a-coding-agent) (2026-04-04)
+
+---
+
 ## Model Considerations
 
 ### Temperature Settings
@@ -300,6 +358,8 @@ Then invoke the appropriate tool.
 - **To [Orchestrator Pattern](3-orchestrator-pattern.md)**: ReAct can operate within an orchestrator's sub-agents. Scout agents using ReAct gather grounded observations that the orchestrator synthesizes.
 
 - **To [Context Management](../4-context/_index.md)**: ReAct's accumulated observations require careful context management. Progressive disclosure and observation summarization prevent context exhaustion.
+
+- **To [Tool Design](../5-tool-use/1-tool-design.md#coding-agent-edit-formats):** Observation quality in coding loops depends on edit format selection. Binary feedback signals (test pass/fail, lint: 0 errors) converge faster than interpretive tool output.
 
 ---
 

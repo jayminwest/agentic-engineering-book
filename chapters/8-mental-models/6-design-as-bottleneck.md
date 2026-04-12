@@ -2,8 +2,8 @@
 title: "Design as Bottleneck"
 description: "Mental models for multi-agent systems at scale — when implementation is automated, design becomes the constraint"
 created: 2026-02-11
-last_updated: 2026-02-11
-tags: [mental-models, multi-agent, scale, design, gastown, theory-of-constraints]
+last_updated: 2026-04-11
+tags: [mental-models, multi-agent, scale, design, gastown, theory-of-constraints, interface-design, capability-overhang, user-experience, external-validation, mollick, rsi, organizational-design]
 part: 3
 part_title: Perspectives
 chapter: 8
@@ -95,12 +95,26 @@ Three properties of multi-agent implementation create the shift:
 
 *[2026-02-11]*: Gas Town (multi-agent orchestration platform) users report that issue decomposition quality directly determines swarm output quality. The system churns through implementation so quickly that design and planning become the dominant time cost. Teams that invest in decomposition skills consistently outperform those optimizing implementation speed.
 
+*[2026-04-11]*: Ethan Mollick's practitioner-research synthesis reaches the same conclusion from a different evidentiary tradition. Drawing on the BCG 758-consultant study, METR Long Tasks benchmarks, and the StrongDM software factory case, Mollick argues that in agent-managed organizations, "the window to shape the Thing" — the design and organizational configuration work done before agents execute — is the scarce practitioner resource (Mollick, "The Shape of the Thing," 2026). The book's Model 1 derives this from Theory of Constraints and Gas Town production data (engineering and production-observation traditions). Mollick derives it from organizational research and team-scale production cases. Two independent evidentiary paths reaching identical structural conclusions increase confidence in the model's generality.
+
+**Source:** Mollick, E. "The Shape of the Thing." One Useful Thing, ~2026-03-12. https://www.oneusefulthing.org/p/the-shape-of-the-thing
+
 ### Implications for Practitioners
 
 - **Invest in decomposition skills.** The ability to break complex problems into well-scoped, independent units is the highest-leverage skill in agentic systems.
 - **Treat specifications as the primary artifact.** See [Specs as Source Code](3-specs-as-source-code.md)—specifications are not throwaway scaffolding; they are the program.
 - **Measure design throughput, not implementation throughput.** Track how quickly well-formed specifications emerge, not how quickly agents write code.
 - **Front-load architectural decisions.** Ambiguity in architecture creates cascading failures across parallel agents. Resolve architectural questions before spawning the swarm.
+
+### A Tension to Hold
+
+The factory metaphor that runs through this chapter (and through [Software Factories](7-software-factories.md)) implies a stable equilibrium: once workflow infrastructure is in place, design is the ongoing human contribution and execution is reliably delegated.
+
+Mollick's 2026 article complicates this. Mollick treats recursive self-improvement (RSI) — AI systems building better AI systems — as an explicit destabilizing factor. RSI is on major lab roadmaps. If the capability profile of the execution layer is improving on a timescale shorter than organizational design cycles, the factory metaphor's stability assumption is challenged: the design that suffices today may be obsolete before the factory runs it to completion. Organizations cannot design once and then operate; the target is moving.
+
+This does not dissolve the design-as-bottleneck framing — design remains the constraint regardless of whether the execution layer is stable or improving. But it challenges the inference that practitioners can invest in a stable harness architecture and return to it. If execution capabilities are shifting, institutional design (see [Workflow Coordination §7.5](../7-practices/5-workflow-coordination.md#the-human-role-in-agent-managed-workflows)) may need to be treated as continuous rather than one-time. The "organizational experimentation urgency" Mollick prescribes is partly a response to RSI: experiment now, before the target has moved further.
+
+Neither the factory metaphor nor the RSI instability view can be dismissed. This remains an open tension in the field.
 
 ---
 
@@ -547,45 +561,140 @@ Each symptom maps to specific infrastructure. Build only what the symptoms deman
 
 ---
 
+## Model 6: Interface as Bottleneck
+
+**When AI capability exceeds accessible capability, the interface is the constraint.**
+
+### The Core Idea
+
+The five preceding models address bottlenecks in multi-agent *execution*: design quality, agent coordination, state management, accountability, and infrastructure scale. Each operates on the developer/orchestrator side of the system. A complementary bottleneck operates at the human-facing layer: even when AI capability is ample, users can only access what the interface makes thinkable.
+
+Ethan Mollick frames this as "capability overhang" — the gap between what AI can do and what users actually request. The cause is not model capability; it is interface design:
+
+> "We built one of the most powerful technologies in recent history and then made people access it by typing into a chat window."
+
+The chat interface shapes cognition. A chat window makes users think in terms of "questions and responses." A task-dispatch interface makes users think in terms of "work delegation." The same model, different interaction paradigm, different effective capability.
+
+```
+Developer-Side Bottleneck (Models 1-5):      User-Side Bottleneck (Model 6):
+
+AI Capability          AI Capability
+     │                      │
+     ▼                      ▼
+  Design            ┌──────────────┐
+  Specification     │  INTERFACE   │  ← accessible capability ceiling
+  Decomposition     │  BOTTLENECK  │
+     │              └──────────────┘
+     ▼                      │
+  Implementation            ▼
+     │                What users
+     ▼                think to ask
+  Output
+                    (same model, different ceiling)
+```
+
+These two bottlenecks coexist and operate at different system levels. Addressing the developer-side bottleneck (better specs, faster implementation) does not resolve the user-side bottleneck. A perfectly specified multi-agent system that users cannot effectively interact with still underperforms.
+
+### Why the Interface Shapes Cognition
+
+Three mechanisms explain why the interface determines the effective capability ceiling:
+
+1. **Affordance gaps.** Users cannot request capabilities they cannot perceive. Chat interfaces present a text field, which signals "ask questions." Caetano et al. (2025) document this directly: "Conversational user interfaces often lack clear signifiers for AI affordances." The interface does not reveal what AI can do; users discover capabilities through friction and accident.
+
+2. **Interaction paradigm lock-in.** Mollick's Claude Dispatch demonstration illustrates the alternative: from his phone, he delegated Claude to verify a graph in a PowerPoint, find updated data online, download a PDF, extract the graph, and update the slide — a task framed as delegation, not question-answering. The dispatch interface made this task sequence thinkable; a chat window would not have.
+
+3. **Cognitive overhead.** Research with financial professionals showed productivity gains from AI assistance were partially offset by interface-induced cognitive burden: walls of text, tangential suggestions, sprawling conversation threads. The interface imposes a processing cost that reduces net benefit.
+
+### Evidence
+
+*[2026-03-31]*: Mollick's "Claude Dispatch and the Power of Interfaces" (One Useful Thing) demonstrates the interface bottleneck via Claude Dispatch: the same model accessed through a task-dispatch interface enables qualitatively different work than through chat. Primary practitioner evidence for the capability-overhang framing.
+
+*[2026-03-19]*: Anthropic's Claude Cowork product page: "Unlike Chat, Cowork lets Claude complete work on its own. Describe the outcome and cadence, and it takes action." Anthropic's own positioning confirms the paradigm distinction between conversational interaction and asynchronous delegation.
+
+*[January 2025]*: Caetano et al., "Agentic Workflows for Conversational Human-AI Interaction Design" (arxiv:2501.18002): research-through-design study with 10 participants documenting that users lack clarity about AI capabilities and that conversational interfaces fail to surface affordances. Provides academic grounding for the capability discovery problem.
+
+*[February 2026]*: Andru & Saksena, "Interface Framework for Human-AI Collaboration" (arxiv:2602.22343): three-factor framework (workflow complexity, AI autonomy, AI reasoning) mapping to interface pattern selection. Describes interfaces as "necessary affordances bridging legacy SaaS tools with autonomous systems" and identifies "progressive user control" as a design principle for graduated human oversight as AI autonomy increases.
+
+### The Three-Layer Bottleneck Stack
+
+All three layers have distinct bottlenecks. Resolving one does not resolve the others:
+
+| Layer | Bottleneck | What It Controls |
+|-------|-----------|-----------------|
+| **Developer/Specification** | Design quality, decomposition precision | What the agent system can do |
+| **Interface Design** | Affordance clarity, interaction paradigm | What users think to request |
+| **Model Capability** | Reasoning quality, context handling | Execution quality for a given request |
+
+Most capability-overhang conversations conflate the interface layer with the model layer ("the AI isn't good enough"). Mollick's argument is that the interface layer is the binding constraint *before* model capability for most users.
+
+### Implications for Practitioners
+
+- **Design the affordance surface explicitly.** What can users see the system doing? What actions are surfaced vs. buried? A system that can delegate email processing but presents only a chat window effectively cannot delegate email processing.
+- **Match interaction paradigm to task type.** Synchronous chat is appropriate for exploratory tasks requiring back-and-forth. Asynchronous delegation (Cowork/Dispatch model) is appropriate for well-scoped tasks that do not need mid-task steering. The paradigm shapes what users request.
+- **Treat interface design as a first-class engineering concern.** Interface decisions are not UX polish applied after capability is built — they determine the accessible capability ceiling. The most capable agent system is limited by the interface through which it is reached.
+- **Consider progressive capability revelation.** Andru & Saksena's "progressive user control" principle applies to capability discovery: surfaces that reveal AI affordances progressively (starting simple, growing richer as user confidence grows) outperform both overwhelming full-feature disclosure and impoverished minimal interfaces.
+
+### When This Model Applies
+
+**Most relevant:**
+- User-facing agentic products where non-expert users interact with AI systems
+- Internal tooling where adoption is below expectations despite model capability
+- Situations where "the AI isn't good enough" feedback may actually be "the interface doesn't surface what the AI can do"
+
+**Less relevant:**
+- Developer-to-developer tooling where users have high model familiarity
+- CLI-first tools where affordance discovery is expected to require documentation
+- Pure orchestration systems where no human interacts with the interface at runtime
+
+---
+
 ## The Models in Combination
 
 These five models form an interlocking system. Each addresses a different aspect of multi-agent work at scale:
 
 ```
-┌────────────────────────────────────────────────────────┐
-│                                                        │
-│  DESIGN AS BOTTLENECK                                  │
-│  (what to invest in)                                   │
-│         │                                              │
-│         ▼                                              │
-│  ┌──────────────┐     ┌────────────────────────┐       │
-│  │ AGENTS AS    │     │ PERSISTENT IDENTITY,   │       │
-│  │ PISTONS      │     │ EPHEMERAL EXECUTION    │       │
-│  │              │     │                        │       │
-│  │ (how agents  │     │ (how agents persist    │       │
-│  │  execute)    │     │  across sessions)      │       │
-│  └──────┬───────┘     └───────────┬────────────┘       │
-│         │                         │                    │
-│         └──────────┬──────────────┘                    │
-│                    │                                   │
-│                    ▼                                   │
-│         ┌──────────────────┐                           │
-│         │ WORK AS LEDGER   │                           │
-│         │                  │                           │
-│         │ (how work is     │                           │
-│         │  tracked)        │                           │
-│         └────────┬─────────┘                           │
-│                  │                                     │
-│                  ▼                                     │
-│         ┌──────────────────┐                           │
-│         │ FACTORY FLOOR    │                           │
-│         │ vs. WORKSHOP     │                           │
-│         │                  │                           │
-│         │ (what scale      │                           │
-│         │  demands)        │                           │
-│         └──────────────────┘                           │
-│                                                        │
-└────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                                                                     │
+│  INTERFACE AS BOTTLENECK                                            │
+│  (what users can access)                                            │
+│         │                                                           │
+│         ▼                                                           │
+│  ┌──────────────────────────────────────────────────────────┐      │
+│  │                                                          │      │
+│  │  DESIGN AS BOTTLENECK                                    │      │
+│  │  (what to invest in)                                     │      │
+│  │         │                                                │      │
+│  │         ▼                                                │      │
+│  │  ┌──────────────┐     ┌────────────────────────┐        │      │
+│  │  │ AGENTS AS    │     │ PERSISTENT IDENTITY,   │        │      │
+│  │  │ PISTONS      │     │ EPHEMERAL EXECUTION    │        │      │
+│  │  │              │     │                        │        │      │
+│  │  │ (how agents  │     │ (how agents persist    │        │      │
+│  │  │  execute)    │     │  across sessions)      │        │      │
+│  │  └──────┬───────┘     └───────────┬────────────┘        │      │
+│  │         │                         │                     │      │
+│  │         └──────────┬──────────────┘                     │      │
+│  │                    │                                    │      │
+│  │                    ▼                                    │      │
+│  │         ┌──────────────────┐                            │      │
+│  │         │ WORK AS LEDGER   │                            │      │
+│  │         │                  │                            │      │
+│  │         │ (how work is     │                            │      │
+│  │         │  tracked)        │                            │      │
+│  │         └────────┬─────────┘                            │      │
+│  │                  │                                      │      │
+│  │                  ▼                                      │      │
+│  │         ┌──────────────────┐                            │      │
+│  │         │ FACTORY FLOOR    │                            │      │
+│  │         │ vs. WORKSHOP     │                            │      │
+│  │         │                  │                            │      │
+│  │         │ (what scale      │                            │      │
+│  │         │  demands)        │                            │      │
+│  │         └──────────────────┘                            │      │
+│  │                                                          │      │
+│  └──────────────────────────────────────────────────────────┘      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 **Design as Bottleneck** identifies where to invest: upstream, in decomposition and specification.
@@ -599,6 +708,8 @@ These five models form an interlocking system. Each addresses a different aspect
 **Factory Floor vs. Workshop** determines what infrastructure these models require at each scale level.
 
 Each model is useful independently. Together, they describe a coherent philosophy for building multi-agent systems that scale.
+
+**Interface as Bottleneck** identifies the user-facing constraint: before agents receive any task, the interface determines what tasks users think to delegate. Capability overhang — the gap between what AI can do and what users request — is closed by interface design, not model capability.
 
 ---
 
@@ -636,6 +747,14 @@ Each model is useful independently. Together, they describe a coherent philosoph
 
 **The fix:** Factory floor infrastructure. Supervisors, health monitoring, merge queues, automated routing. The human designs and reviews; infrastructure manages execution.
 
+### Vibe Designed
+
+**The mistake:** Shipping a system whose architecture was never deliberately considered — metaphors chosen implicitly, primitives inherited rather than selected, interaction model emerging by accident rather than design.
+
+**Why it fails:** A vibe-designed system may function and even scale; its design decisions will be paid for downstream when the implicit metaphors collide with requirements they were not built to handle. The failure is upstream of specification: no specification effort can compensate for primitives that were never examined. Maggie Appleton (January 2026) uses this framing to critique Gas Town directly — Yegge "absolutely did not design the shape of this system ahead of time, thoughtfully considering which metaphors and primitives would make this effective."
+
+**The fix:** Treat metaphor and primitive selection as explicit design decisions before any implementation begins. Name the interaction model. State which abstractions are load-bearing. The upstream cost of deliberation is low; the downstream cost of renegotiating embedded metaphors is high.
+
 ---
 
 ## Open Questions
@@ -654,6 +773,8 @@ Each model is useful independently. Together, they describe a coherent philosoph
 
 - **How does the ledger interact with privacy constraints?** In regulated environments, permanent attribution records may conflict with data retention policies. How does the ledger model adapt to privacy requirements?
 
+- **What happens when AI generates interfaces on-demand?** Mollick argues the near-term trajectory involves AI generating the right interface for the moment — agent on desktop, chart in conversation, custom app — rather than users adapting to fixed interfaces. If this is directionally correct, the bottleneck shifts from "what interface exists" to "how well AI generates the appropriate interface for a given task and user." Does AI-generated interface quality become the next constraint in the stack?
+
 ---
 
 ## Connections
@@ -670,11 +791,15 @@ Each model is useful independently. Together, they describe a coherent philosoph
 
 - **[Expert Swarm Pattern](../6-patterns/8-expert-swarm-pattern.md):** Expert swarms operate at factory-floor scale. The swarm pattern implements the piston model (agents as execution units) and the ledger model (work attribution across swarm members).
 
-- **[Workflow Coordination](../7-practices/5-workflow-coordination.md):** Operational implementation of the infrastructure that factory-floor scale demands—merge strategies, health monitoring, and conflict resolution.
+- **[Workflow Coordination](../7-practices/5-workflow-coordination.md):** Operational implementation of the infrastructure that factory-floor scale demands—merge strategies, health monitoring, and conflict resolution. See [The Human Role in Agent-Managed Workflows](../7-practices/5-workflow-coordination.md#the-human-role-in-agent-managed-workflows) for the three-part human role taxonomy that follows from the design-as-bottleneck constraint.
 
 - **[Context Fundamentals](../4-context/1-context-fundamentals.md):** Ephemeral execution is a context management strategy. Disposing sessions and loading identity via CV keeps context windows fresh and relevant.
 
 - **[Operating Agent Swarms](../7-practices/7-operating-agent-swarms.md)**: Operational practices for when the factory floor is running—cost management, incident response, and scale transitions that emerge once design bottlenecks are addressed.
+
+- **[Claude Code](../9-practitioner-toolkit/1-claude-code.md):** Claude Cowork/Dispatch (documented there) is the production instantiation of the interface bottleneck model — Anthropic's own product acknowledges the paradigm gap between chat and asynchronous delegation. See the Cowork entry in the Tips & Tricks section.
+
+- **[Human-in-the-Loop](../6-patterns/6-human-in-the-loop.md):** Human-in-the-Loop patterns address *developer*-designed approval gates; the interface bottleneck model addresses *user-facing* affordance design. These are complementary concerns at different system layers.
 
 ---
 
@@ -684,3 +809,10 @@ Each model is useful independently. Together, they describe a coherent philosoph
 - Gas Town multi-agent orchestration platform — production evidence for piston model, persistent identity, ledger system, and factory-floor infrastructure
 - Steve Yegge, "Eight Levels of AI-Assisted Development" — framework for classifying human-AI development modes
 - Rico Mariani, .NET Framework design — original "Pit of Success" concept, applied here to agent execution contracts
+- Maggie Appleton, "Gas Town's Agent Patterns, Design Bottlenecks, and Vibecoding at Scale" (January 2026) — six-factor code-proximity framework; "vibe designed" framing applied to Gas Town. https://maggieappleton.com/gastown/
+- Mollick, E. "The Shape of the Thing." One Useful Thing, ~2026-03-12. https://www.oneusefulthing.org/p/the-shape-of-the-thing — independent organizational-research path to the design-as-bottleneck conclusion; RSI as destabilizing factor
+- Mollick, E. "Centaurs and Cyborgs on the Jagged Frontier." One Useful Thing, 2023-09-16. https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged — centaur/cyborg taxonomy; BCG 758-consultant study (cited secondarily via Mollick)
+- Ethan Mollick, "Claude Dispatch and the Power of Interfaces" (One Useful Thing, ~2026-03-31) — practitioner evidence for capability-overhang framing and interface paradigm analysis: https://www.oneusefulthing.org/p/claude-dispatch-and-the-power-of
+- Caetano et al., "Agentic Workflows for Conversational Human-AI Interaction Design" (arxiv:2501.18002, January 2025) — research grounding for affordance gap in conversational AI interfaces: https://arxiv.org/abs/2501.18002
+- Andru & Saksena, "Interface Framework for Human-AI Collaboration" (arxiv:2602.22343, February 2026) — three-factor framework and progressive user control principle: https://arxiv.org/abs/2602.22343
+- Claude Cowork product page (accessed 2026-04-11) — Anthropic's own positioning on chat vs. delegation paradigm distinction: https://claude.com/product/cowork

@@ -2,8 +2,8 @@
 title: Workflow Coordination for Agents
 description: Using structured metadata and persistent stores as coordination layers between agents
 created: 2025-12-08
-last_updated: 2026-03-20
-tags: [practices, coordination, workflow, handoff, metadata, spec-files]
+last_updated: 2026-04-11
+tags: [practices, coordination, workflow, handoff, metadata, spec-files, human-role, agent-management, institutional-design, quality-gate]
 part: 2
 part_title: Craft
 chapter: 7
@@ -509,6 +509,63 @@ The two are complementary, not competing. A workspace manager could orchestrate 
 
 ---
 
+## The Human Role in Agent-Managed Workflows
+
+*[2026-04-11]*: As agents take over execution of hours-long workflows, the human role migrates upstream. Ethan Mollick's practitioner-research synthesis identifies three distinct responsibilities that remain human in agent-managed work — and notably, execution is not among them (Mollick, "The Shape of the Thing," 2026).
+
+**Strategy and direction:** Practitioners write roadmaps, scope work, and set success criteria before agents begin. This is the specification layer — the work that happens above the workflow harness. In GSD terms, the Discuss phase is where this work lives; in GitHub-based coordination, it is the original issue description and its acceptance criteria. The quality of this work determines the quality of everything downstream. This is the inverse of the old model where strategy was the fast part and execution was the bottleneck — when implementation is automated, specification becomes the scarce resource (see [Design as Bottleneck](../8-mental-models/6-design-as-bottleneck.md)).
+
+**Quality gate:** Practitioners review finished work, not intermediate steps. This is structurally different from in-loop collaboration. The StrongDM case makes this concrete: "Code must not be reviewed by humans" applies to pull-request review of individual commits; the human quality gate operates at the finished-product level — does this work satisfy the roadmap? The GSD lifecycle's Verify phase is a quality gate in this sense. Reviewing finished work at the product level requires different judgment than reviewing code at the line level. The acceptance criteria in the strategy layer feed directly into the quality-gate layer.
+
+**Institutional design:** Practitioners decide how to organize work around autonomous agents — which roles agents fill, which quality gates are human-operated, how exceptions escalate, and what norms govern the whole system. Mollick argues that organizations experimenting with agent-based work structures now are defining the default norms that later adopters will inherit. This is not a technical problem; it is an organizational one. The design of the harness (which this chapter covers) is a subset of institutional design. The larger question is how the organization positions itself relative to autonomous execution. StrongDM's explicit rules ("Code must not be reviewed by humans") are an example of institutional design operationalized at team scale — see [Software Factories](../8-mental-models/7-software-factories.md) for the full case.
+
+### Where These Roles Sit Relative to the Coordination Layer
+
+```
+┌─────────────────────────────────────────────────┐
+│  INSTITUTIONAL DESIGN                            │
+│  (What is the organization's agent strategy?)   │
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │  STRATEGY AND DIRECTION                   │  │
+│  │  (Roadmap, scope, acceptance criteria)    │  │
+│  │                                           │  │
+│  │  ┌─────────────────────────────────────┐  │  │
+│  │  │  WORKFLOW HARNESS                   │  │  │
+│  │  │  (Agent-to-agent coordination,      │  │  │
+│  │  │   state management, Git layer)       │  │  │
+│  │  │                                     │  │  │
+│  │  │  ┌─────────────────────────────┐    │  │  │
+│  │  │  │  EXECUTION                  │    │  │  │
+│  │  │  │  (Agents)                   │    │  │  │
+│  │  │  └─────────────────────────────┘    │  │  │
+│  │  └─────────────────────────────────────┘  │  │
+│  │                                           │  │
+│  │  QUALITY GATE                             │  │
+│  │  (Finished-product review)                │  │
+│  └───────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────┘
+```
+
+### The Phase-Transition Framing
+
+This taxonomy describes a structural shift, not a gradual evolution. Mollick frames it as a phase transition from co-intelligence (human and AI in iterative back-and-forth) to agent management (human above the harness, agent executing autonomously below it). Prior collaborative models — centaur (strategic division of labor between human and AI) and cyborg (deep blending, no clear handoff) — both keep the human in-loop during execution (Mollick, "Centaurs and Cyborgs on the Jagged Frontier," 2023). The agent management phase removes the human from execution entirely and reassigns them to the three upstream roles above.
+
+This is relevant to practitioners who have internalized the centaur/cyborg collaboration model: those skills (real-time iteration, jagged-frontier allocation) remain useful for tasks within a single session but do not describe the human's role in a multi-agent workflow harness operating over hours or days.
+
+### Implications for Practitioners
+
+- **Specification quality is the upstream-facing skill the harness demands.** The most valuable skill to develop is not prompting (in-loop collaboration) but writing roadmaps and acceptance criteria that agents can execute without clarification.
+- **Quality-gate design requires defining "finished product" before agents begin.** Vague quality gates produce ambiguous review decisions; explicit acceptance criteria in the strategy layer feed directly into the quality-gate layer.
+- **Institutional design is the practitioner's highest-leverage contribution.** Technical decisions about harness architecture (GitHub vs. database-backed, spec-file format, commit strategy) are downstream of organizational decisions about which work agents own and which quality gates remain human.
+- **The three roles are layered, not sequential.** Institutional design is ongoing; strategy and direction cycle per project; quality gates operate continuously as agents complete work.
+
+**Sources:**
+- Mollick, E. "The Shape of the Thing." One Useful Thing, ~2026-03-12. https://www.oneusefulthing.org/p/the-shape-of-the-thing
+- Mollick, E. "Centaurs and Cyborgs on the Jagged Frontier." One Useful Thing, 2023-09-16. https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged
+
+---
+
 ## Questions to Explore
 
 - How do agents handle GitHub API rate limiting during parallel operations?
@@ -525,6 +582,7 @@ The two are complementary, not competing. A workspace manager could orchestrate 
 - **[Context Management](../4-context/_index.md)**: Issues/PRs as persistent context stores
 - **[Production Concerns](4-production-concerns.md)**: GitHub workflows as part of deployment pipeline
 - **[Multi-Agent Workspace Managers](../9-practitioner-toolkit/5-multi-agent-workspace-managers.md)**: GSD workflow harnesses complement workspace managers — harnesses structure workflow within a project, workspace managers coordinate infrastructure across agents
+- **[Design as Bottleneck](../8-mental-models/6-design-as-bottleneck.md)**: The upstream shift in the constraint that drives the human-role taxonomy in agent-managed workflows — when implementation is automated, specification becomes the scarce resource.
 
 ---
 
@@ -539,3 +597,9 @@ These patterns were extracted from real project configurations:
 - **[pull_request.md](../../appendices/examples/kotadb/.claude/commands/git/pull_request.md)**: PR validation evidence sections
 - **[commit.md](../../appendices/examples/kotadb/.claude/commands/git/commit.md)**: Conventional commits with meta-commentary detection
 - **[prioritize.md](../../appendices/examples/kotadb/.claude/commands/issues/prioritize.md)**: Dependency-aware prioritization
+
+### Mollick Practitioner Research
+
+- Mollick, E. "The Shape of the Thing." One Useful Thing, ~2026-03-12. https://www.oneusefulthing.org/p/the-shape-of-the-thing
+- Mollick, E. "Centaurs and Cyborgs on the Jagged Frontier." One Useful Thing, 2023-09-16. https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged
+  - Note: BCG 758-consultant study and Dell'Acqua recruiter accuracy research are cited by Mollick in these articles; cite Mollick as secondary source, not primary.

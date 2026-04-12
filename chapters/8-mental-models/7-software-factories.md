@@ -2,7 +2,7 @@
 title: "Software Factories"
 description: "The resurgence of industrial-scale software production — from Japanese factories to dark factories, and what the metaphor reveals about agentic systems"
 created: 2026-04-09
-last_updated: 2026-04-09
+last_updated: 2026-04-11
 tags: [mental-models, software-factories, dark-factory, multi-agent, scale, production, spec-driven-development]
 part: 3
 part_title: Perspectives
@@ -270,7 +270,7 @@ Extending the infrastructure table from §6 (Model 5) to factory-scale operation
 
 **Premature factory infrastructure.** Building supervisor agents, merge queues, specification validation pipelines, and Digital Twin environments for a five-agent team. The overhead exceeds the value. Direct management remains superior at workshop scale. The factory model adds complexity that benefits appear only at scale.
 
-**Vibe coding at industrial volume.** Deploying factory-scale agent counts without factory-scale validation infrastructure. The absence of holdout sets, behavioral validation, and quality measurement produces output quantity without assured quality. Code duplication, architectural drift, and silent failures scale with agent count when validation does not.
+**Vibe coding at industrial volume.** Deploying factory-scale agent counts without factory-scale validation infrastructure. The term "vibe coding" was coined by Andrej Karpathy in February 2025 to describe "fully giving in to the vibes...and forgetting that the code even exists" — a legitimate stance for exploratory, throwaway-project work where stakes are low and rapid iteration is the goal. At industrial volume, without holdout sets, behavioral validation, and quality measurement, the stance produces output quantity without assured quality. Code duplication, architectural drift, and silent failures scale with agent count when validation does not. The failure mode is not the practice itself but its misapplication to a scale context it was not designed for. (See: [Agentic Engineering vs. Vibe Coding](../../.journal/2026-02-24-agentic-engineering-vs-vibe-coding.md) for the spectrum framing and scale boundary.)
 
 **Level 5 as the target.** Treating the dark factory as an aspirational endpoint rather than an extreme case. For most teams and most brownfield contexts, Levels 3-4 represent the productive sweet spot: sufficient agent autonomy to capture substantial velocity gains, with human oversight sufficient to catch the quality issues that current models consistently produce.
 
@@ -344,3 +344,4 @@ The factory metaphor is most useful as a way of understanding what changes as sc
 - METR study (2025) — 246-task randomized controlled trial; 19% slower with AI, 24% faster predicted; 43-point perception gap
 - Veracode (2025) — 45% of AI code contains OWASP Top 10 vulnerabilities; 10.5% both correct and secure
 - FANUC Corporation — lights-out manufacturing facility, Oshino, Japan (2001–present); 30-day unmanned production runs
+- Andrej Karpathy, "vibe coding" coinage (February 2, 2025) — original definition: "fully giving in to the vibes...and forgetting that the code even exists"; original framing: exploratory/throwaway contexts. https://x.com/karpathy/status/1886192184808149383

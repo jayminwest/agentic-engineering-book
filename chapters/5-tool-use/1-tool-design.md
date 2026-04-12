@@ -2,8 +2,8 @@
 title: Tool Design
 description: Principles for creating well-designed tools that agents can use effectively
 created: 2025-12-10
-last_updated: 2026-01-30
-tags: [tool-design, naming, parameters, descriptions, function-calling]
+last_updated: 2026-04-11
+tags: [tool-design, naming, parameters, descriptions, function-calling, coding-agent, edit-formats, diff, search-replace, tool-inventory, poka-yoke]
 part: 1
 part_title: Foundations
 chapter: 5
@@ -218,6 +218,70 @@ Which do you prefer?
 
 ---
 
+## Coding Agent Edit Formats
+
+*[2026-04-11]*: Edit format selection is a first-order tool design decision for coding agents — one with direct consequences for model error rates, output size, and edit application reliability. The choice is model-capability-driven, not aesthetic.
+
+### Three Primary Format Archetypes
+
+| Format | Mechanism | Cognitive Load on Model | Production Evidence |
+|--------|-----------|------------------------|---------------------|
+| **Whole-file rewrite** | Model returns complete updated file | Low — no line number tracking required | Reliable; expensive for large files |
+| **Unified diff (udiff)** | Standard diff format with `+`/`-` line prefixes | High — requires tracking original line numbers before writing new code | Used for legacy models with "lazy coding" tendency |
+| **Search-replace blocks** | Model specifies exact text to find and exact replacement text | Medium — no line numbers; exact string matching | Most models in production; Aider's primary format |
+
+The cognitive load distinction is significant. Unified diff requires the model to know the line count of original content *before* writing new code — a constraint that causes errors on complex edits. Search-replace blocks avoid this by using content identity rather than position. Whole-file rewrites sidestep both constraints at the cost of output token volume.
+
+### Model-Capability-Driven Format Selection
+
+Aider's production documentation provides the most concrete evidence available for model-specific format selection:
+
+| Model Family | Recommended Format | Reason |
+|-------------|-------------------|--------|
+| Most modern models (Claude, GPT-4o, Gemini 1.5+) | Search-replace (`diff`) | Reliable exact-match application; balanced output size |
+| Gemini models (older) | `diff-fenced` (path inside fence) | Standard fencing syntax failed consistently |
+| GPT-4 Turbo | `udiff` | Mitigated "lazy coding" — replacing implementation with placeholder comments |
+| Architect mode tasks | `editor-diff` / `editor-whole` | Streamlined for multi-file operations in a separate editor model |
+
+**The practical implication:** format choice is not a configuration detail — it is a tool design decision that affects model reliability at the task level. When a model produces incorrect edits, audit the edit format before adjusting the prompt.
+
+### Poka-Yoke Constraints for Coding Tools
+
+Anthropic's SWE-bench implementation provides a concrete example of constraint-based tool design: converting relative to absolute filepaths as a required tool input. The result was measurable reduction in model path errors — the tool became harder to use incorrectly.
+
+**The principle:** coding agent tools benefit from constraints that prevent common model errors:
+- Require absolute paths (eliminates relative-path resolution errors)
+- Require exact string matching in search-replace (prevents approximate matches that corrupt context)
+- Validate that referenced line numbers exist before executing edits (prevents off-by-one failures)
+
+These are not validation afterthoughts — they are design decisions that change model behavior by making the wrong action structurally difficult.
+
+**Sources:** [Aider Edit Formats](https://aider.chat/docs/more/edit-formats.html), [Building Effective Agents — Anthropic](https://www.anthropic.com/research/building-effective-agents), [Components of a Coding Agent — Raschka](https://magazine.sebastianraschka.com/p/components-of-a-coding-agent) (2026-04-04)
+
+---
+
+## Coding Agent Tool Inventory
+
+*[2026-04-11]*: Coding agents use a recurring, minimal tool set. Raschka identifies the baseline as five named tools; Anthropic's SWE-bench work extends this with patch-application tools. Understanding the canonical inventory prevents over-engineering the tool layer.
+
+### Standard Inventory
+
+| Tool | Role | Notes |
+|------|------|-------|
+| `read_file` | Retrieve file content for context | Prefer whole-file for small files; line-range for large |
+| `write_file` / `apply_edit` | Persist changes to disk | Format depends on edit format choice (see above) |
+| `search` / `grep` | Find symbols, patterns, references across the repo | Critical for navigation without full-file reads |
+| `bash` / `shell` | Run commands, tests, linters, build tools | Primary execution feedback mechanism |
+| `list_files` / `ls` | Directory traversal and discovery | Supports repo orientation without reading every file |
+
+Claude Code adds a sixth functional layer via hooks — pre/post action enforcement that operates outside the agent's direct tool calls. This is best understood as a meta-tool: it applies constraints and side effects that the agent cannot disable.
+
+**Minimum viable set for most coding tasks:** `read_file`, `write_file`, `bash`, `search`. The other tools improve efficiency but are not required for correctness on small codebases.
+
+**Sources:** [Components of a Coding Agent — Raschka](https://magazine.sebastianraschka.com/p/components-of-a-coding-agent) (2026-04-04), [Building Effective Agents — Anthropic](https://www.anthropic.com/research/building-effective-agents)
+
+---
+
 ## Leading Questions
 
 - How do you write tool descriptions that work for both humans and LLMs?
@@ -234,3 +298,4 @@ Which do you prefer?
 - **To [Prompt](../2-prompt/_index.md):** Tool descriptions are prompts themselves—see [Model-Invoked vs. User-Invoked Prompts](../2-prompt/_index.md#model-invoked-vs-user-invoked-prompts)
 - **To [Scaling Tools](4-scaling-tools.md):** Good design becomes critical when managing dozens of tools
 - **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** AskUserQuestion maximal pattern demonstrates rich clarification as coordination tool. Orchestrators use structured questioning before delegation to absorb complexity and radiate simplicity.
+- **To [ReAct Pattern](../6-patterns/5-react-pattern.md):** Edit format choice directly affects observation quality in coding agent loops. Search-replace formats produce cleaner, verifiable observations than whole-file rewrites.

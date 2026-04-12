@@ -2,8 +2,8 @@
 title: Model Evaluation for Agents
 description: How to evaluate models for agentic tasks—metrics, benchmarks, observability, and the compound error problem
 created: 2025-12-10
-last_updated: 2026-03-18
-tags: [model, evaluation, benchmarks, observability, metrics, agentic]
+last_updated: 2026-04-11
+tags: [model, evaluation, benchmarks, observability, metrics, agentic, reliability-gap, reliability-dimensions, benchmark-validity, autoresearch, training-loop]
 part: 1
 part_title: Foundations
 chapter: 3
@@ -78,6 +78,35 @@ The compound error problem drives several core architectural patterns:
 **Implement recovery mechanisms.** Retries, validation gates, and error correction reduce effective step count. A workflow with retry logic that catches and fixes 80% of errors behaves like a much shorter workflow.
 
 **Measure and monitor per-step accuracy.** Production monitoring should track success rates at the step level, not just task level. A declining per-step accuracy of 99% → 98% predicts task completion dropping from 90% → 82% over 10 steps—a meaningful regression that overall metrics might miss initially.
+
+---
+
+## The Capability-Reliability Gap
+
+*[2026-04-11]*: The compound error problem is a theoretical concern. The capability-reliability gap is its empirical confirmation.
+
+Rabanser et al. define **capability** as mean task success rate — the standard benchmark metric — and **reliability** as a multi-dimensional property covering consistency, robustness, predictability, and safety that is independent of raw capability. The gap is the empirically measured divergence in how these improve over time. [Rabanser et al., arXiv:2602.16666, 2026]
+
+"A highly capable system can be unreliable, and a less capable system can be highly reliable within its operating envelope. This separation is essential: improving capability does not automatically improve reliability." [Rabanser et al., 2026]
+
+### Empirical Evidence
+
+Across 14 frontier models (OpenAI, Anthropic, Google) evaluated over 18 months of releases on two benchmarks:
+
+- On **GAIA** (general assistant tasks): accuracy improved steadily; reliability showed "barely any improvement, even among the latest models"
+- On **τ-bench** (customer service simulation): reliability improved at **one-seventh** the rate of accuracy
+
+The divergence is not uniform across reliability dimensions. Calibration (whether confidence aligns with actual performance) improved in recent models. Consistency (whether agents produce the same outcome on repeated identical runs) remained low across all models. Discrimination (whether confidence successfully separates successes from failures) "mostly worsened" on GAIA despite τ-bench improvements.
+
+This means selecting a newer, higher-accuracy model does not reliably produce a more consistent or robust agent. Capability and reliability require independent measurement and independent improvement strategies.
+
+### Why This Matters for Architecture
+
+The compound error math (above) establishes why per-step reliability matters theoretically. The capability-reliability gap establishes that reliability does not improve as a byproduct of chasing benchmark scores.
+
+Architectural implication: reliability dimensions must become explicit optimization targets, not expected byproducts of capability gains. The question "What reliability threshold is needed for production deployment?" (Core Questions, above) cannot be answered by benchmark accuracy scores alone — it requires measurement against the four reliability dimensions: consistency, robustness, predictability, and safety. These are operationalized in [Evaluation](../../7-practices/2-evaluation.md#reliability-dimensions-beyond-task-completion) and applied as deployment gate criteria in [Production Concerns](../../7-practices/4-production-concerns.md#reliability-thresholds-for-production-deployment).
+
+**Source:** [Towards a Science of AI Agent Reliability](https://arxiv.org/abs/2602.16666) (Rabanser, Kapoor, Narayanan et al., Princeton, 2026); [AI agents are getting more capable, but reliability is lagging](https://fortune.com/2026/03/24/ai-agents-are-getting-more-capable-but-reliability-is-lagging-narayanan-kapoor/) (Fortune, 2026)
 
 ---
 
@@ -319,6 +348,40 @@ LLM judges are not objective. They must be calibrated against ground truth befor
 
 **Re-calibrate when changing judge models.** Different models have different biases. Calibration for GPT-4 doesn't transfer to Claude or vice versa.
 
+### Domain-Specific Judge Construction
+
+Generic judge calibration—calibrate on 50–100 examples, measure agreement, deploy—misses the upstream work that determines whether the judge measures the right thing. Husain's structured process for building domain-specific judges starts with rubric design before any calibration begins [Husain, 2024b].
+
+**Three rubric structuring dimensions** ensure evaluation coverage across realistic usage:
+
+| Dimension | What It Covers | Examples |
+|-----------|---------------|---------|
+| **Features** | Specific functionalities the product provides | Order tracking, email summarization, code review, appointment scheduling |
+| **Scenarios** | Problem contexts the agent encounters | Multiple matches, no match, ambiguous request, invalid data, system error, incomplete information, unsupported feature |
+| **Personas** | User profiles with different needs | New users (high explanation need), expert users (low tolerance for verbosity), non-native speakers, busy professionals (prefer brevity) |
+
+A rubric that covers all three dimensions produces evaluation cases that represent the product's actual usage distribution, not a developer's intuition about what matters.
+
+**The principal domain expert principle.** For most teams, a single domain expert whose judgment defines acceptable performance produces more reliable calibration than a committee. Husain terms this the "benevolent dictator" approach: one person's standards govern, with clear accountability. The single-expert approach eliminates annotation conflicts and establishes a quality bar that the automated judge can be trained to replicate. This recommendation pairs with the annotation workflow guidance in [Evaluation](../../7-practices/2-evaluation.md#annotation-workflow-design).
+
+**Seven-step calibration process:**
+
+1. Identify a single principal domain expert—the person whose judgment defines product quality.
+2. Create a diverse dataset covering the dimension combinations above (30+ examples minimum; aim for coverage across feature × scenario × persona combinations).
+3. Domain expert makes binary pass/fail judgments on each example, with detailed written critiques explaining each decision.
+4. Fix obvious product errors discovered during review—the calibration process often surfaces bugs before the judge is built.
+5. Build the judge iteratively, using expert-labeled examples as few-shot demonstrations.
+6. Measure human–judge agreement; refine until acceptable. Husain's documented example: >90% agreement achieved in three iterations.
+7. Perform error analysis on remaining disagreements. If specific failure categories (e.g., all "ambiguous request" scenarios) show persistent low agreement, create specialized judges for those categories rather than forcing a single judge to handle all cases.
+
+**Binary-over-Likert preference.** Binary pass/fail produces more consistent labeling than rating scales and requires fewer labeled examples to detect meaningful model differences. Husain states this directly: "Tracking a bunch of scores on a 1-5 scale is often a sign of a bad eval process" [Husain, 2024b]. Pairwise comparison (which response is better?) outperforms direct absolute scoring on both consistency and correlation with human preference—a finding corroborated by Eugene Yan's analysis of LLM evaluator effectiveness: pairwise comparison produces more stable results than direct scoring, and finetuned evaluators show catastrophic performance drops on cross-domain transfer, reinforcing the domain-specificity requirement [Yan, 2024].
+
+**The process-value insight.** The iterative judge-building process produces value beyond the judge itself. Husain observes that "the judge is a hack to trick people into looking at their data"—the real benefit is the systematic examination of failures that the construction process forces. Teams that build judges by going through the calibration workflow develop product intuition that teams using off-the-shelf evaluators do not.
+
+**Sources:**
+- Husain, H. "Using LLM-as-a-Judge For Evaluation: A Complete Guide." hamel.dev/blog/posts/llm-judge/ (2024-10-29)
+- Yan, E. "Evaluating the Effectiveness of LLM-Evaluators (aka LLM-as-Judge)." eugeneyan.com/writing/llm-evaluators/ (2024-08-18)
+
 ### Known Biases in LLM Judges
 
 **Writing style preferences.** LLM judges favor responses that match their own generation style—verbose for verbose models, concise for concise models.
@@ -345,6 +408,48 @@ LLM judges scale evaluation but cannot replace human judgment entirely.
 - Regression testing (did this change hurt performance?)
 - Initial filtering before human review
 
+### Evaluation Inside Training Loops
+
+*[2026-04-11]*: Autoresearch introduces a structurally distinct application of evaluation that does not appear elsewhere in this file. Existing coverage evaluates deployed agent outputs — task completion, tool accuracy, error recovery, LLM-as-judge quality ratings. The autoresearch pattern applies evaluation in a different role: as the fitness function inside an iterative model training loop.
+
+**The structural distinction**
+
+In standard agent evaluation, an eval suite measures output quality after deployment to guide prompt or architecture improvements. Evaluation is a gate on changes. In autoresearch, validation bits-per-byte (val_bpb) on a held-out set is measured after every five-minute training experiment to make a binary keep/discard decision. Evaluation is not a gate; it is the decision function inside a loop running approximately 100 iterations overnight. The loop modifies architecture, optimizer selection, attention configuration, and regularization — and keeps or discards each change based solely on whether val_bpb improves.
+
+**The formal basis**
+
+GEPA (gradient-free evolutionary program adaptation, arxiv 2501.09361, ICLR 2026) formalizes this pattern: the validation metric is the fitness function for evolutionary search over training programs. The eval infrastructure does not change; its role does. The same held-out set and scalar metric that measure a deployed model's quality can drive an autonomous model improvement loop.
+
+**Why this matters for practitioners**
+
+The prerequisite for autoresearch is a scalar quality metric computable in minutes. Practitioners who have already instrumented production eval pipelines — held-out sets, task completion metrics, domain-specific accuracy signals — are closer to autoresearch-capable than they may realize. The infrastructure investment they have made in evaluation supports both post-deployment monitoring and, if the task is narrow and compute is available, autonomous model improvement.
+
+The compound error analysis elsewhere in this file establishes that small per-step accuracy improvements yield dramatic compounding reliability gains. Autoresearch applies this logic one level down: improving per-step training efficiency (via architecture and optimizer search) compounds within a fixed compute budget. The eval-in-the-loop pattern closes a feedback loop that compound error theory implies but does not close.
+
+**Constraints for safe autonomous evaluation loops**
+
+Four constraints identified independently by the HN community (2026-03-08) and embedded in Karpathy's implementation define the minimum viable guardrails for unattended evaluation-driven loops:
+
+| Constraint | Why it matters |
+|------------|----------------|
+| One-file scope | Limits blast radius of any single experiment; prevents architectural drift across unrelated components |
+| One scalar metric | Prevents gaming: a single metric forces genuine improvement rather than trade-off exploitation |
+| Time-boxed experiments (~5 minutes) | Caps maximum compute waste per rejected experiment; enables 100 iterations overnight |
+| Git checkpoint per accepted change | Every accepted modification is committed; full rollback available at any point |
+
+These constraints map directly to observability requirements described earlier in this file: one metric to monitor, bounded execution time, and a complete audit trail of accepted changes.
+
+**See Also:**
+- [When to Train Your Own](1-model-selection.md#when-to-train-your-own) — Model selection context for trained-to-task SLMs
+- [Autonomous Loops](../6-patterns/4-autonomous-loops.md) — Autoresearch as a specific application of the autonomous loop pattern
+- [Evaluation (Practices)](../7-practices/2-evaluation.md) — Eval-driven model improvement workflows
+
+**Sources:**
+- Schmid, P. "How Autoresearch will change Small Language Models adoption." philschmid.de, ~2026-03-10. https://www.philschmid.de/autoresearch
+- Karpathy, A. karpathy/autoresearch. GitHub, 2026-03-06. https://github.com/karpathy/autoresearch
+- GEPA (arxiv 2501.09361). ICLR 2026. https://arxiv.org/abs/2501.09361
+- HN: "Autoresearch: Agents researching on single-GPU nanochat training automatically." 2026-03-08. https://news.ycombinator.com/item?id=47291123
+
 ---
 
 ## Evaluation Strategy Progression
@@ -369,6 +474,26 @@ Run these manually. Observe the agent's reasoning, tool calls, and outputs. This
 **Phase 2: Online user feedback.** Deploy to limited users with feedback mechanisms. Track which tasks users report as failures. This reveals real-world failure modes missed in testing.
 
 **Phase 3: Offline automated datasets.** Build regression test suites from production failures. Automate evaluation of known failure modes to prevent regressions.
+
+### Component-Level Evaluation
+
+Pipeline-level evaluations produce ambiguous failures: the agent failed, but which component failed? Component-level evaluation isolates each pipeline stage's behavior before composing it into system-level tests. This maps to Husain's Level 1 evaluation hierarchy [Husain, 2024]: deterministic assertions per component, run on every code change. Level 1 must be solid before scaling to Level 2 (model-based evaluations) because model-based evals on a fragile pipeline produce noise, not signal.
+
+**Why the sequencing gate matters.** A RAG pipeline that returns wrong answers could fail at retrieval (wrong chunks returned), reranking (right chunks returned in wrong order), generation (right chunks, wrong synthesis), or format validation (correct content, wrong structure). A single pipeline-level eval catches that something is wrong. Component-level evals identify *which* component is wrong. That specificity is the difference between a debugging session that takes hours and one that takes minutes—see [Debugging Agents](../../7-practices/1-debugging-agents.md) for how failure attribution accelerates diagnosis.
+
+**Canonical component list for RAG systems** (the most common pipeline architecture in deployed agents):
+
+- **Retrieval relevance:** Are the retrieved chunks relevant to the query? Measure precision@k and recall@k against a labeled set of query–chunk pairs.
+- **Reranking quality:** Does the reranker improve chunk ordering? Compare ranked vs. unranked chunk relevance scores on a held-out set.
+- **Prompt adherence:** Does the generation follow the instructions in the system prompt? Check for constraint violations (format, length, scope restrictions).
+- **Format correctness:** Does the output structure match the specification? Validate schema, required fields, and encoding.
+- **Reasoning quality:** Does the response correctly use the retrieved information? Check for hallucinated claims not grounded in retrieved chunks.
+
+**Generalization beyond RAG.** The component taxonomy extends to other architectures: routing accuracy for intent-classification agents, tool selection accuracy for function-calling agents, extraction precision for document-processing pipelines. The principle is architecture-agnostic—isolate and validate each component before trusting the composition.
+
+**Sources:**
+- Husain, H. "Your AI Product Needs Evals." hamel.dev/blog/posts/evals/ (2024-03-29)
+- Husain, H. "LLM Evals: Everything You Need to Know (FAQ)." hamel.dev/blog/posts/evals-faq/ (2025)
 
 ### Build Regression Tests from Production Failures
 
@@ -429,6 +554,7 @@ Common evaluation mistakes waste time and produce misleading results.
 - **To [Tool Use](../../5-tool-use/_index.md):** Tool calling accuracy is a critical evaluation metric. Tool design quality directly impacts agent performance on benchmarks.
 - **To [Model Selection](1-model-selection.md):** Evaluation metrics determine which models are suitable for which tasks. Benchmark performance predicts (but doesn't guarantee) production capability.
 - **To [Cost and Latency](../../7-practices/3-cost-and-latency.md):** Evaluation must include cost and latency metrics, not just accuracy. Multi-step workflows amplify both cost and latency beyond single-turn estimates.
+- **To [Model Selection — When to Train Your Own](1-model-selection.md#when-to-train-your-own):** Evaluation infrastructure is the prerequisite for autoresearch. Practitioners with production eval pipelines can extend them to drive trained-to-task SLM development.
 
 ---
 
@@ -441,3 +567,6 @@ Common evaluation mistakes waste time and produce misleading results.
 - [τ-Bench: A Benchmark for Tool-Augmented LLMs](https://www.sierra.ai/research/tau-bench) (Sierra): Dynamic user/tool interaction evaluation
 - [SWE-bench Pro](https://www.scale.com/blog/swe-bench-pro) (Scale AI): Data contamination in agent benchmarks, difficulty progression
 - [Measuring Progress Toward AGI: A Cognitive Framework](https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/measuring-progress-toward-agi/measuring-progress-toward-agi-a-cognitive-framework.pdf) (Burnell et al., Google DeepMind, 2026): Cognitive taxonomy, capability profiling, system vs. model evaluation
+- [How Autoresearch will change Small Language Models adoption](https://www.philschmid.de/autoresearch) (Schmid, 2026): Autoresearch mechanism, production evidence, Shopify case study
+- [karpathy/autoresearch](https://github.com/karpathy/autoresearch) (Karpathy, 2026): Implementation of agent-driven training-loop search; 700-experiment results
+- [GEPA: Gradient-Free Evolutionary Program Adaptation](https://arxiv.org/abs/2501.09361) (ICLR 2026): Formal basis for eval-as-fitness-function in autonomous training loops

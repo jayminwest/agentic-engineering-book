@@ -2,8 +2,8 @@
 title: Multi-Model Architectures
 description: When and how to use multiple models in agent systems—orchestrator patterns, cascades, routing strategies, and planning versus execution separation
 created: 2025-12-10
-last_updated: 2026-01-30
-tags: [model, multi-model, orchestrator, cascade, routing, agentic, swarm]
+last_updated: 2026-04-11
+tags: [model, multi-model, orchestrator, cascade, routing, agentic, swarm, advisor-strategy, model-pairing]
 part: 1
 part_title: Foundations
 chapter: 3
@@ -273,6 +273,26 @@ The improvement came from specialization. Planning models focused on decompositi
 The cost savings came from volume. Execution steps outnumber planning steps 5-10×. Using a cheap model for the high-volume phase cut costs while preserving quality through better planning.
 
 **Source:** [Planning-Execution Separation in LLM Workflows](https://arxiv.org/abs/2406.12582)
+
+### The Advisor Strategy: Inverted Orchestration
+
+*[2026-04-11]*: Anthropic's officially named "advisor strategy" is a structural variant on planning-execution separation that inverts the orchestrator-specialist topology described above. In standard orchestrator-specialist architectures, the expensive model orchestrates — it decomposes tasks, routes to specialists, and synthesizes results. In the advisor strategy, the small model drives end-to-end: it calls tools, iterates, and produces output. The expensive model advises only — it receives queries from the executor, returns guidance, and never calls tools or produces user-facing responses.
+
+This inversion changes where expensive model tokens are consumed. The executor handles the high-frequency, low-reasoning steps (tool calls, iteration loops, output formatting). The advisor handles only the low-frequency, high-reasoning steps (architectural decisions, ambiguous judgment calls). Advisor tokens are tracked separately from executor tokens, enabling precise cost attribution at the decision-type level.
+
+**API primitive:** Anthropic ships the advisor role as a first-class platform feature. The `max_uses` parameter caps advisor calls per request, functioning as a hard cost gate rather than a soft prompt instruction.
+
+**Evidence (Anthropic, 2026-04):**
+
+- Sonnet (executor) + Opus (advisor): +2.7 percentage points on SWE-bench Multilingual vs. Sonnet alone, at −11.9% cost per task
+- Haiku (executor) + Opus (advisor) on BrowseComp: 41.2% vs. 19.7% Haiku solo (>2× improvement), 85% cheaper than Sonnet solo at equivalent or higher accuracy
+
+**When this pattern applies:**
+- Tasks require occasional high-stakes decisions embedded in a routine execution loop — the executor handles most steps; the advisor unblocks specific judgment calls
+- Cost observability per decision-type is required — `max_uses` limits enforce spending at the architectural level, not prompt level
+- The executor model is capable enough to drive tool use and iteration but bottlenecks at specific reasoning quality thresholds
+
+**Source:** [The Advisor Strategy](https://claude.com/blog/the-advisor-strategy) — Anthropic official blog, ~2026-04, retrieved 2026-04-11
 
 ---
 
