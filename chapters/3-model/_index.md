@@ -56,4 +56,4 @@ This chapter explores:
 - **To [Prompt](../2-prompt/_index.md):** Instruction-following is shaped more by prompt quality than model selection. Different models respond differently to the same prompt, but SOTA models are generally more forgiving.
 - **To [Context](../4-context/_index.md):** Context length limits shape architecture decisions. Frontier models tend to have larger windows, but the capability-capacity tradeoff still applies.
 - **To [Tool Use](../5-tool-use/_index.md):** Some models are better at tool-use than others. This is a core selection criterion for agentic work.
-- **To [Practitioner Toolkit](../9-practitioner-toolkit/_index.md):** Harness availability varies by provider. Model selection and harness selection are coupled decisions for agentic systems. See [Agent Frameworks](../9-practitioner-toolkit/4-agent-frameworks.md) for harness capability tiers.
+- **To [Practitioner Toolkit](../10-practitioner-toolkit/_index.md):** Harness availability varies by provider. Model selection and harness selection are coupled decisions for agentic systems. See [Agent Frameworks](../10-practitioner-toolkit/4-agent-frameworks.md) for harness capability tiers.

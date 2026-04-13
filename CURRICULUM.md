@@ -231,10 +231,10 @@ After building your project:
 ### Stage 1: Pattern Foundations (2-3 hours)
 
 **Core Reading:**
-- [Chapter 6: Patterns](chapters/6-patterns/_index.md) (30 min)
-- [Research-Plan-Build-Review Pattern](chapters/6-patterns/1-plan-build-review.md) (45 min)
-- [Self-Improving Expert Commands](chapters/6-patterns/2-self-improving-experts.md) (45 min)
-- [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) (45 min)
+- [Chapter 6: Patterns](chapters/7-patterns/_index.md) (30 min)
+- [Research-Plan-Build-Review Pattern](chapters/7-patterns/1-plan-build-review.md) (45 min)
+- [Self-Improving Expert Commands](chapters/7-patterns/2-self-improving-experts.md) (45 min)
+- [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md) (45 min)
 
 **Key Competencies:**
 - Recognize when to apply each pattern
@@ -264,11 +264,11 @@ Compare complexity, reliability, and debuggability vs. single-agent approach.
 ### Stage 2: Production Practices (2-3 hours)
 
 **Core Reading:**
-- [Chapter 7: Practices](chapters/7-practices/_index.md) (30 min)
-- [Debugging Agents](chapters/7-practices/1-debugging-agents.md) (45 min)
-- [Evaluation](chapters/7-practices/2-evaluation.md) (45 min)
-- [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) (30 min)
-- [Production Concerns](chapters/7-practices/4-production-concerns.md) (45 min)
+- [Chapter 7: Practices](chapters/8-practices/_index.md) (30 min)
+- [Debugging Agents](chapters/8-practices/1-debugging-agents.md) (45 min)
+- [Evaluation](chapters/8-practices/2-evaluation.md) (45 min)
+- [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) (30 min)
+- [Production Concerns](chapters/8-practices/4-production-concerns.md) (45 min)
 
 **Key Competencies:**
 - Debug agent failures systematically
@@ -300,10 +300,10 @@ Deploy and observe behavior under realistic workloads.
 ### Stage 3: Mental Models (1-2 hours)
 
 **Core Reading:**
-- [Chapter 8: Mental Models](chapters/8-mental-models/_index.md) (20 min)
-- [Pit of Success](chapters/8-mental-models/1-pit-of-success.md) (30 min)
-- [Prompt Maturity Model](chapters/8-mental-models/2-prompt-maturity-model.md) (30 min)
-- [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md) (30 min)
+- [Chapter 8: Mental Models](chapters/9-mental-models/_index.md) (20 min)
+- [Pit of Success](chapters/9-mental-models/1-pit-of-success.md) (30 min)
+- [Prompt Maturity Model](chapters/9-mental-models/2-prompt-maturity-model.md) (30 min)
+- [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md) (30 min)
 
 **Key Competencies:**
 - Design systems that guide agents toward success
@@ -377,7 +377,7 @@ After building your project:
 **Core Reading:**
 - [Advanced Context Patterns](chapters/4-context/3-context-patterns.md) (45 min)
 - [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md) (45 min)
-- [Workflow Coordination for Agents](chapters/7-practices/5-workflow-coordination.md) (30 min)
+- [Workflow Coordination for Agents](chapters/8-practices/5-workflow-coordination.md) (30 min)
 
 **Key Competencies:**
 - Apply progressive disclosure and context isolation
@@ -406,9 +406,9 @@ Design a context isolation strategy for a system with 5+ specialized agents:
 ### Stage 2: Toolkit Mastery (1-2 hours)
 
 **Core Reading:**
-- [Chapter 9: Practitioner Toolkit](chapters/9-practitioner-toolkit/_index.md) (20 min)
-- [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) (45 min)
-- [Google ADK](chapters/9-practitioner-toolkit/2-google-adk.md) (45 min)
+- [Chapter 9: Practitioner Toolkit](chapters/10-practitioner-toolkit/_index.md) (20 min)
+- [Claude Code](chapters/10-practitioner-toolkit/1-claude-code.md) (45 min)
+- [Google ADK](chapters/10-practitioner-toolkit/2-google-adk.md) (45 min)
 - [Scaling Tool Use](chapters/5-tool-use/4-scaling-tools.md) (30 min)
 - [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md) (30 min)
 
@@ -439,8 +439,8 @@ Implement the same agent functionality on two platforms (e.g., Claude Code + Goo
 ### Stage 3: Meta-Framework Design (2-3 hours)
 
 **Core Reading:**
-- [Context as Code](chapters/8-mental-models/4-context-as-code.md) (30 min)
-- [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) (45 min)
+- [Context as Code](chapters/9-mental-models/4-context-as-code.md) (30 min)
+- [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md) (45 min)
 
 **Key Competencies:**
 - Design frameworks that support multiple agent architectures
@@ -516,55 +516,55 @@ Navigate directly to solutions for specific issues you're facing right now.
 
 | Symptom | Quick Check | Deep Dive | Example |
 |---------|-------------|-----------|---------|
-| Agent ignores instructions | [Prompt Types](chapters/2-prompt/1-prompt-types.md) - Check prompt level/authority | [Debugging Agents](chapters/7-practices/1-debugging-agents.md) | [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) |
+| Agent ignores instructions | [Prompt Types](chapters/2-prompt/1-prompt-types.md) - Check prompt level/authority | [Debugging Agents](chapters/8-practices/1-debugging-agents.md) | [Claude Code](chapters/10-practitioner-toolkit/1-claude-code.md) |
 | Agent uses wrong tools | [Tool Selection](chapters/5-tool-use/2-tool-selection.md) - Review tool descriptions | [Tool Design](chapters/5-tool-use/1-tool-design.md) | [KotaDB](appendices/examples/kotadb/) |
-| Agent repeats same failed action | [Evaluation](chapters/7-practices/2-evaluation.md) - Add failure detection | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | [Context Loading Demo](appendices/examples/context-loading-demo/) |
-| Agent loses track of task progress | [Context Strategies](chapters/4-context/2-context-strategies.md) - Implement explicit state | [Workflow Coordination](chapters/7-practices/5-workflow-coordination.md) | - |
+| Agent repeats same failed action | [Evaluation](chapters/8-practices/2-evaluation.md) - Add failure detection | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | [Context Loading Demo](appendices/examples/context-loading-demo/) |
+| Agent loses track of task progress | [Context Strategies](chapters/4-context/2-context-strategies.md) - Implement explicit state | [Workflow Coordination](chapters/8-practices/5-workflow-coordination.md) | - |
 | Agent gives inconsistent outputs | [Model Selection](chapters/3-model/1-model-selection.md) - Check model vs. task fit | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | - |
 | Agent can't find relevant information | [Context Fundamentals](chapters/4-context/1-context-fundamentals.md) - Improve information structure | [Context Patterns](chapters/4-context/3-context-patterns.md) | - |
-| Multi-agent coordination failures | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) - Review delegation | [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md) | [KotaDB](appendices/examples/kotadb/) |
-| Agent refuses valid requests | [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md) - Check constraints | [Pit of Success](chapters/8-mental-models/1-pit-of-success.md) | - |
+| Multi-agent coordination failures | [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md) - Review delegation | [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md) | [KotaDB](appendices/examples/kotadb/) |
+| Agent refuses valid requests | [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md) - Check constraints | [Pit of Success](chapters/9-mental-models/1-pit-of-success.md) | - |
 
 ### Performance & Cost Issues
 
 | Symptom | Quick Check | Deep Dive | Example |
 |---------|-------------|-----------|---------|
-| High token costs | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) - Audit token usage | [Context Strategies](chapters/4-context/2-context-strategies.md) | [KotaDB](appendices/examples/kotadb/) |
-| Slow agent responses | [Model Selection](chapters/3-model/1-model-selection.md) - Consider smaller models | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) | - |
+| High token costs | [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) - Audit token usage | [Context Strategies](chapters/4-context/2-context-strategies.md) | [KotaDB](appendices/examples/kotadb/) |
+| Slow agent responses | [Model Selection](chapters/3-model/1-model-selection.md) - Consider smaller models | [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) | - |
 | Context window overflow | [Context Fundamentals](chapters/4-context/1-context-fundamentals.md) - Implement windowing | [Context Patterns](chapters/4-context/3-context-patterns.md) | - |
 | Too many tool calls | [Tool Selection](chapters/5-tool-use/2-tool-selection.md) - Restrict or consolidate | [Scaling Tools](chapters/5-tool-use/4-scaling-tools.md) | - |
-| Agent making unnecessary API calls | [Evaluation](chapters/7-practices/2-evaluation.md) - Add efficiency metrics | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) | - |
+| Agent making unnecessary API calls | [Evaluation](chapters/8-practices/2-evaluation.md) - Add efficiency metrics | [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) | - |
 
 ### Design & Architecture Questions
 
 | Question | Check | Deep Dive | Example |
 |----------|-------|-----------|---------|
-| Should I use one agent or multiple? | [Patterns](chapters/6-patterns/_index.md) - Review pattern catalog | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) | - |
-| How do I structure prompts? | [Prompt Types](chapters/2-prompt/1-prompt-types.md) | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) |
-| Which model should I use? | [Model Selection](chapters/3-model/1-model-selection.md) | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) | - |
+| Should I use one agent or multiple? | [Patterns](chapters/7-patterns/_index.md) - Review pattern catalog | [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md) | - |
+| How do I structure prompts? | [Prompt Types](chapters/2-prompt/1-prompt-types.md) | [Prompt Structuring](chapters/2-prompt/2-structuring.md) | [Claude Code](chapters/10-practitioner-toolkit/1-claude-code.md) |
+| Which model should I use? | [Model Selection](chapters/3-model/1-model-selection.md) | [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) | - |
 | How should agents share information? | [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md) | [Context Patterns](chapters/4-context/3-context-patterns.md) | [KotaDB](appendices/examples/kotadb/) |
 | What tools should my agent have? | [Tool Design](chapters/5-tool-use/1-tool-design.md) | [Scaling Tools](chapters/5-tool-use/4-scaling-tools.md) | - |
-| How do I make agents learn from experience? | [Self-Improving Experts](chapters/6-patterns/2-self-improving-experts.md) | [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) | - |
-| When should I add human oversight? | [Patterns](chapters/6-patterns/_index.md) - Human-in-the-Loop | [Production Concerns](chapters/7-practices/4-production-concerns.md) | - |
-| How do I prevent agent mistakes? | [Pit of Success](chapters/8-mental-models/1-pit-of-success.md) | [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md) | - |
+| How do I make agents learn from experience? | [Self-Improving Experts](chapters/7-patterns/2-self-improving-experts.md) | [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md) | - |
+| When should I add human oversight? | [Patterns](chapters/7-patterns/_index.md) - Human-in-the-Loop | [Production Concerns](chapters/8-practices/4-production-concerns.md) | - |
+| How do I prevent agent mistakes? | [Pit of Success](chapters/9-mental-models/1-pit-of-success.md) | [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md) | - |
 
 ### Production & Operations
 
 | Challenge | Quick Check | Deep Dive | Example |
 |-----------|-------------|-----------|---------|
-| Rate limiting issues | [Production Concerns](chapters/7-practices/4-production-concerns.md) - Retry logic | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) | - |
-| Monitoring and logging | [Debugging Agents](chapters/7-practices/1-debugging-agents.md) - Structured logging | [Evaluation](chapters/7-practices/2-evaluation.md) | [KotaDB](appendices/examples/kotadb/) |
-| Error handling | [Production Concerns](chapters/7-practices/4-production-concerns.md) | [Debugging Agents](chapters/7-practices/1-debugging-agents.md) | - |
-| Evaluating improvements | [Evaluation](chapters/7-practices/2-evaluation.md) | [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) | - |
-| Scaling to production | [Production Concerns](chapters/7-practices/4-production-concerns.md) | [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) | [KotaDB](appendices/examples/kotadb/) |
+| Rate limiting issues | [Production Concerns](chapters/8-practices/4-production-concerns.md) - Retry logic | [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) | - |
+| Monitoring and logging | [Debugging Agents](chapters/8-practices/1-debugging-agents.md) - Structured logging | [Evaluation](chapters/8-practices/2-evaluation.md) | [KotaDB](appendices/examples/kotadb/) |
+| Error handling | [Production Concerns](chapters/8-practices/4-production-concerns.md) | [Debugging Agents](chapters/8-practices/1-debugging-agents.md) | - |
+| Evaluating improvements | [Evaluation](chapters/8-practices/2-evaluation.md) | [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md) | - |
+| Scaling to production | [Production Concerns](chapters/8-practices/4-production-concerns.md) | [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) | [KotaDB](appendices/examples/kotadb/) |
 
 ### Tool-Specific Guidance
 
 | Tool/Platform | Getting Started | Advanced Topics | Examples |
 |---------------|----------------|-----------------|----------|
-| Claude Code | [Claude Code Overview](chapters/9-practitioner-toolkit/1-claude-code.md) | [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md) | [Context Loading Demo](appendices/examples/context-loading-demo/) |
-| Google ADK | [Google ADK Overview](chapters/9-practitioner-toolkit/2-google-adk.md) | [Multi-Model Architectures](chapters/3-model/4-multi-model-architectures.md) | - |
-| Custom Agents | [Foundations](chapters/1-foundations/_index.md) | [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) | - |
+| Claude Code | [Claude Code Overview](chapters/10-practitioner-toolkit/1-claude-code.md) | [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md) | [Context Loading Demo](appendices/examples/context-loading-demo/) |
+| Google ADK | [Google ADK Overview](chapters/10-practitioner-toolkit/2-google-adk.md) | [Multi-Model Architectures](chapters/3-model/4-multi-model-architectures.md) | - |
+| Custom Agents | [Foundations](chapters/1-foundations/_index.md) | [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md) | - |
 
 ---
 
@@ -713,12 +713,12 @@ Use chapters as reference material:
 
 ### Chapter 6: Patterns
 
-**Core Reading:** [Patterns](chapters/6-patterns/_index.md)
+**Core Reading:** [Patterns](chapters/7-patterns/_index.md)
 
 **Key Sections:**
-- [Research-Plan-Build-Review Pattern](chapters/6-patterns/1-plan-build-review.md) (45 min)
-- [Self-Improving Expert Commands](chapters/6-patterns/2-self-improving-experts.md) (45 min)
-- [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md) (45 min)
+- [Research-Plan-Build-Review Pattern](chapters/7-patterns/1-plan-build-review.md) (45 min)
+- [Self-Improving Expert Commands](chapters/7-patterns/2-self-improving-experts.md) (45 min)
+- [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md) (45 min)
 
 **Recommended Example:** [KotaDB](appendices/examples/kotadb/) - Multi-agent patterns
 
@@ -730,15 +730,15 @@ Use chapters as reference material:
 
 ### Chapter 7: Practices
 
-**Core Reading:** [Practices](chapters/7-practices/_index.md)
+**Core Reading:** [Practices](chapters/8-practices/_index.md)
 
 **Key Sections:**
-- [Debugging Agents](chapters/7-practices/1-debugging-agents.md) (45 min)
-- [Evaluation](chapters/7-practices/2-evaluation.md) (45 min)
-- [Cost and Latency](chapters/7-practices/3-cost-and-latency.md) (30 min)
-- [Production Concerns](chapters/7-practices/4-production-concerns.md) (45 min)
-- [Workflow Coordination for Agents](chapters/7-practices/5-workflow-coordination.md) (30 min)
-- [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md) (30 min)
+- [Debugging Agents](chapters/8-practices/1-debugging-agents.md) (45 min)
+- [Evaluation](chapters/8-practices/2-evaluation.md) (45 min)
+- [Cost and Latency](chapters/8-practices/3-cost-and-latency.md) (30 min)
+- [Production Concerns](chapters/8-practices/4-production-concerns.md) (45 min)
+- [Workflow Coordination for Agents](chapters/8-practices/5-workflow-coordination.md) (30 min)
+- [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md) (30 min)
 
 **Recommended Example:** [KotaDB](appendices/examples/kotadb/) - Production patterns
 
@@ -750,13 +750,13 @@ Use chapters as reference material:
 
 ### Chapter 8: Mental Models
 
-**Core Reading:** [Mental Models](chapters/8-mental-models/_index.md)
+**Core Reading:** [Mental Models](chapters/9-mental-models/_index.md)
 
 **Key Sections:**
-- [Pit of Success](chapters/8-mental-models/1-pit-of-success.md) (30 min)
-- [Prompt Maturity Model](chapters/8-mental-models/2-prompt-maturity-model.md) (30 min)
-- [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md) (30 min)
-- [Context as Code](chapters/8-mental-models/4-context-as-code.md) (30 min)
+- [Pit of Success](chapters/9-mental-models/1-pit-of-success.md) (30 min)
+- [Prompt Maturity Model](chapters/9-mental-models/2-prompt-maturity-model.md) (30 min)
+- [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md) (30 min)
+- [Context as Code](chapters/9-mental-models/4-context-as-code.md) (30 min)
 
 **Exercise:** Audit an existing agent design for "pit of success" principles. Where are agents climbing vs. falling into correct behavior? Redesign to reduce friction.
 
@@ -766,11 +766,11 @@ Use chapters as reference material:
 
 ### Chapter 9: Practitioner Toolkit
 
-**Core Reading:** [Practitioner Toolkit](chapters/9-practitioner-toolkit/_index.md)
+**Core Reading:** [Practitioner Toolkit](chapters/10-practitioner-toolkit/_index.md)
 
 **Key Sections:**
-- [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md) (45 min)
-- [Google ADK](chapters/9-practitioner-toolkit/2-google-adk.md) (45 min)
+- [Claude Code](chapters/10-practitioner-toolkit/1-claude-code.md) (45 min)
+- [Google ADK](chapters/10-practitioner-toolkit/2-google-adk.md) (45 min)
 
 **Exercise:** Build the same agent on two platforms. Document platform-specific optimizations and portability challenges.
 

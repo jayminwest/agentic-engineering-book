@@ -63,7 +63,7 @@ This balances discoverability (agent knows what's possible) with context efficie
 
 **See Also**:
 - [Context: Progressive Disclosure](../4-context/3-context-patterns.md#progressive-disclosure-pattern) — Managing context window through layered information
-- [Claude Code: Skills System](../9-practitioner-toolkit/1-claude-code.md#skills-system) — Concrete implementation in production
+- [Claude Code: Skills System](../10-practitioner-toolkit/1-claude-code.md#skills-system) — Concrete implementation in production
 - [Prompt](../2-prompt/_index.md) — Model-invoked vs user-invoked patterns for skill activation
 
 **Sources**: [Claude Code Skills Docs](https://code.claude.com/docs/en/skills), [Skills Deep Dive](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/), [Skills Explained](https://www.claude.com/blog/skills-explained)
@@ -126,7 +126,7 @@ Agents declare context contracts in structured metadata:
 
 - **To [Skills](5-skills-and-meta-tools.md#skills-as-meta-tools)**: Context contracts extend progressive disclosure from runtime (Skills load on-demand) to orchestration design (agents declare requirements)
 - **To [Tool Restrictions](3-tool-restrictions.md)**: Contracts provide schema-based validation where tool restrictions provide runtime enforcement
-- **To [Self-Improving Experts](../6-patterns/2-self-improving-experts.md#agent-registry-pattern)**: Registry generation from contracts enables discovery layer for expert systems
+- **To [Self-Improving Experts](../7-patterns/2-self-improving-experts.md#agent-registry-pattern)**: Registry generation from contracts enables discovery layer for expert systems
 
 **Sources:** Advanced external .claude/ implementation patterns documented in KotaDB scouting analysis.
 
@@ -150,5 +150,5 @@ Agents declare context contracts in structured metadata:
 - **To [Prompt](../2-prompt/_index.md):** Skills as prompt injection mechanism
 - **To [Tool Selection](2-tool-selection.md):** Skills affect tool availability dynamically
 - **To [Scaling Tools](4-scaling-tools.md):** Skills as a scaling pattern for specialized capabilities
-- **To [Claude Code](../9-practitioner-toolkit/1-claude-code.md):** Production implementation
-- **To [Cost and Latency](../7-practices/3-cost-and-latency.md):** Token cost comparison across feature types
+- **To [Claude Code](../10-practitioner-toolkit/1-claude-code.md):** Production implementation
+- **To [Cost and Latency](../8-practices/3-cost-and-latency.md):** Token cost comparison across feature types

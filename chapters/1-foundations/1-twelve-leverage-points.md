@@ -153,7 +153,7 @@ What are the tests doing and how do they help agents? Are agents conducting "tes
 - When mocks help and when they hide problems
 - How test failures guide agent behavior
 
-**Evaluation hierarchy and testing theatre.** Husain's three-level evaluation hierarchy maps directly to the testing theatre risk this leverage point names [Husain, 2024]. Level 1 evaluations—deterministic assertions per component, run on every code change—must be established before scaling to Level 2 (model-based evaluations using LLM-as-judge). Teams that skip Level 1 and build Level 2 evaluations on a shaky component foundation produce evaluations that cannot distinguish component failures from system failures. The result is exactly testing theatre: evaluations that run, produce numbers, and inform nothing. Establish per-component behavioral assertions first; model-based evaluations on top of a solid Level 1 foundation become actionable signal. See [Evaluation](../7-practices/2-evaluation.md) for the full error analysis and annotation methodology.
+**Evaluation hierarchy and testing theatre.** Husain's three-level evaluation hierarchy maps directly to the testing theatre risk this leverage point names [Husain, 2024]. Level 1 evaluations—deterministic assertions per component, run on every code change—must be established before scaling to Level 2 (model-based evaluations using LLM-as-judge). Teams that skip Level 1 and build Level 2 evaluations on a shaky component foundation produce evaluations that cannot distinguish component failures from system failures. The result is exactly testing theatre: evaluations that run, produce numbers, and inform nothing. Establish per-component behavioral assertions first; model-based evaluations on top of a solid Level 1 foundation become actionable signal. See [Evaluation](../8-practices/2-evaluation.md) for the full error analysis and annotation methodology.
 
 **Source:** Husain, H. "Your AI Product Needs Evals." hamel.dev/blog/posts/evals/ (2024-03-29)
 
@@ -215,11 +215,11 @@ How does work carry between agents? How are multiple agents working together to 
 
 - **To [Core Four](_index.md):** The twelve leverage points expand on the four pillars. Context (#12), Model (#11), Prompt (#10), and Tools (#9) map directly to the core four. The higher leverage points (Plans, Templates, ADWs) represent system-level patterns built on top of the pillars.
 
-- **To [Evaluation](../7-practices/2-evaluation.md):** Each leverage point requires different evaluation approaches. Low leverage points (context, model, prompt) can be evaluated per-task. High leverage points (architecture, templates, ADWs) require system-level metrics across multiple tasks.
+- **To [Evaluation](../8-practices/2-evaluation.md):** Each leverage point requires different evaluation approaches. Low leverage points (context, model, prompt) can be evaluated per-task. High leverage points (architecture, templates, ADWs) require system-level metrics across multiple tasks.
 
-- **To [Patterns](../6-patterns/_index.md):** ADWs (#1) and Plans (#3) directly correspond to the orchestrator and plan-build-review patterns. Templates (#2) enable self-improving expert patterns.
+- **To [Patterns](../7-patterns/_index.md):** ADWs (#1) and Plans (#3) directly correspond to the orchestrator and plan-build-review patterns. Templates (#2) enable self-improving expert patterns.
 
-- **To [Prompt Maturity Model](../8-mental-models/2-prompt-maturity-model.md):** The Engineer Leverage Progression section maps practitioner framing stages to leverage levels. Stage 2 framing is what makes Plans (#3) and ADWs (#1) accessible; Stage 3 is what makes Tests (#5) and measurement infrastructure actionable. The anti-pattern catalog identifies the specific failure behaviors that occur when framing lags behind leverage ambition.
+- **To [Prompt Maturity Model](../9-mental-models/2-prompt-maturity-model.md):** The Engineer Leverage Progression section maps practitioner framing stages to leverage levels. Stage 2 framing is what makes Plans (#3) and ADWs (#1) accessible; Stage 3 is what makes Tests (#5) and measurement infrastructure actionable. The anti-pattern catalog identifies the specific failure behaviors that occur when framing lags behind leverage ambition.
 
 ---
 
@@ -319,7 +319,7 @@ Teams delegate prompt optimization to automated tools before developing manual u
 
 Why it fails at #1-#2: Templates (#2) and ADWs (#1) must encode practitioner judgment about what good output looks like. Automated optimization produces locally optimal outputs on the target metric; it cannot encode the judgment that determines whether the target metric is the right one. The prompt may improve by the metric while failing in ways the metric cannot detect.
 
-*Distinguishing feature:* Not automation that is wrong in principle — automated optimization has its place in Stage 3 [Engineer Leverage Progression](../8-mental-models/2-prompt-maturity-model.md). The failure is sequencing: automation at Stage 1 forecloses the manual learning that produces judgment.
+*Distinguishing feature:* Not automation that is wrong in principle — automated optimization has its place in Stage 3 [Engineer Leverage Progression](../9-mental-models/2-prompt-maturity-model.md). The failure is sequencing: automation at Stage 1 forecloses the manual learning that produces judgment.
 
 *Source:* Hamel [6] — "Good writing is good thinking. Prompt engineering requires active intellectual engagement; delegating early means never fully understanding requirements or failure modes." Manual prompt writing is the first stage, not an intermediate step to automate away.
 
@@ -335,7 +335,7 @@ Why it fails at #1-#2: Templates (#2) and ADWs (#1) must encode practitioner jud
 | **Post-Hoc Learning** | #1 ADWs | Point-tool knowledge without workflow design | Liu [1] |
 | **Automated Optimization Before Understanding** | #1-#2 ADWs/Templates | Judgment outsourced before developed | Hamel [6] |
 
-The [Engineer Leverage Progression](../8-mental-models/2-prompt-maturity-model.md) section maps these anti-patterns to practitioner framing stages: Isolated Prompting and Tool Proliferation are Stage 1 behaviors applied to system components; Design Delegation and Post-Hoc Learning indicate Stage 1-2 framing applied to Stage 3 leverage points. Testing Theatre and Metric Over-Aggregation are treated in depth in the [Evaluation](../7-practices/2-evaluation.md) chapter.
+The [Engineer Leverage Progression](../9-mental-models/2-prompt-maturity-model.md) section maps these anti-patterns to practitioner framing stages: Isolated Prompting and Tool Proliferation are Stage 1 behaviors applied to system components; Design Delegation and Post-Hoc Learning indicate Stage 1-2 framing applied to Stage 3 leverage points. Testing Theatre and Metric Over-Aggregation are treated in depth in the [Evaluation](../8-practices/2-evaluation.md) chapter.
 
 **Sources**
 - [1] Liu, Jason. "Do Your Engineers Know How to Leverage AI?" 2025-09-11.

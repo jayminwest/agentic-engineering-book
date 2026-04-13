@@ -117,6 +117,6 @@ Architectural approaches to active context management. Surveys three points on t
 - **To [Prompt](../2-prompt/_index.md):** Context determines how agents respond to prompts. Prompts are context, but not all context is prompts.
 - **To [Model](../3-model/_index.md):** Context limits vary by model. Small models work in orchestrator patterns via context loading.
 - **To [Tool Use](../5-tool-use/_index.md):** Tools modify context—reading files, searching codebases. Progressive disclosure via tool metadata. See [MCP Tool Declarations](../5-tool-use/3-tool-restrictions.md#mcp-tool-declarations-in-frontmatter) and [Scaling Tool Use](../5-tool-use/4-scaling-tools.md).
-- **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** Context isolation via sub-agents. Emergency Context Rewriting anti-pattern shows why reactive compaction fails.
-- **To [Claude Code](../9-practitioner-toolkit/1-claude-code.md):** Skills implement progressive disclosure in production.
-- **To [Google ADK](../9-practitioner-toolkit/2-google-adk.md):** State prefixes demonstrate persistent state scoping.
+- **To [Orchestrator Pattern](../7-patterns/3-orchestrator-pattern.md):** Context isolation via sub-agents. Emergency Context Rewriting anti-pattern shows why reactive compaction fails.
+- **To [Claude Code](../10-practitioner-toolkit/1-claude-code.md):** Skills implement progressive disclosure in production.
+- **To [Google ADK](../10-practitioner-toolkit/2-google-adk.md):** State prefixes demonstrate persistent state scoping.

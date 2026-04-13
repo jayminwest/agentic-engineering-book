@@ -12,7 +12,7 @@ This rubric provides a framework for self-assessment and skill development in ag
 **Related Resources:**
 - [Table of Contents](TABLE_OF_CONTENTS.md) - Complete book structure
 - [Foundations](chapters/1-foundations/_index.md) - Core concepts for all dimensions
-- [Mental Models](chapters/8-mental-models/_index.md) - Strategic thinking frameworks
+- [Mental Models](chapters/9-mental-models/_index.md) - Strategic thinking frameworks
 
 ---
 
@@ -57,9 +57,9 @@ Building working agent systems with prompts, tools, and workflows.
 ### Chapter Mapping
 
 - **Level 1**: [Foundations](chapters/1-foundations/_index.md), [Prompt Types](chapters/2-prompt/1-prompt-types.md), [Tool Design](chapters/5-tool-use/1-tool-design.md)
-- **Level 2**: [Prompt Structuring](chapters/2-prompt/2-structuring.md), [Context Strategies](chapters/4-context/2-context-strategies.md), [Plan-Build-Review](chapters/6-patterns/1-plan-build-review.md)
-- **Level 3**: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md), [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md)
-- **Level 4**: [Self-Improving Experts](chapters/6-patterns/2-self-improving-experts.md), [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md)
+- **Level 2**: [Prompt Structuring](chapters/2-prompt/2-structuring.md), [Context Strategies](chapters/4-context/2-context-strategies.md), [Plan-Build-Review](chapters/7-patterns/1-plan-build-review.md)
+- **Level 3**: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md), [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md)
+- **Level 4**: [Self-Improving Experts](chapters/7-patterns/2-self-improving-experts.md), [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md)
 
 ### Example Mapping
 
@@ -108,9 +108,9 @@ Architecting multi-agent workflows and selecting appropriate patterns.
 ### Chapter Mapping
 
 - **Level 1**: [Foundations](chapters/1-foundations/_index.md), [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md), [Model Selection](chapters/3-model/1-model-selection.md)
-- **Level 2**: [Patterns](chapters/6-patterns/_index.md), [Pit of Success](chapters/8-mental-models/1-pit-of-success.md), [Tool Selection](chapters/5-tool-use/2-tool-selection.md)
-- **Level 3**: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Workflow Coordination](chapters/7-practices/5-workflow-coordination.md), [Prompt Maturity Model](chapters/8-mental-models/2-prompt-maturity-model.md)
-- **Level 4**: [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md), [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md)
+- **Level 2**: [Patterns](chapters/7-patterns/_index.md), [Pit of Success](chapters/9-mental-models/1-pit-of-success.md), [Tool Selection](chapters/5-tool-use/2-tool-selection.md)
+- **Level 3**: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Workflow Coordination](chapters/8-practices/5-workflow-coordination.md), [Prompt Maturity Model](chapters/9-mental-models/2-prompt-maturity-model.md)
+- **Level 4**: [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md), [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md)
 
 ### Example Mapping
 
@@ -124,7 +124,7 @@ Architecting multi-agent workflows and selecting appropriate patterns.
 1. Design three systems using different patterns (plan-build-review, orchestrator, single-agent)
 2. Make explicit model selection decisions for different task types
 3. Create tool interfaces with built-in guardrails
-4. Study [Pit of Success](chapters/8-mental-models/1-pit-of-success.md) and apply to one design
+4. Study [Pit of Success](chapters/9-mental-models/1-pit-of-success.md) and apply to one design
 5. Document architectural decisions and tradeoffs
 
 **From Level 2 to Level 3:**
@@ -159,9 +159,9 @@ Identifying and fixing failures across the four pillars.
 ### Chapter Mapping
 
 - **Level 1**: [Foundations](chapters/1-foundations/_index.md), [Context Fundamentals](chapters/4-context/1-context-fundamentals.md), [Tool Design](chapters/5-tool-use/1-tool-design.md)
-- **Level 2**: [Debugging Agents](chapters/7-practices/1-debugging-agents.md), [Context Strategies](chapters/4-context/2-context-strategies.md), [Model Selection](chapters/3-model/1-model-selection.md)
-- **Level 3**: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Production Concerns](chapters/7-practices/4-production-concerns.md), [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md)
-- **Level 4**: [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md), [Debugging Agents](chapters/7-practices/1-debugging-agents.md)
+- **Level 2**: [Debugging Agents](chapters/8-practices/1-debugging-agents.md), [Context Strategies](chapters/4-context/2-context-strategies.md), [Model Selection](chapters/3-model/1-model-selection.md)
+- **Level 3**: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Production Concerns](chapters/8-practices/4-production-concerns.md), [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md)
+- **Level 4**: [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md), [Debugging Agents](chapters/8-practices/1-debugging-agents.md)
 
 ### Example Mapping
 
@@ -175,7 +175,7 @@ Identifying and fixing failures across the four pillars.
 1. Debug three multi-step failures using systematic tracing
 2. Implement logging and instrumentation in all systems
 3. Create a reproducible test case for a complex failure
-4. Study [Debugging Agents](chapters/7-practices/1-debugging-agents.md) thoroughly
+4. Study [Debugging Agents](chapters/8-practices/1-debugging-agents.md) thoroughly
 5. Fix three ambiguous prompt issues with evidence-based improvements
 
 **From Level 2 to Level 3:**
@@ -209,10 +209,10 @@ Running agents reliably at scale with cost and quality constraints.
 
 ### Chapter Mapping
 
-- **Level 1**: [Cost and Latency](chapters/7-practices/3-cost-and-latency.md), [Model Selection](chapters/3-model/1-model-selection.md), [Evaluation](chapters/7-practices/2-evaluation.md)
-- **Level 2**: [Production Concerns](chapters/7-practices/4-production-concerns.md), [Context Strategies](chapters/4-context/2-context-strategies.md), [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md)
-- **Level 3**: [Advanced Context Patterns](chapters/4-context/3-context-patterns.md), [Multi-Model Architectures](chapters/3-model/4-multi-model-architectures.md), [Workflow Coordination](chapters/7-practices/5-workflow-coordination.md)
-- **Level 4**: [Production Concerns](chapters/7-practices/4-production-concerns.md), [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md)
+- **Level 1**: [Cost and Latency](chapters/8-practices/3-cost-and-latency.md), [Model Selection](chapters/3-model/1-model-selection.md), [Evaluation](chapters/8-practices/2-evaluation.md)
+- **Level 2**: [Production Concerns](chapters/8-practices/4-production-concerns.md), [Context Strategies](chapters/4-context/2-context-strategies.md), [Tool Restrictions](chapters/5-tool-use/3-tool-restrictions.md)
+- **Level 3**: [Advanced Context Patterns](chapters/4-context/3-context-patterns.md), [Multi-Model Architectures](chapters/3-model/4-multi-model-architectures.md), [Workflow Coordination](chapters/8-practices/5-workflow-coordination.md)
+- **Level 4**: [Production Concerns](chapters/8-practices/4-production-concerns.md), [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md)
 
 ### Example Mapping
 
@@ -227,7 +227,7 @@ Running agents reliably at scale with cost and quality constraints.
 2. Optimize a system for 30% cost reduction while maintaining quality
 3. Implement comprehensive error handling and retries
 4. Set up alerting for failures, cost spikes, and latency issues
-5. Study [Production Concerns](chapters/7-practices/4-production-concerns.md)
+5. Study [Production Concerns](chapters/8-practices/4-production-concerns.md)
 
 **From Level 2 to Level 3:**
 1. Scale a system to 1000+ tasks/day
@@ -260,10 +260,10 @@ Meta-framework design, pattern extraction, and knowledge evolution.
 
 ### Chapter Mapping
 
-- **Level 1**: [Mental Models](chapters/8-mental-models/_index.md), [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md), [Pit of Success](chapters/8-mental-models/1-pit-of-success.md)
-- **Level 2**: [Prompt Maturity Model](chapters/8-mental-models/2-prompt-maturity-model.md), [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md), [Patterns](chapters/6-patterns/_index.md)
-- **Level 3**: [Context as Code](chapters/8-mental-models/4-context-as-code.md), [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md), [Self-Improving Experts](chapters/6-patterns/2-self-improving-experts.md)
-- **Level 4**: [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md), [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md)
+- **Level 1**: [Mental Models](chapters/9-mental-models/_index.md), [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md), [Pit of Success](chapters/9-mental-models/1-pit-of-success.md)
+- **Level 2**: [Prompt Maturity Model](chapters/9-mental-models/2-prompt-maturity-model.md), [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md), [Patterns](chapters/7-patterns/_index.md)
+- **Level 3**: [Context as Code](chapters/9-mental-models/4-context-as-code.md), [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md), [Self-Improving Experts](chapters/7-patterns/2-self-improving-experts.md)
+- **Level 4**: [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md), [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md)
 
 ### Example Mapping
 
@@ -278,7 +278,7 @@ Meta-framework design, pattern extraction, and knowledge evolution.
 2. Design one system using pit of success principles
 3. Extract and document three patterns from implementations
 4. Create systematic documentation of learnings
-5. Study [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md) and apply it
+5. Study [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md) and apply it
 
 **From Level 2 to Level 3:**
 1. Extract generalizable patterns from 3+ different systems
@@ -533,10 +533,10 @@ This table shows which dimensions each chapter primarily addresses:
 | [Model](chapters/3-model/_index.md) | ✓ | ✓✓✓ | ✓✓ | ✓✓✓ | ✓ |
 | [Context](chapters/4-context/_index.md) | ✓✓ | ✓✓ | ✓✓✓ | ✓✓ | ✓ |
 | [Tool Use](chapters/5-tool-use/_index.md) | ✓✓✓ | ✓✓ | ✓✓ | ✓ | ✓ |
-| [Patterns](chapters/6-patterns/_index.md) | ✓✓ | ✓✓✓ | ✓ | ✓ | ✓✓ |
-| [Practices](chapters/7-practices/_index.md) | ✓ | ✓ | ✓✓✓ | ✓✓✓ | ✓✓ |
-| [Mental Models](chapters/8-mental-models/_index.md) | ✓ | ✓✓ | ✓ | ✓ | ✓✓✓ |
-| [Practitioner Toolkit](chapters/9-practitioner-toolkit/_index.md) | ✓✓ | ✓ | ✓ | ✓✓ | ✓ |
+| [Patterns](chapters/7-patterns/_index.md) | ✓✓ | ✓✓✓ | ✓ | ✓ | ✓✓ |
+| [Practices](chapters/8-practices/_index.md) | ✓ | ✓ | ✓✓✓ | ✓✓✓ | ✓✓ |
+| [Mental Models](chapters/9-mental-models/_index.md) | ✓ | ✓✓ | ✓ | ✓ | ✓✓✓ |
+| [Practitioner Toolkit](chapters/10-practitioner-toolkit/_index.md) | ✓✓ | ✓ | ✓ | ✓✓ | ✓ |
 
 **Legend:** ✓ = Relevant, ✓✓ = Significant, ✓✓✓ = Primary focus
 
@@ -556,7 +556,7 @@ This table shows which dimensions each chapter primarily addresses:
 2. [Prompt Types](chapters/2-prompt/1-prompt-types.md)
 3. [Context Fundamentals](chapters/4-context/1-context-fundamentals.md)
 4. [Tool Design](chapters/5-tool-use/1-tool-design.md)
-5. [Pit of Success](chapters/8-mental-models/1-pit-of-success.md)
+5. [Pit of Success](chapters/9-mental-models/1-pit-of-success.md)
 
 **Practice:**
 - Build three simple agent systems using [Context Loading Demo](appendices/examples/context-loading-demo/) as reference
@@ -568,10 +568,10 @@ This table shows which dimensions each chapter primarily addresses:
 **Core Reading:**
 1. [Prompt Structuring](chapters/2-prompt/2-structuring.md)
 2. [Context Strategies](chapters/4-context/2-context-strategies.md)
-3. [Plan-Build-Review](chapters/6-patterns/1-plan-build-review.md)
-4. [Debugging Agents](chapters/7-practices/1-debugging-agents.md)
-5. [Production Concerns](chapters/7-practices/4-production-concerns.md)
-6. [Prompt Maturity Model](chapters/8-mental-models/2-prompt-maturity-model.md)
+3. [Plan-Build-Review](chapters/7-patterns/1-plan-build-review.md)
+4. [Debugging Agents](chapters/8-practices/1-debugging-agents.md)
+5. [Production Concerns](chapters/8-practices/4-production-concerns.md)
+6. [Prompt Maturity Model](chapters/9-mental-models/2-prompt-maturity-model.md)
 
 **Practice:**
 - Build three independent agent systems
@@ -584,11 +584,11 @@ This table shows which dimensions each chapter primarily addresses:
 **Core Reading:**
 1. [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md)
 2. [Advanced Context Patterns](chapters/4-context/3-context-patterns.md)
-3. [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md)
+3. [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md)
 4. [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md)
-5. [Workflow Coordination](chapters/7-practices/5-workflow-coordination.md)
-6. [Cost and Latency](chapters/7-practices/3-cost-and-latency.md)
-7. [Context as Code](chapters/8-mental-models/4-context-as-code.md)
+5. [Workflow Coordination](chapters/8-practices/5-workflow-coordination.md)
+6. [Cost and Latency](chapters/8-practices/3-cost-and-latency.md)
+7. [Context as Code](chapters/9-mental-models/4-context-as-code.md)
 
 **Practice:**
 - Design multi-agent orchestration
@@ -599,9 +599,9 @@ This table shows which dimensions each chapter primarily addresses:
 **Target Level 4 (Expert)**
 
 **Core Reading:**
-1. [Self-Improving Experts](chapters/6-patterns/2-self-improving-experts.md)
-2. [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md)
-3. [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md)
+1. [Self-Improving Experts](chapters/7-patterns/2-self-improving-experts.md)
+2. [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md)
+3. [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md)
 4. [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md)
 5. All chapters for comprehensive understanding
 
@@ -630,7 +630,7 @@ This table shows which dimensions each chapter primarily addresses:
 - Systems work but don't scale or evolve well
 
 **Remediation:**
-1. Study [Patterns](chapters/6-patterns/_index.md) and [Mental Models](chapters/8-mental-models/_index.md)
+1. Study [Patterns](chapters/7-patterns/_index.md) and [Mental Models](chapters/9-mental-models/_index.md)
 2. Practice articulating architectural tradeoffs before implementing
 3. Review [Twelve Leverage Points](chapters/1-foundations/1-twelve-leverage-points.md)
 4. For each implementation, write design doc explaining alternatives
@@ -659,8 +659,8 @@ This table shows which dimensions each chapter primarily addresses:
 - Lacks operational expertise
 
 **Remediation:**
-1. Study [Production Concerns](chapters/7-practices/4-production-concerns.md) thoroughly
-2. Read [Cost and Latency](chapters/7-practices/3-cost-and-latency.md)
+1. Study [Production Concerns](chapters/8-practices/4-production-concerns.md) thoroughly
+2. Read [Cost and Latency](chapters/8-practices/3-cost-and-latency.md)
 3. Deploy three systems to production with full monitoring
 4. Run a system at 1000+ tasks/day
 5. Implement comprehensive error handling and retries
@@ -690,9 +690,9 @@ This table shows which dimensions each chapter primarily addresses:
 - Debugging skills mask design weaknesses
 
 **Remediation:**
-1. Study [Pit of Success](chapters/8-mental-models/1-pit-of-success.md)
+1. Study [Pit of Success](chapters/9-mental-models/1-pit-of-success.md)
 2. For each debug session, document the design change that would prevent it
-3. Read [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md)
+3. Read [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md)
 4. Create debugging tools that prevent future failures
 5. Practice designing systems that make errors impossible
 
@@ -721,7 +721,7 @@ This table shows which dimensions each chapter primarily addresses:
 **Remediation:**
 1. Choose one dimension to push to Level 3
 2. Take on a challenging project requiring deep expertise
-3. Study advanced chapters: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md)
+3. Study advanced chapters: [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md), [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md)
 4. Analyze [KotaDB](appendices/examples/kotadb/) deeply
 5. Mentor someone to force articulation of deep knowledge
 

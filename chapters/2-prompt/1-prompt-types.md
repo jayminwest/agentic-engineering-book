@@ -459,7 +459,7 @@ Level 6 → Level 7
 
 - **[Prompt](_index.md):** The foundational concepts that apply across all levels
 - **[Prompt Language](3-language.md):** Language choice affects effectiveness at every level—higher levels require more precise linguistic patterns
-- **[Patterns](../6-patterns/_index.md):** Higher-level prompts often implement agentic patterns
+- **[Patterns](../7-patterns/_index.md):** Higher-level prompts often implement agentic patterns
 - **Multi-Agent:** Level 5+ prompts enable multi-agent coordination
 
 ---

@@ -1,6 +1,6 @@
 # Table of Contents
 
-*Generated: 2026-02-24*
+*Generated: 2026-04-12*
 
 ---
 
@@ -34,6 +34,8 @@
 - [Context Management Strategies](chapters/4-context/2-context-strategies.md)
 - [Advanced Context Patterns](chapters/4-context/3-context-patterns.md)
 - [Multi-Agent Context](chapters/4-context/4-multi-agent-context.md)
+- [Context Management Architectures](chapters/4-context/5-context-management-architectures.md)
+- [Context at Codebase Scale](chapters/4-context/6-context-at-codebase-scale.md)
 
 ### Chapter 5: Tool Use
 
@@ -44,64 +46,77 @@
 - [Scaling Tool Use](chapters/5-tool-use/4-scaling-tools.md)
 - [Skills and Meta-Tools](chapters/5-tool-use/5-skills-and-meta-tools.md)
 
+### Chapter 6: Harnesses
+
+- [Harnesses](chapters/6-harnesses/_index.md)
+- [What Is a Harness?](chapters/6-harnesses/1-what-is-a-harness.md)
+- [The Harness Stack](chapters/6-harnesses/2-harness-stack.md)
+- [Harness Categories](chapters/6-harnesses/3-harness-categories.md)
+- [Harness as Control System](chapters/6-harnesses/4-harness-as-control-system.md)
+- [Harness Engineering](chapters/6-harnesses/5-harness-engineering.md)
+- [Security, Permissions, and Trust](chapters/6-harnesses/6-security-permissions-trust.md)
+- [Designing for Your Context](chapters/6-harnesses/7-designing-for-your-context.md)
+
 ---
 
 ## Part 2: Craft
 
-### Chapter 6: Patterns
+### Chapter 7: Patterns
 
-- [Patterns](chapters/6-patterns/_index.md)
-- [Plan-Build-Review Pattern](chapters/6-patterns/1-plan-build-review.md)
-- [Self-Improving Expert Commands](chapters/6-patterns/2-self-improving-experts.md)
-- [Orchestrator Pattern](chapters/6-patterns/3-orchestrator-pattern.md)
-- [Autonomous Loops (Ralph Wiggum)](chapters/6-patterns/4-autonomous-loops.md)
-- [ReAct Pattern](chapters/6-patterns/5-react-pattern.md)
-- [Human-in-the-Loop Pattern](chapters/6-patterns/6-human-in-the-loop.md)
-- [Progressive Disclosure Pattern](chapters/6-patterns/7-progressive-disclosure.md)
-- [Expert Swarm Pattern](chapters/6-patterns/8-expert-swarm-pattern.md)
-- [Multi-Agent Collaboration Pattern](chapters/6-patterns/9-multi-agent-collaboration.md)
-- [The Multi-Agent Landscape](chapters/6-patterns/10-multi-agent-landscape.md)
-- [Production Multi-Agent Systems](chapters/6-patterns/11-production-multi-agent-systems.md)
+- [Patterns](chapters/7-patterns/_index.md)
+- [Plan-Build-Review Pattern](chapters/7-patterns/1-plan-build-review.md)
+- [Self-Improving Expert Commands](chapters/7-patterns/2-self-improving-experts.md)
+- [Orchestrator Pattern](chapters/7-patterns/3-orchestrator-pattern.md)
+- [Autonomous Loops (Ralph Wiggum)](chapters/7-patterns/4-autonomous-loops.md)
+- [ReAct Pattern](chapters/7-patterns/5-react-pattern.md)
+- [Human-in-the-Loop Pattern](chapters/7-patterns/6-human-in-the-loop.md)
+- [Progressive Disclosure Pattern](chapters/7-patterns/7-progressive-disclosure.md)
+- [Expert Swarm Pattern](chapters/7-patterns/8-expert-swarm-pattern.md)
+- [Multi-Agent Collaboration Pattern](chapters/7-patterns/9-multi-agent-collaboration.md)
+- [The Multi-Agent Landscape](chapters/7-patterns/10-multi-agent-landscape.md)
+- [Production Multi-Agent Systems](chapters/7-patterns/11-production-multi-agent-systems.md)
 
-### Chapter 7: Practices
+### Chapter 8: Practices
 
-- [Practices](chapters/7-practices/_index.md)
-- [Debugging Agents](chapters/7-practices/1-debugging-agents.md)
-- [Evaluation](chapters/7-practices/2-evaluation.md)
-- [Cost and Latency](chapters/7-practices/3-cost-and-latency.md)
-- [Production Concerns](chapters/7-practices/4-production-concerns.md)
-- [Workflow Coordination for Agents](chapters/7-practices/5-workflow-coordination.md)
-- [Knowledge Evolution](chapters/7-practices/6-knowledge-evolution.md)
-- [Operating Agent Swarms](chapters/7-practices/7-operating-agent-swarms.md)
+- [Practices](chapters/8-practices/_index.md)
+- [Debugging Agents](chapters/8-practices/1-debugging-agents.md)
+- [Evaluation](chapters/8-practices/2-evaluation.md)
+- [Cost and Latency](chapters/8-practices/3-cost-and-latency.md)
+- [Production Concerns](chapters/8-practices/4-production-concerns.md)
+- [Workflow Coordination for Agents](chapters/8-practices/5-workflow-coordination.md)
+- [Knowledge Evolution](chapters/8-practices/6-knowledge-evolution.md)
+- [Operating Agent Swarms](chapters/8-practices/7-operating-agent-swarms.md)
 
 ---
 
 ## Part 3: Perspectives
 
-### Chapter 8: Mental Models
+### Chapter 9: Mental Models
 
-- [Mental Models](chapters/8-mental-models/_index.md)
-- [Pit of Success](chapters/8-mental-models/1-pit-of-success.md)
-- [Prompt Maturity Model](chapters/8-mental-models/2-prompt-maturity-model.md)
-- [Specs as Source Code](chapters/8-mental-models/3-specs-as-source-code.md)
-- [Context as Code](chapters/8-mental-models/4-context-as-code.md)
-- [Execution Topologies](chapters/8-mental-models/5-execution-topologies.md)
-- [Design as Bottleneck](chapters/8-mental-models/6-design-as-bottleneck.md)
+- [Mental Models](chapters/9-mental-models/_index.md)
+- [Pit of Success](chapters/9-mental-models/1-pit-of-success.md)
+- [Prompt Maturity Model](chapters/9-mental-models/2-prompt-maturity-model.md)
+- [Specs as Source Code](chapters/9-mental-models/3-specs-as-source-code.md)
+- [Context as Code](chapters/9-mental-models/4-context-as-code.md)
+- [Execution Topologies](chapters/9-mental-models/5-execution-topologies.md)
+- [Design as Bottleneck](chapters/9-mental-models/6-design-as-bottleneck.md)
+- [Software Factories](chapters/9-mental-models/7-software-factories.md)
 
-### Chapter 9: Practitioner Toolkit
+### Chapter 10: Practitioner Toolkit
 
-- [Practitioner Toolkit](chapters/9-practitioner-toolkit/_index.md)
-- [Claude Code](chapters/9-practitioner-toolkit/1-claude-code.md)
-- [Google ADK](chapters/9-practitioner-toolkit/2-google-adk.md)
-- [IDE Integrations](chapters/9-practitioner-toolkit/3-ide-integrations.md)
-- [Agent Frameworks](chapters/9-practitioner-toolkit/4-agent-frameworks.md)
-- [Multi-Agent Workspace Managers](chapters/9-practitioner-toolkit/5-multi-agent-workspace-managers.md)
+- [Practitioner Toolkit](chapters/10-practitioner-toolkit/_index.md)
+- [Claude Code](chapters/10-practitioner-toolkit/1-claude-code.md)
+- [Google ADK](chapters/10-practitioner-toolkit/2-google-adk.md)
+- [IDE Integrations](chapters/10-practitioner-toolkit/3-ide-integrations.md)
+- [Agent Frameworks](chapters/10-practitioner-toolkit/4-agent-frameworks.md)
+- [Multi-Agent Workspace Managers](chapters/10-practitioner-toolkit/5-multi-agent-workspace-managers.md)
+- [Enterprise Codebase Context Tools](chapters/10-practitioner-toolkit/6-enterprise-context-tools.md)
 
 ---
 
 ## Part 4: Appendices
 
-### Chapter 10: Case Studies
+### Appendices
 
 - [Appendices](appendices/_index.md)
 - [Examples](appendices/examples/README.md)

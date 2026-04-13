@@ -287,7 +287,7 @@ The approaches are not mutually exclusive. A system could apply Sapling-style co
 - **To [Advanced Context Patterns](3-context-patterns.md):** Progressive disclosure appears in both architectures: LCM uses exploration summaries that expand on demand; Sapling places operation summaries in the system prompt as a progressive view over compacted history.
 - **To [Multi-Agent Context](4-multi-agent-context.md):** LCM's `agentic_map` creates context-isolated sub-agents as a first-class engine primitive. Sapling's RPC interface enables orchestrator-level monitoring of agent context health across a swarm.
 - **To [Tool Design](../5-tool-use/1-tool-design.md):** LCM's `llm_map` and `agentic_map` are tools that relocate iteration logic from the stochastic model layer to the deterministic engine layer — a design pattern applicable beyond context management.
-- **To [Design as Bottleneck](../8-mental-models/6-design-as-bottleneck.md):** Both architectures embody design as bottleneck — investing in infrastructure to eliminate agent failure modes rather than accepting them as inherent limitations.
+- **To [Design as Bottleneck](../9-mental-models/6-design-as-bottleneck.md):** Both architectures embody design as bottleneck — investing in infrastructure to eliminate agent failure modes rather than accepting them as inherent limitations.
 
 ---
 

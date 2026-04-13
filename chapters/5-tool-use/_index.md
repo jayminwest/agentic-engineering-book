@@ -55,6 +55,6 @@ The boundary between what the model does (reasoning) and what tools do (actions)
 - **To [Prompt](../2-prompt/_index.md):** Tool descriptions are themselves prompts—see [Model-Invoked vs. User-Invoked Prompts](../2-prompt/_index.md#model-invoked-vs-user-invoked-prompts)
 - **To [Model](../3-model/_index.md):** Which models are best at tool selection and use?
 - **To [Context](../4-context/_index.md):** How do tool results become context for next steps? See [Progressive Disclosure](../4-context/3-context-patterns.md#progressive-disclosure-pattern)
-- **To [Cost and Latency](../7-practices/3-cost-and-latency.md):** Token cost models differ by feature type—tools vs. Skills vs. subagents vs. MCP
-- **To [Google ADK](../9-practitioner-toolkit/2-google-adk.md):** MCP deployment patterns and tool filtering at runtime
+- **To [Cost and Latency](../8-practices/3-cost-and-latency.md):** Token cost models differ by feature type—tools vs. Skills vs. subagents vs. MCP
+- **To [Google ADK](../10-practitioner-toolkit/2-google-adk.md):** MCP deployment patterns and tool filtering at runtime
 

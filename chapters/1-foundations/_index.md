@@ -1,8 +1,8 @@
 ---
 title: Foundations
-description: The core four pillars of agentic systems - prompt, model, context, and tooling
+description: The core five pillars of agentic systems - prompt, model, context, tooling, and harness
 created: 2025-12-08
-last_updated: 2025-12-10
+last_updated: 2026-04-12
 tags: [foundations, core-concepts]
 part: 1
 part_title: Foundations
@@ -13,7 +13,7 @@ order: 1.1.0
 
 # Foundations
 
-Everything in agentic engineering flows from four interconnected pillars:
+Everything in agentic engineering flows from five interconnected pillars:
 
 | Pillar | Core Question |
 |--------|---------------|
@@ -21,8 +21,11 @@ Everything in agentic engineering flows from four interconnected pillars:
 | [Model](../3-model/_index.md) | What capabilities does the system provide? |
 | [Context](../4-context/_index.md) | What information does the agent access? |
 | [Tool Use](../5-tool-use/_index.md) | What actions can the agent take? |
+| [Harness](../6-harnesses/_index.md) | What system orchestrates and constrains execution? |
 
-This framing is adopted from [agenticengineer.com](https://agenticengineer.com)'s "core four." For a more granular hierarchy of intervention points, see the [Twelve Leverage Points](1-twelve-leverage-points.md)—a framework that expands beyond the core four into architecture, workflows, and system-level concerns.
+This framing extends [agenticengineer.com](https://agenticengineer.com)'s "core four" with a fifth pillar: Harness. For a more granular hierarchy of intervention points, see the [Twelve Leverage Points](1-twelve-leverage-points.md)—a framework that expands beyond the core five into architecture, workflows, and system-level concerns.
+
+*[2026-04-12]*: **Why Harness was added as a fifth pillar.** The original core four (Prompt, Model, Context, Tool Use) answered: what do you say, what brain do you use, what does it know, what can it do. A fifth question crystallized in early 2026: *what system orchestrates and constrains the agent's execution?* Without a harness, there is no agent — only a model being prompted. Multiple authoritative practitioners converged on the formula `Agent = Model + Harness` within a 90-day window (Fowler, Raschka, Mollick, Hashimoto, Schmid), constituting a definitional crystallization event. Agent Psychometrics research (arXiv:2604.00594) formalized the independence: P(success) = σ(θ_LLM + θ_scaffold − β_difficulty), where harness quality and model quality contribute independently. Harness investment yields separable gains from model investment — meaning the fifth pillar carries foundational weight equal to the original four.
 
 ---
 
@@ -34,6 +37,7 @@ Explaining agentic engineering in 60 seconds:
 - **Context**: The "active memory"—what the agent has seen and can access during a session.
 - **Tools**: How agents take action. Reading and writing files, conducting web research, spawning subagents.
 - **Prompt**: The trigger that initiates model action. The interface between user (or system) and agent.
+- **Harness**: The execution environment that wraps the model—managing tool dispatch, context flow, safety enforcement, and loop control. Without a harness, a model produces text; with a harness, it completes tasks.
 
 ---
 
@@ -42,24 +46,27 @@ Explaining agentic engineering in 60 seconds:
 The pillars are deeply interdependent:
 
 ```
-┌─────────────────────────────────────────┐
-│                                         │
-│   ┌─────────┐         ┌─────────┐       │
-│   │ Prompt  │◄───────►│ Context │       │
-│   └────┬────┘         └────┬────┘       │
-│        │                   │            │
-│        ▼                   ▼            │
-│   ┌─────────┐         ┌─────────┐       │
-│   │  Model  │◄───────►│ Tooling │       │
-│   └─────────┘         └─────────┘       │
-│                                         │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│                      Harness                         │
+│                                                      │
+│   ┌─────────┐         ┌─────────┐                    │
+│   │ Prompt  │◄───────►│ Context │                    │
+│   └────┬────┘         └────┬────┘                    │
+│        │                   │                         │
+│        ▼                   ▼                         │
+│   ┌─────────┐         ┌─────────┐                    │
+│   │  Model  │◄───────►│ Tooling │                    │
+│   └─────────┘         └─────────┘                    │
+│                                                      │
+└──────────────────────────────────────────────────────┘
 ```
 
+- **The harness contains all four inner pillars**—it orchestrates prompt assembly, context management, model invocation, and tool dispatch as a unified execution environment
 - **Context fills as tools grow**—tool outputs consume context window space
 - **Context is treated differently by different models**—each model has its own strengths and quirks
 - **Certain models are better at tool calling**—capability varies significantly
 - **Prompting impacts how models react to their context and tools**—a prompt can intentionally disregard sections of context or available tools
+- **Harness quality is often the distinguishing factor**—apparent model quality differences frequently resolve to harness design differences (Raschka, 2026)
 
 When one pillar changes, it ripples to the others:
 - **Downgrade the model** → massive performance impacts across the board
@@ -102,7 +109,7 @@ When one pillar changes, it ripples to the others:
 5. **Neglecting structure** in prompts, context, and tool responses—models perform better with consistent formatting.
 6. **Allowing too much freedom**—agents need constraints to succeed. Unbounded option spaces lead to analysis paralysis.
 7. **Insufficient instruction detail**—relying too heavily on agent discovery increases failure rates.
-8. **Failing to adhere to the [pit of success](../8-mental-models/1-pit-of-success.md) mindset**—making correct actions harder than incorrect ones.
+8. **Failing to adhere to the [pit of success](../9-mental-models/1-pit-of-success.md) mindset**—making correct actions harder than incorrect ones.
 
 *[2025-12-10]*: Counter-intuitive finding: "more" does not equal better capability. More tools, more context, and more steering prompts degrade performance. **A focused agent is a productive agent.**
 
@@ -114,7 +121,7 @@ What this framework doesn't capture well:
 
 - **"Prompting" is too general.** It could mean sending ad-hoc "build me a website" prompts, or 2,500-line spec files that do cutting-edge engineering work. This distinction can be murky.
 
-When the four-pillar lens has led astray:
+When the five-pillar lens has led astray:
 
 - The misconception that "more is better"—more tools, more context, more steering prompts. This floods agents and degrades performance.
 
@@ -129,3 +136,5 @@ When the four-pillar lens has led astray:
 - **To [Context](../4-context/_index.md):** Context management determines what information agents can access during execution. Context window constraints force tradeoffs between comprehensiveness and focus. Effective context strategies prevent information loss while avoiding token waste.
 
 - **To [Tool Use](../5-tool-use/_index.md):** Tools translate agent intelligence into action. Well-designed tools provide clear interfaces and reliable outputs. Tool selection and restriction patterns shape what agents can accomplish and how efficiently they work.
+
+- **To [Harness](../6-harnesses/_index.md):** The harness is the execution environment that wraps and coordinates the other four pillars. It handles tool dispatch, context management, safety enforcement, and loop control. `Agent = Model + Harness` — without the harness, the other pillars produce text rather than completed tasks.

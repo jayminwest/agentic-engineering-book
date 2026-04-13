@@ -104,7 +104,7 @@ This means selecting a newer, higher-accuracy model does not reliably produce a 
 
 The compound error math (above) establishes why per-step reliability matters theoretically. The capability-reliability gap establishes that reliability does not improve as a byproduct of chasing benchmark scores.
 
-Architectural implication: reliability dimensions must become explicit optimization targets, not expected byproducts of capability gains. The question "What reliability threshold is needed for production deployment?" (Core Questions, above) cannot be answered by benchmark accuracy scores alone — it requires measurement against the four reliability dimensions: consistency, robustness, predictability, and safety. These are operationalized in [Evaluation](../../7-practices/2-evaluation.md#reliability-dimensions-beyond-task-completion) and applied as deployment gate criteria in [Production Concerns](../../7-practices/4-production-concerns.md#reliability-thresholds-for-production-deployment).
+Architectural implication: reliability dimensions must become explicit optimization targets, not expected byproducts of capability gains. The question "What reliability threshold is needed for production deployment?" (Core Questions, above) cannot be answered by benchmark accuracy scores alone — it requires measurement against the four reliability dimensions: consistency, robustness, predictability, and safety. These are operationalized in [Evaluation](../../8-practices/2-evaluation.md#reliability-dimensions-beyond-task-completion) and applied as deployment gate criteria in [Production Concerns](../../8-practices/4-production-concerns.md#reliability-thresholds-for-production-deployment).
 
 **Source:** [Towards a Science of AI Agent Reliability](https://arxiv.org/abs/2602.16666) (Rabanser, Kapoor, Narayanan et al., Princeton, 2026); [AI agents are getting more capable, but reliability is lagging](https://fortune.com/2026/03/24/ai-agents-are-getting-more-capable-but-reliability-is-lagging-narayanan-kapoor/) (Fortune, 2026)
 
@@ -362,7 +362,7 @@ Generic judge calibration—calibrate on 50–100 examples, measure agreement, d
 
 A rubric that covers all three dimensions produces evaluation cases that represent the product's actual usage distribution, not a developer's intuition about what matters.
 
-**The principal domain expert principle.** For most teams, a single domain expert whose judgment defines acceptable performance produces more reliable calibration than a committee. Husain terms this the "benevolent dictator" approach: one person's standards govern, with clear accountability. The single-expert approach eliminates annotation conflicts and establishes a quality bar that the automated judge can be trained to replicate. This recommendation pairs with the annotation workflow guidance in [Evaluation](../../7-practices/2-evaluation.md#annotation-workflow-design).
+**The principal domain expert principle.** For most teams, a single domain expert whose judgment defines acceptable performance produces more reliable calibration than a committee. Husain terms this the "benevolent dictator" approach: one person's standards govern, with clear accountability. The single-expert approach eliminates annotation conflicts and establishes a quality bar that the automated judge can be trained to replicate. This recommendation pairs with the annotation workflow guidance in [Evaluation](../../8-practices/2-evaluation.md#annotation-workflow-design).
 
 **Seven-step calibration process:**
 
@@ -441,8 +441,8 @@ These constraints map directly to observability requirements described earlier i
 
 **See Also:**
 - [When to Train Your Own](1-model-selection.md#when-to-train-your-own) — Model selection context for trained-to-task SLMs
-- [Autonomous Loops](../6-patterns/4-autonomous-loops.md) — Autoresearch as a specific application of the autonomous loop pattern
-- [Evaluation (Practices)](../7-practices/2-evaluation.md) — Eval-driven model improvement workflows
+- [Autonomous Loops](../7-patterns/4-autonomous-loops.md) — Autoresearch as a specific application of the autonomous loop pattern
+- [Evaluation (Practices)](../8-practices/2-evaluation.md) — Eval-driven model improvement workflows
 
 **Sources:**
 - Schmid, P. "How Autoresearch will change Small Language Models adoption." philschmid.de, ~2026-03-10. https://www.philschmid.de/autoresearch
@@ -479,7 +479,7 @@ Run these manually. Observe the agent's reasoning, tool calls, and outputs. This
 
 Pipeline-level evaluations produce ambiguous failures: the agent failed, but which component failed? Component-level evaluation isolates each pipeline stage's behavior before composing it into system-level tests. This maps to Husain's Level 1 evaluation hierarchy [Husain, 2024]: deterministic assertions per component, run on every code change. Level 1 must be solid before scaling to Level 2 (model-based evaluations) because model-based evals on a fragile pipeline produce noise, not signal.
 
-**Why the sequencing gate matters.** A RAG pipeline that returns wrong answers could fail at retrieval (wrong chunks returned), reranking (right chunks returned in wrong order), generation (right chunks, wrong synthesis), or format validation (correct content, wrong structure). A single pipeline-level eval catches that something is wrong. Component-level evals identify *which* component is wrong. That specificity is the difference between a debugging session that takes hours and one that takes minutes—see [Debugging Agents](../../7-practices/1-debugging-agents.md) for how failure attribution accelerates diagnosis.
+**Why the sequencing gate matters.** A RAG pipeline that returns wrong answers could fail at retrieval (wrong chunks returned), reranking (right chunks returned in wrong order), generation (right chunks, wrong synthesis), or format validation (correct content, wrong structure). A single pipeline-level eval catches that something is wrong. Component-level evals identify *which* component is wrong. That specificity is the difference between a debugging session that takes hours and one that takes minutes—see [Debugging Agents](../../8-practices/1-debugging-agents.md) for how failure attribution accelerates diagnosis.
 
 **Canonical component list for RAG systems** (the most common pipeline architecture in deployed agents):
 
@@ -549,11 +549,11 @@ Common evaluation mistakes waste time and produce misleading results.
 
 ## Connections
 
-- **To [Evaluation (Practices)](../../7-practices/2-evaluation.md):** Practical evaluation workflows, tooling, and integration with development cycles.
-- **To [Debugging Agents](../../7-practices/1-debugging-agents.md):** Evaluation metrics guide debugging by identifying where in the workflow failures occur. Observability infrastructure supports both evaluation and debugging.
+- **To [Evaluation (Practices)](../../8-practices/2-evaluation.md):** Practical evaluation workflows, tooling, and integration with development cycles.
+- **To [Debugging Agents](../../8-practices/1-debugging-agents.md):** Evaluation metrics guide debugging by identifying where in the workflow failures occur. Observability infrastructure supports both evaluation and debugging.
 - **To [Tool Use](../../5-tool-use/_index.md):** Tool calling accuracy is a critical evaluation metric. Tool design quality directly impacts agent performance on benchmarks.
 - **To [Model Selection](1-model-selection.md):** Evaluation metrics determine which models are suitable for which tasks. Benchmark performance predicts (but doesn't guarantee) production capability.
-- **To [Cost and Latency](../../7-practices/3-cost-and-latency.md):** Evaluation must include cost and latency metrics, not just accuracy. Multi-step workflows amplify both cost and latency beyond single-turn estimates.
+- **To [Cost and Latency](../../8-practices/3-cost-and-latency.md):** Evaluation must include cost and latency metrics, not just accuracy. Multi-step workflows amplify both cost and latency beyond single-turn estimates.
 - **To [Model Selection — When to Train Your Own](1-model-selection.md#when-to-train-your-own):** Evaluation infrastructure is the prerequisite for autoresearch. Practitioners with production eval pipelines can extend them to drive trained-to-task SLM development.
 
 ---

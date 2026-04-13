@@ -91,7 +91,7 @@ The pattern: keep the small model's context minimal (base config, project prompt
 This explains why Haiku excels at scouting—it's not doing heavy reasoning, it's doing targeted retrieval with lightweight synthesis. The orchestrator handles the complex reasoning; the small model handles the fast, focused lookup.
 
 **See Also**:
-- [Orchestrator Pattern: Capability Minimization](../6-patterns/3-orchestrator-pattern.md#capability-minimization) — How tool restriction complements model selection
+- [Orchestrator Pattern: Capability Minimization](../7-patterns/3-orchestrator-pattern.md#capability-minimization) — How tool restriction complements model selection
 - [Context: Context Loading vs. Accumulation](../4-context/3-context-patterns.md#context-loading-vs-context-accumulation) — The "payload" mental model that makes small models work
 - [Context Loading Demo](../../appendices/examples/context-loading-demo/README.md) — Demonstrates Haiku as retrieval agent with minimal context payloads (~800 tokens)
 
@@ -138,8 +138,8 @@ It does not apply to general-purpose workloads, tasks that change frequently, or
 
 **See Also:**
 - [Evaluation Inside Training Loops](5-model-evaluation.md#evaluation-inside-training-loops) — How validation loss functions as the fitness signal inside the autoresearch loop
-- [Autonomous Loops](../6-patterns/4-autonomous-loops.md) — Structural parallel: autoresearch is an autonomous loop applied to model improvement
-- [Cost and Latency](../7-practices/3-cost-and-latency.md) — Economics of SLM fine-tuning vs. frontier model API costs
+- [Autonomous Loops](../7-patterns/4-autonomous-loops.md) — Structural parallel: autoresearch is an autonomous loop applied to model improvement
+- [Cost and Latency](../8-practices/3-cost-and-latency.md) — Economics of SLM fine-tuning vs. frontier model API costs
 
 **Sources:**
 - Schmid, P. "How Autoresearch will change Small Language Models adoption." philschmid.de, ~2026-03-10. https://www.philschmid.de/autoresearch
@@ -252,7 +252,7 @@ AgentArch (arXiv:2509.10769) evaluated model-architecture pairings across enterp
 **Implication:** Reasoning models (o-series, extended thinking) are not universally superior to standard frontier models in agentic systems — they are more sensitive to getting the harness configuration right. Standard frontier models offer more predictable baselines across configurations.
 
 **See Also:**
-- [Agent Frameworks](../9-practitioner-toolkit/4-agent-frameworks.md) — Framework comparison and harness capability tiers
+- [Agent Frameworks](../10-practitioner-toolkit/4-agent-frameworks.md) — Framework comparison and harness capability tiers
 - [Model Evaluation](5-model-evaluation.md) — Cognitive profiles across providers
 - [Multi-Model Architectures](4-multi-model-architectures.md) — Cross-provider orchestration patterns
 
@@ -374,6 +374,6 @@ Compare to single Opus doing everything: $1.00 but serial execution (5× slower)
 
 ## See Also
 
-- [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md) - How model selection integrates with coordination patterns
-- [Cost and Latency](../7-practices/3-cost-and-latency.md) - Economic optimization for multi-agent systems
+- [Orchestrator Pattern](../7-patterns/3-orchestrator-pattern.md) - How model selection integrates with coordination patterns
+- [Cost and Latency](../8-practices/3-cost-and-latency.md) - Economic optimization for multi-agent systems
 - [Evaluation Inside Training Loops](5-model-evaluation.md#evaluation-inside-training-loops) — How validation loss functions as the fitness signal in autoresearch

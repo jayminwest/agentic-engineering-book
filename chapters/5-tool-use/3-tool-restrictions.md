@@ -43,7 +43,7 @@ Tool restrictions aren't just about capability—they're security boundaries. Tr
 **Production Lesson**: Permission sprawl compounds. Start restrictive and expand only when you hit actual blockers. It's much easier to grant additional permissions than to clean up after an agent with too much access does something unexpected.
 
 **See Also**:
-- [Orchestrator Pattern: Capability Minimization](../6-patterns/3-orchestrator-pattern.md#capability-minimization) — How tool restriction becomes an architectural forcing function for delegation
+- [Orchestrator Pattern: Capability Minimization](../7-patterns/3-orchestrator-pattern.md#capability-minimization) — How tool restriction becomes an architectural forcing function for delegation
 
 **Sources**: [Subagents in the SDK - Claude Docs](https://platform.claude.com/docs/en/agent-sdk/subagents), [Claude Agent SDK Best Practices](https://skywork.ai/blog/claude-agent-sdk-best-practices-ai-agents-2025/), [Best practices for Claude Code subagents](https://www.pubnub.com/blog/best-practices-for-claude-code-sub-agents/)
 
@@ -94,8 +94,8 @@ tools: mcp__playwright__browser_click, mcp__firecrawl-mcp__firecrawl_scrape, Wri
 **Gap**: Frontmatter only references tools by name—server configuration (endpoints, auth, schemas) happens elsewhere (`.mcp.json`, environment variables, or external config). The declaration pattern is separate from the instantiation pattern.
 
 **See Also**:
-- [Claude Code: Subagent System](../9-practitioner-toolkit/1-claude-code.md#subagent-system) — How MCP tools integrate with subagent definitions
-- [Orchestrator Pattern: Tool Assignment](../6-patterns/3-orchestrator-pattern.md#tool-assignment) — Role-based MCP tool assignment in multi-agent workflows
+- [Claude Code: Subagent System](../10-practitioner-toolkit/1-claude-code.md#subagent-system) — How MCP tools integrate with subagent definitions
+- [Orchestrator Pattern: Tool Assignment](../7-patterns/3-orchestrator-pattern.md#tool-assignment) — Role-based MCP tool assignment in multi-agent workflows
 
 ---
 
@@ -228,5 +228,5 @@ Run permission tests in isolation before production use. Permission validation a
 
 - **To [Tool Selection](2-tool-selection.md):** Restrictions affect what's selectable
 - **To [Scaling Tools](4-scaling-tools.md):** MCP deployment patterns intersect with security
-- **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** Delegation as security enforcement
-- **To [Production Concerns](../7-practices/4-production-concerns.md):** Security in production environments
+- **To [Orchestrator Pattern](../7-patterns/3-orchestrator-pattern.md):** Delegation as security enforcement
+- **To [Production Concerns](../8-practices/4-production-concerns.md):** Security in production environments

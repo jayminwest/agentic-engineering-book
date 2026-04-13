@@ -72,7 +72,7 @@ For simple tasks, multi-agent context isolation introduces unnecessary overhead.
 
 Both patterns achieve context hygiene, but agent teams add collaboration primitives that subagents lack.
 
-**See:** [Agent Teams documentation](../../9-practitioner-toolkit/1-claude-code.md#agent-teams-native-multi-agent-coordination-experimental) for coordination patterns, message primitives, and decision frameworks. [Official Claude Code docs](https://docs.claude.com/en/docs/claude-code/agent-teams) for setup and usage.
+**See:** [Agent Teams documentation](../../10-practitioner-toolkit/1-claude-code.md#agent-teams-native-multi-agent-coordination-experimental) for coordination patterns, message primitives, and decision frameworks. [Official Claude Code docs](https://docs.claude.com/en/docs/claude-code/agent-teams) for setup and usage.
 
 ### Contrast with Single-Agent
 
@@ -80,7 +80,7 @@ Single-agent approaches accumulate everything in one context window. Context com
 
 ### See Also
 
-[Orchestrator Pattern: Context Isolation via Sub-Agents](../6-patterns/3-orchestrator-pattern.md#context-isolation-via-sub-agents) — Implementation details on how sub-agents act as disposable context buffers, returning synthesized summaries rather than raw data to keep orchestrator context clean.
+[Orchestrator Pattern: Context Isolation via Sub-Agents](../7-patterns/3-orchestrator-pattern.md#context-isolation-via-sub-agents) — Implementation details on how sub-agents act as disposable context buffers, returning synthesized summaries rather than raw data to keep orchestrator context clean.
 
 ### Sub-Agent Forking
 
@@ -206,7 +206,7 @@ This is a real gap. When an agent learns something valuable mid-session, how doe
 
 ### See Also
 
-[Google ADK: State and Memory Architecture](../9-practitioner-toolkit/2-google-adk.md#state-and-memory-architecture) — Concrete implementation of state scoping
+[Google ADK: State and Memory Architecture](../10-practitioner-toolkit/2-google-adk.md#state-and-memory-architecture) — Concrete implementation of state scoping
 
 ---
 
@@ -273,9 +273,9 @@ This aligns with the token economics of multi-agent systems: spending tokens on 
 
 - **To [Context Fundamentals](1-context-fundamentals.md):** How multi-agent isolation changes the "One Agent, One Task" model
 - **To [Advanced Context Patterns](3-context-patterns.md):** ACE playbooks are persistent state loaded into ephemeral context
-- **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** How orchestrators use context isolation to maintain clean working memory
-- **To [Expert Swarm Pattern](../6-patterns/8-expert-swarm-pattern.md):** Path-passing protocol implements expertise sharing without context pollution. Workers receive `EXPERTISE_PATH: /path/to/expertise.yaml` and read relevant sections themselves. Prevents context pollution while maintaining consistency.
-- **To [Google ADK](../9-practitioner-toolkit/2-google-adk.md):** Production implementation of persistent state
+- **To [Orchestrator Pattern](../7-patterns/3-orchestrator-pattern.md):** How orchestrators use context isolation to maintain clean working memory
+- **To [Expert Swarm Pattern](../7-patterns/8-expert-swarm-pattern.md):** Path-passing protocol implements expertise sharing without context pollution. Workers receive `EXPERTISE_PATH: /path/to/expertise.yaml` and read relevant sections themselves. Prevents context pollution while maintaining consistency.
+- **To [Google ADK](../10-practitioner-toolkit/2-google-adk.md):** Production implementation of persistent state
 
 ---
 

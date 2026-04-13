@@ -381,7 +381,7 @@ Regression tests don't prevent model changes—they surface the impact so inform
 *[2025-12-10]*: Spotify's production agent infrastructure runs continuous regression testing against new model releases. Deployment decision: if new version scores >5% better on capability benchmarks but breaks <2% of existing workflows, upgrade proceeds with targeted prompt adjustments. If breakage exceeds 5%, upgrade deferred until prompts can be updated.
 
 **See Also**:
-- [Evaluation](../7-practices/2-evaluation.md) — Building test suites for agent systems
+- [Evaluation](../8-practices/2-evaluation.md) — Building test suites for agent systems
 - [Model Selection](1-model-selection.md) — When to upgrade vs. stay pinned
 
 ---
@@ -446,7 +446,7 @@ Beyond basic arithmetic (already solved by calculator tools), some tasks require
 
 **See Also**:
 - [Context Management Strategies](../4-context/2-context-strategies.md#frequent-intentional-compaction) — Proactive compaction pattern
-- [Pit of Success](../8-mental-models/1-pit-of-success.md) — Designing context as probability landscape
+- [Pit of Success](../9-mental-models/1-pit-of-success.md) — Designing context as probability landscape
 
 ---
 
@@ -482,7 +482,7 @@ Beyond basic arithmetic (already solved by calculator tools), some tasks require
 **Better approach**: Default to frontier models for initial development. When failures occur, debug systematically—check prompt clarity, context relevance, tool availability, output validation. Model upgrade is one possible solution, not the first resort.
 
 **See Also**:
-- [Debugging Agents](../7-practices/1-debugging-agents.md#anti-pattern-blame-the-model) — Systematic debugging patterns
+- [Debugging Agents](../8-practices/1-debugging-agents.md#anti-pattern-blame-the-model) — Systematic debugging patterns
 - [Model Selection](1-model-selection.md#when-to-downgrade) — When model changes actually help
 
 ---
@@ -493,8 +493,8 @@ Beyond basic arithmetic (already solved by calculator tools), some tasks require
 
 - **To [Context](../4-context/2-context-strategies.md):** Context management addresses window limits and instruction drift. Frequent compaction, strategic placement, and proactive context hygiene prevent degradation before it becomes emergency salvage.
 
-- **To [Evaluation](../7-practices/2-evaluation.md):** Regression testing catches version-specific behavior changes. Evaluation suites make model upgrades measurable decisions rather than blind deployments.
+- **To [Evaluation](../8-practices/2-evaluation.md):** Regression testing catches version-specific behavior changes. Evaluation suites make model upgrades measurable decisions rather than blind deployments.
 
 - **To [Model Selection](1-model-selection.md):** Understanding limitations informs when to downgrade (small model sufficient for constrained task) vs. when frontier models are necessary (complex reasoning, multi-step planning).
 
-- **To [Debugging Agents](../7-practices/1-debugging-agents.md):** Recognizing limitations prevents misdiagnosis—"model isn't capable" vs. "prompt isn't clear" vs. "context is polluted." Systematic debugging separates model limits from engineering errors.
+- **To [Debugging Agents](../8-practices/1-debugging-agents.md):** Recognizing limitations prevents misdiagnosis—"model isn't capable" vs. "prompt isn't clear" vs. "context is polluted." Systematic debugging separates model limits from engineering errors.

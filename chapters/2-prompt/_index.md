@@ -204,7 +204,7 @@ Treat prompts like code:
 - **To [Tool Use](../5-tool-use/_index.md):** Tool descriptions are prompts themselves. Poor tool docs lead to misuse regardless of the main prompt quality. Tool restrictions define what agents can do—a form of capability prompting.
 - **To [Prompt Types](1-prompt-types.md):** Understanding prompt maturity levels helps you choose the right complexity for your use case.
 - **To [Prompt Language](3-language.md):** Specific linguistic choices—verb mood, constraint framing, structural delimiters—significantly impact how models interpret and execute prompts.
-- **To [Claude Code](../9-practitioner-toolkit/1-claude-code.md):** Skills (model-invoked) and slash commands (user-invoked) exemplify the invocation pattern trade-offs in practice.
+- **To [Claude Code](../10-practitioner-toolkit/1-claude-code.md):** Skills (model-invoked) and slash commands (user-invoked) exemplify the invocation pattern trade-offs in practice.
 
 ---
 
@@ -328,7 +328,7 @@ The model-invoked layer handles delegation to specialists. The user-invoked laye
 ### Implementation Examples
 
 **Claude Code Skills** (model-invoked):
-Skills are defined in `.claude/agents/*.md` with frontmatter containing `name` and `description`. The orchestrator reads the description and decides whether to spawn the subagent based on semantic matching. See [Claude Code: Subagent System](../9-practitioner-toolkit/1-claude-code.md#subagent-system) for details.
+Skills are defined in `.claude/agents/*.md` with frontmatter containing `name` and `description`. The orchestrator reads the description and decides whether to spawn the subagent based on semantic matching. See [Claude Code: Subagent System](../10-practitioner-toolkit/1-claude-code.md#subagent-system) for details.
 
 **Slash Commands** (user-invoked):
 Commands are defined in `.claude/commands/**/*.md` and appear in the autocomplete menu when the user types `/`. The user sees the command name and brief description, then chooses to invoke. See [Claude Code documentation](https://code.claude.com/docs/en/slash-commands) for implementation details.

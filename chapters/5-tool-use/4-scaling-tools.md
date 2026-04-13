@@ -39,7 +39,7 @@ Patterns for managing large numbers of tools without overwhelming context or deg
 
 **See Also**:
 - [Context: Progressive Disclosure](../4-context/3-context-patterns.md#progressive-disclosure-pattern) — The underlying pattern for tiered information loading
-- [Cost and Latency](../7-practices/3-cost-and-latency.md) — Token cost implications of discovery vs. eager loading
+- [Cost and Latency](../8-practices/3-cost-and-latency.md) — Token cost implications of discovery vs. eager loading
 
 **Source**: [Advanced Tool Use - Anthropic](https://www.anthropic.com/engineering/advanced-tool-use)
 
@@ -75,7 +75,7 @@ Patterns for managing large numbers of tools without overwhelming context or deg
 
 **See Also**:
 - [Context: Multi-Agent Context Isolation](../4-context/4-multi-agent-context.md#multi-agent-context-isolation) — Related pattern for preventing context pollution through agent boundaries
-- [Cost and Latency: Token Cost Models](../7-practices/3-cost-and-latency.md#token-cost-models-by-feature-type) — How programmatic orchestration compares to other approaches
+- [Cost and Latency: Token Cost Models](../8-practices/3-cost-and-latency.md#token-cost-models-by-feature-type) — How programmatic orchestration compares to other approaches
 
 **Source**: [Advanced Tool Use - Anthropic](https://www.anthropic.com/engineering/advanced-tool-use)
 
@@ -136,7 +136,7 @@ This serves two purposes:
 1. **Security**: Expose only needed capabilities per agent
 2. **Model focus**: Fewer tools means better tool selection (less overwhelm)
 
-**See Also**: [Google ADK: MCP Integration](../9-practitioner-toolkit/2-google-adk.md#mcp-integration) — Concrete implementation patterns
+**See Also**: [Google ADK: MCP Integration](../10-practitioner-toolkit/2-google-adk.md#mcp-integration) — Concrete implementation patterns
 
 ---
 
@@ -226,6 +226,6 @@ Manual mode requires explicit tool declarations in prompts or configuration. Use
 - **To [Tool Selection](2-tool-selection.md):** Discovery changes selection dynamics
 - **To [Tool Restrictions](3-tool-restrictions.md):** MCP deployment intersects security
 - **To [Context](../4-context/_index.md):** Progressive disclosure and context management
-- **To [Cost and Latency](../7-practices/3-cost-and-latency.md):** Token cost models by feature type
-- **To [Google ADK](../9-practitioner-toolkit/2-google-adk.md):** MCP implementation patterns
-- **To [Enterprise Codebase Context Tools](../9-practitioner-toolkit/6-enterprise-context-tools.md):** For tool selection in enterprise brownfield contexts, the MCP deployment patterns documented here (transport mechanism, auto-selection thresholds, tool filtering) apply directly to tools like Serena MCP, Augment's Context Engine MCP, and Sourcegraph's MCP server surveyed there.
+- **To [Cost and Latency](../8-practices/3-cost-and-latency.md):** Token cost models by feature type
+- **To [Google ADK](../10-practitioner-toolkit/2-google-adk.md):** MCP implementation patterns
+- **To [Enterprise Codebase Context Tools](../10-practitioner-toolkit/6-enterprise-context-tools.md):** For tool selection in enterprise brownfield contexts, the MCP deployment patterns documented here (transport mechanism, auto-selection thresholds, tool filtering) apply directly to tools like Serena MCP, Augment's Context Engine MCP, and Sourcegraph's MCP server surveyed there.

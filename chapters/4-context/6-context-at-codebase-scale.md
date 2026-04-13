@@ -13,7 +13,7 @@ order: 1.4.6
 
 # Context at Codebase Scale
 
-*[2026-02-11]*: Multi-agent deployments fail in the majority of enterprises — not due to agent capability limitations but due to architectural misunderstanding of legacy systems and undocumented dependencies. The systems agents interact with were not designed for automated consumption. Undocumented APIs, implicit workflows, and tribal knowledge create failure surfaces that no amount of agent sophistication can navigate without explicit mapping. ([Multi-Agent Landscape](../6-patterns/10-multi-agent-landscape.md))
+*[2026-02-11]*: Multi-agent deployments fail in the majority of enterprises — not due to agent capability limitations but due to architectural misunderstanding of legacy systems and undocumented dependencies. The systems agents interact with were not designed for automated consumption. Undocumented APIs, implicit workflows, and tribal knowledge create failure surfaces that no amount of agent sophistication can navigate without explicit mapping. ([Multi-Agent Landscape](../7-patterns/10-multi-agent-landscape.md))
 
 This section addresses that failure mode directly with a pattern catalog for managing agent context in codebases that are too large, too old, or too underdocumented for naive context loading.
 
@@ -71,7 +71,7 @@ The patterns in this section address both failure types. Semantic indexing (Patt
 
 The same 85% token reduction principle documented for dynamic tool discovery in [Scaling Tool Use](../5-tool-use/4-scaling-tools.md) applies here: representing thousands of symbols as metadata is dramatically cheaper than representing them as full content, while maintaining the agent's ability to navigate to full content on demand.
 
-The [Progressive Disclosure Pattern](../6-patterns/7-progressive-disclosure.md) provides the three-tier loading model that semantic indexing implements at the codebase level: the index is Tier 1 (metadata), retrieved file contents are Tier 2 (activated content), and referenced dependencies are Tier 3 (on-demand resources).
+The [Progressive Disclosure Pattern](../7-patterns/7-progressive-disclosure.md) provides the three-tier loading model that semantic indexing implements at the codebase level: the index is Tier 1 (metadata), retrieved file contents are Tier 2 (activated content), and referenced dependencies are Tier 3 (on-demand resources).
 
 **Failure mode.** Semantic indexing fails when symbol names are misleading or when the codebase uses implicit conventions that the index cannot capture. A function named `processData` that actually handles PII scrubbing is indexed as `processData` — its constraint regime is invisible until an agent reads it and encounters the business logic. Semantic indexing addresses coverage; it does not address the tribal knowledge failure type.
 
@@ -91,7 +91,7 @@ The [Progressive Disclosure Pattern](../6-patterns/7-progressive-disclosure.md) 
 
 The insight is structural: convention files should mirror the directory hierarchy they document. A file at `services/payments/CLAUDE.md` containing PCI-DSS constraints serves a fundamentally different purpose than a root file containing overall project conventions. Agents navigating the payments service inherit both — the root context and the module-specific override.
 
-The book's prior evidence for this pattern appears in [Production Concerns](../7-practices/4-production-concerns.md): "For large codebases, this is essential — agents can't infer all conventions from code alone."
+The book's prior evidence for this pattern appears in [Production Concerns](../8-practices/4-production-concerns.md): "For large codebases, this is essential — agents can't infer all conventions from code alone."
 
 **Failure mode.** Hierarchical convention files fail when they drift from the code they document. A module-level file that described the state of a service two years ago may actively mislead agents navigating the current state. Convention files require maintenance discipline — they are living documentation, not one-time artifacts.
 
@@ -113,7 +113,7 @@ ADRs give agents the *why*, which is invisible to semantic indexing and invisibl
 
 **The AI-assisted retrospective ADR pattern.** For legacy codebases that predate ADR practices, retrospective generation is viable: feed existing code, test files, and commit history to a model to generate candidate ADRs for documented decisions. The generated candidates require human review and correction, but the process surfaces implicit decisions and makes them explicit. This turns tribal knowledge into structured context.
 
-The relationship to [Specs as Source Code](../8-mental-models/3-specs-as-source-code.md) is direct: ADRs are a specific form of specification — the decision itself as an artifact that agents can read and respect, not just code that embeds the decision invisibly.
+The relationship to [Specs as Source Code](../9-mental-models/3-specs-as-source-code.md) is direct: ADRs are a specific form of specification — the decision itself as an artifact that agents can read and respect, not just code that embeds the decision invisibly.
 
 **Failure mode.** ADRs fail when they are disconnected from the code they document. An ADR that references a decision no longer reflected in the code misleads more than no ADR at all. ADRs must be co-located with or explicitly linked to the code they constrain.
 
@@ -149,7 +149,7 @@ The KotaDB case study (`appendices/examples/kotadb/CASE_STUDY.md:361-397`) demon
 
 ### Pattern 5: Progressive Codebase Disclosure
 
-**Reference only — see [Progressive Disclosure Pattern](../6-patterns/7-progressive-disclosure.md).**
+**Reference only — see [Progressive Disclosure Pattern](../7-patterns/7-progressive-disclosure.md).**
 
 The three-tier loading model documented in that section (metadata index → activated content → on-demand resources) transfers directly to codebase navigation at scale. The adaptation:
 
@@ -175,7 +175,7 @@ The original pattern was documented for loading expertise and skills into agent 
 
 *The thin-pointer model.* For large legacy codebases, the root convention file is a navigation hub rather than a knowledge repository. Domain knowledge lives in module-level expertise files, and the root file provides the map. This mirrors the pattern documented in the external-teacher expertise: a 31KB legacy system document replaced with a 104-line navigation hub pointing to domain-specific expertise files. The result is composable — agents load only the expertise relevant to their current task rather than loading all domain knowledge upfront.
 
-The relationship to [Specs as Source Code](../8-mental-models/3-specs-as-source-code.md) is foundational: tribal knowledge codification is the process of creating the specs that agents will use as source. Without this phase, other patterns operate on an incomplete substrate.
+The relationship to [Specs as Source Code](../9-mental-models/3-specs-as-source-code.md) is foundational: tribal knowledge codification is the process of creating the specs that agents will use as source. Without this phase, other patterns operate on an incomplete substrate.
 
 **Failure mode.** Tribal knowledge codification fails when it is treated as a one-time project rather than a continuous practice. The knowledge base grows stale as the system evolves. Codification requires a maintenance discipline: when a tribal decision changes, the documentation changes with it.
 
@@ -264,14 +264,14 @@ Archetype definitions:
 
 - **To [Context Management Architectures](5-context-management-architectures.md):** Where Section 5 addresses depth (long sessions, context compaction, LCM, Sapling), this section addresses width (large codebases, navigating scale). The two sections are designed to be read together for enterprise deployments — long-session management and codebase-scale context are distinct problems with distinct pattern catalogs.
 
-- **To [Progressive Disclosure Pattern](../6-patterns/7-progressive-disclosure.md):** The three-tier loading model (metadata index → activated content → on-demand resources) is the structural template for codebase navigation at scale. Pattern 5 in this section applies that model to brownfield codebases without redefining it — the pattern transfers directly.
+- **To [Progressive Disclosure Pattern](../7-patterns/7-progressive-disclosure.md):** The three-tier loading model (metadata index → activated content → on-demand resources) is the structural template for codebase navigation at scale. Pattern 5 in this section applies that model to brownfield codebases without redefining it — the pattern transfers directly.
 
 - **To [Scaling Tool Use](../5-tool-use/4-scaling-tools.md):** The 85% token reduction from dynamic tool discovery applies to semantic codebase indexing by the same mechanism — metadata representation is dramatically cheaper than full-content representation while preserving the agent's ability to navigate to full content on demand.
 
-- **To [Production Concerns](../7-practices/4-production-concerns.md):** The CLAUDE.md as convention encoding principle cited there is the foundation for Pattern 2 (Hierarchical Convention Files) and Pattern 6 (Tribal Knowledge Codification). The production concerns chapter provides the operational context; this section provides the codebase-scale application.
+- **To [Production Concerns](../8-practices/4-production-concerns.md):** The CLAUDE.md as convention encoding principle cited there is the foundation for Pattern 2 (Hierarchical Convention Files) and Pattern 6 (Tribal Knowledge Codification). The production concerns chapter provides the operational context; this section provides the codebase-scale application.
 
-- **To [Specs as Source Code](../8-mental-models/3-specs-as-source-code.md):** ADRs (Pattern 3) and tribal knowledge codification (Pattern 6) are direct applications of the specs-as-source-code mental model. Tribal knowledge that has not been codified is source code that has not been checked in — it exists only in human memory and is lost when that memory is unavailable.
+- **To [Specs as Source Code](../9-mental-models/3-specs-as-source-code.md):** ADRs (Pattern 3) and tribal knowledge codification (Pattern 6) are direct applications of the specs-as-source-code mental model. Tribal knowledge that has not been codified is source code that has not been checked in — it exists only in human memory and is lost when that memory is unavailable.
 
-- **To [Multi-Agent Landscape](../6-patterns/10-multi-agent-landscape.md):** The 60% enterprise failure rate documented there is the explicit motivation for this section. The patterns here answer the open question at that section's close: what architectural patterns address brownfield context failure surfaces?
+- **To [Multi-Agent Landscape](../7-patterns/10-multi-agent-landscape.md):** The 60% enterprise failure rate documented there is the explicit motivation for this section. The patterns here answer the open question at that section's close: what architectural patterns address brownfield context failure surfaces?
 
 - **To [Gas Town Case Study](../../appendices/examples/gastown/_index.md):** Gas Town's 189K LOC Go system and its documented failure surfaces — tribal knowledge, undocumented APIs, implicit workflows — are the concrete evidence base for the brownfield failure modes this section addresses. The system demonstrates at production scale what happens when agents navigate complex legacy code without the context infrastructure described here.

@@ -297,5 +297,5 @@ Claude Code adds a sixth functional layer via hooks — pre/post action enforcem
 - **To [Tool Selection](2-tool-selection.md):** Design choices directly impact selection accuracy
 - **To [Prompt](../2-prompt/_index.md):** Tool descriptions are prompts themselves—see [Model-Invoked vs. User-Invoked Prompts](../2-prompt/_index.md#model-invoked-vs-user-invoked-prompts)
 - **To [Scaling Tools](4-scaling-tools.md):** Good design becomes critical when managing dozens of tools
-- **To [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md):** AskUserQuestion maximal pattern demonstrates rich clarification as coordination tool. Orchestrators use structured questioning before delegation to absorb complexity and radiate simplicity.
-- **To [ReAct Pattern](../6-patterns/5-react-pattern.md):** Edit format choice directly affects observation quality in coding agent loops. Search-replace formats produce cleaner, verifiable observations than whole-file rewrites.
+- **To [Orchestrator Pattern](../7-patterns/3-orchestrator-pattern.md):** AskUserQuestion maximal pattern demonstrates rich clarification as coordination tool. Orchestrators use structured questioning before delegation to absorb complexity and radiate simplicity.
+- **To [ReAct Pattern](../7-patterns/5-react-pattern.md):** Edit format choice directly affects observation quality in coding agent loops. Search-replace formats produce cleaner, verifiable observations than whole-file rewrites.

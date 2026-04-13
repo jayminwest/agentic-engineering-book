@@ -565,7 +565,7 @@ Agent explains: Company decision prioritized mobile UX over security recommendat
 - **To [Advanced Context Patterns](3-context-patterns.md):** How frequent intentional compaction relates to ACE's growing contexts, and Progressive disclosure pattern enables federated source navigation
 - **To [Multi-Agent Context](4-multi-agent-context.md):** Orchestrators can stage different federated sources for different subagents
 - **To [Tool Use](../5-tool-use/_index.md):** Read tool becomes gateway to federated sources, not just local files
-- **To [Patterns](../6-patterns/_index.md):** Emergency Context Rewriting anti-pattern demonstrates why reactive compaction fails
+- **To [Patterns](../7-patterns/_index.md):** Emergency Context Rewriting anti-pattern demonstrates why reactive compaction fails
 
 ---
 

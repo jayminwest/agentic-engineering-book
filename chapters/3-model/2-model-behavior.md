@@ -230,7 +230,7 @@ The pattern appears most clearly in conversations exceeding 50% of context windo
 
 **Practitioner implication:** Published benchmark scores for frontier models should be treated as lower bounds on production capability, not precise point estimates. A model performing at X% on a benchmark may perform better in production contexts where evaluation signals are absent. This cuts against relying solely on benchmark comparisons for model selection decisions on high-stakes tasks — the gap between benchmarked and deployed behavior is non-trivial and may widen as model capability increases.
 
-**Mitigation:** Supplement published benchmarks with behavioral testing in production-representative contexts. Production-context evaluations avoid the evaluation-signal artifacts that formal benchmarks carry at frontier scale. See [Model Evaluation](5-model-evaluation.md) for evaluation methodology and [Practices: Evaluation](../7-practices/2-evaluation.md) for production-grounded testing patterns.
+**Mitigation:** Supplement published benchmarks with behavioral testing in production-representative contexts. Production-context evaluations avoid the evaluation-signal artifacts that formal benchmarks carry at frontier scale. See [Model Evaluation](5-model-evaluation.md) for evaluation methodology and [Practices: Evaluation](../8-practices/2-evaluation.md) for production-grounded testing patterns.
 
 **Sources:**
 - Anthropic Alignment Risk Update ([anthropic.com/claude-mythos-preview-risk-report](https://anthropic.com/claude-mythos-preview-risk-report)): 29% evaluation awareness rate
@@ -326,9 +326,9 @@ Project GlassWing (Anthropic, April 2026) is the first publicly documented capab
 
 - **To [Prompt](../2-prompt/_index.md):** Model behavioral patterns interact with prompt structure. Different models interpret the same prompt differently. Clear instruction structure reduces variance. See [Prompt Structuring](../2-prompt/2-structuring.md) for format design patterns.
 
-- **To [Patterns](../6-patterns/_index.md):** Orchestrator pattern relies on family-level behavioral consistency. See [Orchestrator Pattern](../6-patterns/3-orchestrator-pattern.md) for how multi-model systems leverage shared behavioral patterns.
+- **To [Patterns](../7-patterns/_index.md):** Orchestrator pattern relies on family-level behavioral consistency. See [Orchestrator Pattern](../7-patterns/3-orchestrator-pattern.md) for how multi-model systems leverage shared behavioral patterns.
 
-- **To [Practices](../7-practices/_index.md):** Temperature settings and variance management affect cost and reliability. See [Cost and Latency](../7-practices/3-cost-and-latency.md) for how multi-agent architectures trade tokens for deterministic quality.
+- **To [Practices](../8-practices/_index.md):** Temperature settings and variance management affect cost and reliability. See [Cost and Latency](../8-practices/3-cost-and-latency.md) for how multi-agent architectures trade tokens for deterministic quality.
 
 ---
 

@@ -73,7 +73,7 @@ Slight latency on selection (additional tool call to fetch full content) for dra
 
 - Tool descriptions as metadata layer (Read/Grep as on-demand fetchers)
 - Structured indices with `description` fields (see [MCP Tool Declarations](../5-tool-use/3-tool-restrictions.md#mcp-tool-declarations-in-frontmatter))
-- Skills systems (see [Claude Code: Skills](../9-practitioner-toolkit/1-claude-code.md))
+- Skills systems (see [Claude Code: Skills](../10-practitioner-toolkit/1-claude-code.md))
 
 *[2026-02-06]*: Federated knowledge architecture uses progressive disclosure to navigate multi-repository contexts. Instead of loading all repos upfront, load source metadata first (repo names, descriptions), then expand specific repos on-demand. See [Federated Knowledge Architecture](2-context-strategies.md#federated-knowledge-architecture) for distributed context management patterns.
 
@@ -296,9 +296,9 @@ It's a shift from **context as constraint** to **context as knowledge base**. Th
 - **To [Context Strategies](2-context-strategies.md):** Frequent Intentional Compaction as complementary compression strategy
 - **To [Multi-Agent Context](4-multi-agent-context.md):** How generator/reflector/curator roles maintain separate contexts
 - **To [Tool Use](../5-tool-use/_index.md):** MCP tool declarations and progressive disclosure via tool metadata
-- **To [Claude Code](../9-practitioner-toolkit/1-claude-code.md):** Skills implement progressive disclosure in production
+- **To [Claude Code](../10-practitioner-toolkit/1-claude-code.md):** Skills implement progressive disclosure in production
 
-- **To [Progressive Disclosure Pattern](../6-patterns/7-progressive-disclosure.md)**: Progressive Disclosure applies context loading principles from this section as a standalone agent design pattern with tier-based loading strategies.
+- **To [Progressive Disclosure Pattern](../7-patterns/7-progressive-disclosure.md)**: Progressive Disclosure applies context loading principles from this section as a standalone agent design pattern with tier-based loading strategies.
 
 ---
 
