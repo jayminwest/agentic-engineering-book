@@ -4,10 +4,6 @@
 
 📖 **[Read the web version](https://jayminwest.com/agentic-engineering-book)** *(updated daily at 6am)*
 
-> [!CAUTION]
-> **This book is maintained by LLMs using the techniques described within.**
-> Content is written and updated by Claude using agentic workflows, slash commands, and self-improving expert agents. Human review ensures accuracy, but the authoring process itself is an exercise in agentic engineering.
-
 A practical guide to building agentic systems—covering prompts, models, context, and tooling. Written from hands-on experience, not abstractions.
 
 ## Structure
@@ -15,16 +11,19 @@ A practical guide to building agentic systems—covering prompts, models, contex
 ```
 ├── PREFACE.md           # Book introduction
 ├── TABLE_OF_CONTENTS.md # Auto-generated from frontmatter
-├── chapters/            # Main content organized by topic
-│   ├── 1-foundations/   # Part 1: Foundations
+├── chapters/                      # Main content organized by topic
+│   ├── 1-foundations/             # Part 1: Foundations
 │   ├── 2-prompt/
 │   ├── 3-model/
 │   ├── 4-context/
 │   ├── 5-tool-use/
-│   ├── 6-patterns/      # Part 2: Craft
-│   ├── 7-practices/
-│   ├── 8-mental-models/ # Part 3: Perspectives
-│   └── 9-practitioner-toolkit/
+│   ├── 6-harnesses/
+│   ├── 7-patterns/                # Part 2: Craft
+│   ├── 8-practices/
+│   ├── 9-mental-models/           # Part 3: Perspectives
+│   ├── 10-practitioner-toolkit/
+│   ├── 11-agent-readiness/
+│   └── 12-long-horizon-agent-state/
 ├── appendices/          # Supplementary materials
 │   └── examples/        # Real configs from projects
 └── .claude/             # Claude Code configuration
@@ -44,10 +43,6 @@ This book includes Claude Code slash commands for content maintenance:
 - All content is markdown with YAML frontmatter
 - Files prefixed with `_` are chapter/section indexes
 - Ordering controlled by `order` field in frontmatter (e.g., `1.2.0`)
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Author
 
